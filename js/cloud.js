@@ -1,21 +1,11 @@
 // ======================================================================
-// cloud.js — Google sign-in + cloud sync (Firebase Auth + Firestore).
+// cloud.js — Access gate + cloud sync (Firebase Auth + Firestore).
 // ======================================================================
-// Signed-out: the app works exactly as before, with data in this browser only.
-// Signed-in: trades and ledger rows are also stored per user in Firestore:
+// The journal only opens for a signed-in user. Signed-out visitors are sent to login.html.
+// Signed-in data is stored per user in Firestore:
 //   journals/{uid}/trades/{Id}   and   journals/{uid}/ledger/{Id}
-// On sign-in the cloud copy is loaded into the app. If the cloud is empty, this
-// browser's data is uploaded instead. Every later change is uploaded automatically.
-
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyBgvGBCgtC72EZdvsQFcDal04FCXyKCskU",
-  authDomain: "tradingjournal-b632c.firebaseapp.com",
-  projectId: "tradingjournal-b632c",
-  storageBucket: "tradingjournal-b632c.firebasestorage.app",
-  messagingSenderId: "153737354575",
-  appId: "1:153737354575:web:9e558e4725fe9ab1d4393a",
-  measurementId: "G-MPBH4LETNF"
-};
+// On sign-in the cloud copy is loaded. If the cloud is empty, this browser's data is uploaded.
+// Every later change is uploaded automatically.
 
 const CLOUD_DEBOUNCE_MS = 2000;
 const CLOUD_BATCH_SIZE = 450;   // Firestore allows 500 writes per batch
@@ -28,12 +18,6 @@ let cloudBusy = false;
 let cloudQueued = false;
 let cloudPulling = false;
 let localDataReady = false;   // set by main.js once the local database has loaded
-
-// Called by main.js after loadData() and loadLedgerData() finish.
-function cloudMarkReady() {
-  localDataReady = true;
-  if (cloudUser) cloudPull();
-}
 
 // Keep the original local-save functions: the wrapped versions also schedule a cloud upload.
 const localSaveTrades = saveData;
@@ -48,48 +32,40 @@ function cloudClean(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
+function cloudToLogin() {
+  location.replace('login.html');
+}
+
 function cloudInit() {
-  if (typeof firebase === 'undefined') {
-    console.warn('Firebase SDK did not load; running without sign-in.');
-    renderCloudBar();
-    return;
-  }
+  if (typeof firebase === 'undefined') { cloudToLogin(); return; }
   try {
     if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
     cloudAuth = firebase.auth();
     cloudDb = firebase.firestore();
     cloudAuth.onAuthStateChanged(user => {
-      cloudUser = user || null;
+      if (!user) { cloudToLogin(); return; }
+      cloudUser = user;
+      window.__authOk = true;
+      document.documentElement.style.visibility = '';   // reveal the journal (hidden until now, see index.html)
       renderCloudBar();
-      if (cloudUser && localDataReady) cloudPull();
+      if (localDataReady) cloudPull();
     });
   } catch (e) {
     console.error('cloud init failed', e);
-    renderCloudBar();
-  }
-}
-
-async function cloudSignIn() {
-  if (!cloudAuth) return;
-  const provider = new firebase.auth.GoogleAuthProvider();
-  try {
-    await cloudAuth.signInWithPopup(provider);
-  } catch (e) {
-    if (e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') {
-      if (e.code === 'auth/popup-blocked') return cloudAuth.signInWithRedirect(provider);
-      return;
-    }
-    console.error('sign-in failed', e);
-    showToast(e.code === 'auth/operation-not-allowed'
-      ? 'Google sign-in is not turned on in Firebase yet'
-      : 'Sign-in failed: ' + (e.message || e.code));
+    cloudToLogin();
   }
 }
 
 async function cloudSignOut() {
   if (!cloudAuth) return;
-  try { await cloudAuth.signOut(); showToast('Signed out. Data stays in this browser.'); }
-  catch (e) { showToast('Sign-out failed'); }
+  try { await cloudAuth.signOut(); } catch (e) { showToast('Sign-out failed'); return; }
+  cloudToLogin();
+}
+
+// Called by main.js after loadData() and loadLedgerData() finish.
+function cloudMarkReady() {
+  localDataReady = true;
+  if (cloudUser) cloudPull();
 }
 
 // Loads the cloud copy into the app, or uploads this browser's copy if the cloud is empty.
@@ -161,7 +137,7 @@ async function cloudPushNow() {
 saveData = function () { localSaveTrades(); cloudSchedule(); };
 saveLedgerData = function () { localSaveLedger(); cloudSchedule(); };
 
-// Small sign-in control, bottom-left corner.
+// Small account bar, bottom-left corner: who is signed in, and sign out.
 function renderCloudBar() {
   let bar = document.getElementById('cloud-bar');
   if (!bar) {
@@ -172,22 +148,11 @@ function renderCloudBar() {
   }
   bar.textContent = '';
   const label = document.createElement('span');
+  label.textContent = (cloudUser && cloudUser.email ? cloudUser.email : 'Signed in') + ' · synced';
   const btn = document.createElement('button');
+  btn.textContent = 'Sign out';
   btn.style.cssText = 'border:0;border-radius:999px;padding:5px 10px;cursor:pointer;font:inherit;background:#4f7cff;color:#fff';
-  if (!cloudAuth) {
-    label.textContent = 'Cloud sync off';
-    bar.append(label);
-    return;
-  }
-  if (cloudUser) {
-    label.textContent = (cloudUser.email || 'Signed in') + ' · synced';
-    btn.textContent = 'Sign out';
-    btn.addEventListener('click', cloudSignOut);
-  } else {
-    label.textContent = 'Local only';
-    btn.textContent = 'Sign in with Google';
-    btn.addEventListener('click', cloudSignIn);
-  }
+  btn.addEventListener('click', cloudSignOut);
   bar.append(label, btn);
 }
 
