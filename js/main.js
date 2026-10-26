@@ -58,4 +58,5 @@ Promise.all([loadData(), loadLedgerData()]).then(() => {
   renderBrokers();
   if (PREFS.startPage && PREFS.startPage !== 'dashboard' && PREFS.startPage !== 'insights' && document.getElementById('view-' + PREFS.startPage))
     switchView(PREFS.startPage);
+  cloudMarkReady();   // cloud.js: local data is loaded, so a signed-in user's cloud copy can now be loaded
 });
