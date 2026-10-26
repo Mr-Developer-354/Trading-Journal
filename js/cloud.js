@@ -56,8 +56,25 @@ function cloudInit() {
   }
 }
 
+// Removes this browser's copy of the journal (IndexedDB + localStorage).
+// The cloud copy is untouched, and display preferences are kept.
+async function cloudClearLocal() {
+  try { (await dbPromise)?.close(); } catch (e) {}
+  try { (await ledgerDbPromise)?.close(); } catch (e) {}
+  await Promise.all([DB_NAME, LEDGER_DB_NAME].map(name => new Promise(resolve => {
+    try {
+      const req = indexedDB.deleteDatabase(name);
+      req.onsuccess = req.onerror = req.onblocked = () => resolve();
+    } catch (e) { resolve(); }
+  })));
+  [LS_KEY, TRADE_CLEAR_KEY, LEDGER_CLEAR_KEY, DELETED_TRADE_KEY, DELETED_LEDGER_KEY].forEach(k => {
+    try { localStorage.removeItem(k); } catch (e) {}
+  });
+}
+
 async function cloudSignOut() {
   if (!cloudAuth) return;
+  await cloudClearLocal();   // a shared browser must not keep this account's journal
   try { await cloudAuth.signOut(); } catch (e) { showToast('Sign-out failed'); return; }
   cloudToLogin();
 }
