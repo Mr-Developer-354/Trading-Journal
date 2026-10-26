@@ -137,23 +137,15 @@ async function cloudPushNow() {
 saveData = function () { localSaveTrades(); cloudSchedule(); };
 saveLedgerData = function () { localSaveLedger(); cloudSchedule(); };
 
-// Small account bar, bottom-left corner: who is signed in, and sign out.
+// Sign-out button in the sidebar, under "Log a trade". Its title shows the signed-in email.
 function renderCloudBar() {
-  let bar = document.getElementById('cloud-bar');
-  if (!bar) {
-    bar = document.createElement('div');
-    bar.id = 'cloud-bar';
-    bar.style.cssText = 'position:fixed;left:12px;bottom:12px;z-index:900;display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:var(--surface,#1b1f27);color:var(--text,#e6e9ef);border:1px solid rgba(255,255,255,.12);font:500 12px/1.2 Inter,system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.25)';
-    document.body.appendChild(bar);
+  const btn = document.getElementById('cloudSignOutBtn');
+  if (!btn) return;
+  if (!btn.dataset.wired) {
+    btn.dataset.wired = '1';
+    btn.addEventListener('click', cloudSignOut);
   }
-  bar.textContent = '';
-  const label = document.createElement('span');
-  label.textContent = (cloudUser && cloudUser.email ? cloudUser.email : 'Signed in') + ' · synced';
-  const btn = document.createElement('button');
-  btn.textContent = 'Sign out';
-  btn.style.cssText = 'border:0;border-radius:999px;padding:5px 10px;cursor:pointer;font:inherit;background:#4f7cff;color:#fff';
-  btn.addEventListener('click', cloudSignOut);
-  bar.append(label, btn);
+  btn.title = cloudUser && cloudUser.email ? 'Signed in as ' + cloudUser.email + ' · synced' : 'Signed in';
 }
 
 cloudInit();
