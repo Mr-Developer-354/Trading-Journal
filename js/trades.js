@@ -189,6 +189,11 @@ function renderTrades() {
     th.setAttribute('aria-sort', active ? (sortDir === 1 ? 'ascending' : 'descending') : 'none');
   });
   document.getElementById('pagerTotal').textContent = totalPages;
+  const pagerRange = document.getElementById('pagerRange');   // same "· a–b of N" label as the Ledger footer
+  if (pagerRange) {
+    const start = (page - 1) * PAGE_SIZE;
+    pagerRange.textContent = list.length ? `· ${start + 1}–${Math.min(start + PAGE_SIZE, list.length)} of ${list.length}` : '· 0 entries';
+  }
   const pageJumpInput = document.getElementById('pageJump');
   pageJumpInput.style.setProperty('--digits', String(totalPages).length);
   pageJumpInput.max = totalPages;
