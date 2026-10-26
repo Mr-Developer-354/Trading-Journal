@@ -1,0 +1,242 @@
+/* 17-drawers-scrollbars.css — Detail drawers, scrollbars, drawer titles */
+
+/* ================================================================
+   DRAWER v4 — slim, high-readability side panels
+   ================================================================ */
+.trade-drawer-head,
+.ledger-drawer-head {
+  padding: 18px 56px 0 20px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--bg-raised), color-mix(in srgb, var(--bg-raised) 92%, var(--bg-card)));
+}
+.trade-drawer-title h2,
+.ledger-drawer-head h2 { font-family:var(--serif); font-size:21px; line-height:1.12; letter-spacing:-.01em; margin:0 0 5px; }
+.trade-drawer-title p,
+.ledger-drawer-head p { color:var(--ink-dim); font-size:11.5px; line-height:1.45; margin:0; max-width:390px; }
+
+.trade-drawer-head .segment-tabs { margin-top:12px; border-top:1px solid var(--border); }
+.trade-drawer-head .segment-tab { padding:8px 13px 9px; min-height:31px; font-size:10.5px; }
+
+.trade-drawer-body,
+.ledger-drawer-body,
+.trade-detail-scroll {
+  padding: 0 16px 22px 20px;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+}
+.trade-drawer-body::-webkit-scrollbar,
+.trade-detail-scroll::-webkit-scrollbar { width:8px; }
+.trade-drawer-body::-webkit-scrollbar-thumb,
+.trade-detail-scroll::-webkit-scrollbar-thumb { border:2px solid transparent; background-clip:padding-box; }
+
+.drawer-section {
+  padding: 15px 0 16px;
+  border-bottom:1px solid var(--border);
+}
+.drawer-section-title { gap:9px; margin-bottom:11px; }
+.drawer-section-title > span {
+  width:24px; height:24px; flex:0 0 24px;
+  border-radius:7px;
+  background:var(--gold-soft);
+  border:1px solid color-mix(in srgb, var(--gold) 30%, var(--border));
+  color:var(--gold);
+  font-size:9px;
+}
+.drawer-section-title b { font-size:11.5px; letter-spacing:.01em; }
+.drawer-section-title small { font-size:9.5px; color:var(--ink-faint); }
+.field-grid { gap:0 9px; }
+.trade-form .field { margin-bottom:8px; }
+.trade-form .field label,
+.ledger-form .field label { font-size:9.5px; margin-bottom:4px; color:var(--ink-faint); letter-spacing:.025em; }
+.trade-form .field input,
+.trade-form .field select,
+.trade-form .field textarea,
+.ledger-form .field input,
+.ledger-form .field select,
+.ledger-form .field textarea {
+  min-height:36px; height:36px; padding:7px 9px;
+  border-radius:7px; font-size:12px;
+  border-color:var(--border-strong);
+  background:var(--bg-card);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+}
+.trade-form .field textarea,
+.ledger-form .field textarea { height:auto; min-height:68px; line-height:1.45; }
+.trade-form .field input:focus,
+.trade-form .field select:focus,
+.trade-form .field textarea:focus,
+.ledger-form .field input:focus,
+.ledger-form .field select:focus,
+.ledger-form .field textarea:focus { border-color:var(--gold); box-shadow:0 0 0 3px var(--gold-soft); outline:none; }
+.drawer-check { min-height:36px; margin:0 0 8px; padding:0 2px; font-size:11px; }
+.drawer-check input { width:14px; height:14px; }
+.calc-preview { margin-top:5px; padding:10px 11px; border-radius:8px; border:1px solid color-mix(in srgb, var(--gold) 22%, var(--border)); background:var(--gold-soft); }
+.drawer-actions {
+  padding:11px 16px 13px 20px;
+  background:color-mix(in srgb, var(--bg-raised) 96%, var(--bg));
+  backdrop-filter:blur(12px);
+  border-top:1px solid var(--border-strong);
+  box-shadow:0 -10px 25px rgba(0,0,0,.10);
+}
+.drawer-actions .btn { min-height:34px; padding:7px 13px; border-radius:7px; font-size:11px; }
+
+/* detail drawers */
+.trade-detail-scroll { overflow-y:auto; }
+.detail-hero {
+  padding:18px 42px 15px 0;
+  border-bottom:1px solid var(--border);
+}
+.detail-hero-main { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.detail-symbol { min-width:0; }
+.detail-symbol h2 { margin:0 0 4px; font-family:var(--serif); font-size:23px; line-height:1.05; letter-spacing:-.015em; overflow-wrap:anywhere; }
+.detail-meta { color:var(--ink-dim); font-size:10.5px; line-height:1.4; }
+.detail-pnl { flex:0 0 auto; min-width:88px; padding:8px 9px; border:1px solid var(--border); border-radius:9px; text-align:right; background:var(--bg-card); }
+.detail-pnl small { display:block; color:var(--ink-faint); font-size:8.5px; text-transform:uppercase; letter-spacing:.08em; margin-bottom:3px; }
+.detail-pnl b { display:block; font:600 14px var(--mono); font-variant-numeric:tabular-nums; }
+.detail-pnl.pos { border-color:color-mix(in srgb, var(--green) 35%, var(--border)); background:var(--green-soft); }
+.detail-pnl.pos b { color:var(--green); }
+.detail-pnl.neg { border-color:color-mix(in srgb, var(--red) 35%, var(--border)); background:var(--red-soft); }
+.detail-pnl.neg b { color:var(--red); }
+.detail-section { padding:14px 0; border-bottom:1px solid var(--border); }
+.detail-section-title { display:flex; align-items:center; gap:8px; margin-bottom:9px; color:var(--ink-dim); font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; }
+.detail-section-title::before { content:""; width:3px; height:13px; border-radius:99px; background:var(--gold); }
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:var(--border); }
+.detail-item { min-width:0; padding:8px 9px; background:var(--bg-card); }
+.detail-item.full { grid-column:1 / -1; }
+.detail-item .k { display:block; color:var(--ink-faint); font-size:8.5px; margin-bottom:3px; }
+.detail-item .v { display:block; color:var(--ink); font:500 11px var(--mono); font-variant-numeric:tabular-nums; line-height:1.35; overflow-wrap:anywhere; }
+.detail-item .v.text { font-family:var(--sans); font-weight:500; }
+.detail-item .v.pos { color:var(--green); }
+.detail-item .v.neg { color:var(--red); }
+.detail-actions { display:flex; gap:7px; padding:12px 0 2px; position:sticky; bottom:0; background:linear-gradient(180deg, transparent, var(--bg-raised) 20%); }
+.detail-actions .btn { flex:1; justify-content:center; min-height:34px; font-size:11px; }
+.ledger-detail-title { padding:18px 42px 13px 0; border-bottom:1px solid var(--border); }
+.ledger-detail-title h2 { font-size:21px; }
+.ledger-detail-title p { font-size:10.5px; }
+.ledger-detail-section { padding-top:14px; }
+.ledger-detail-section .detail-row { padding:8px 9px; margin:1px 0; border:0; border-radius:6px; background:var(--bg-card); font-size:10.5px; }
+.ledger-detail-section .detail-row span:first-child { color:var(--ink-faint); }
+.ledger-detail-section .detail-row span:last-child { font-size:10.5px; }
+.ledger-detail-actions { display:flex; gap:7px; padding:12px 0 2px; position:sticky; bottom:0; background:linear-gradient(180deg, transparent, var(--bg-raised) 20%); }
+.ledger-detail-actions .btn { flex:1; justify-content:center; min-height:34px; font-size:11px; }
+@media (max-width:520px) {
+  .trade-drawer-head,.ledger-drawer-head { padding-left:16px; padding-right:52px; }
+  .trade-drawer-body,.ledger-drawer-body,.trade-detail-scroll { padding-left:16px; padding-right:12px; }
+  .drawer-actions { padding-left:16px; padding-right:12px; }
+  .detail-hero,.ledger-detail-title { padding-left:0; padding-right:38px; }
+}
+@media (max-width:390px) {
+  .field-grid,.detail-grid { grid-template-columns:1fr; }
+  .field-grid .field-full,.detail-item.full { grid-column:auto; }
+  .detail-pnl { min-width:76px; }
+}
+
+/* ---------- unified application scrollbar width ---------- */
+/* Keep every drawer's scroll container the same width as the main page scrollbar. */
+:root { --app-scrollbar-width: 16px; }
+
+.trade-drawer-body,
+.ledger-drawer-body,
+.trade-detail-scroll {
+  scrollbar-width: auto;
+}
+
+.trade-drawer-body::-webkit-scrollbar,
+.ledger-drawer-body::-webkit-scrollbar,
+.trade-detail-scroll::-webkit-scrollbar {
+  width: var(--app-scrollbar-width);
+  height: var(--app-scrollbar-width);
+}
+
+.trade-drawer-body::-webkit-scrollbar-track,
+.ledger-drawer-body::-webkit-scrollbar-track,
+.trade-detail-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.trade-drawer-body::-webkit-scrollbar-thumb,
+.ledger-drawer-body::-webkit-scrollbar-thumb,
+.trade-detail-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border: 4px solid transparent;
+  background-clip: padding-box;
+  border-radius: 999px;
+  min-height: 44px;
+}
+
+.trade-drawer-body::-webkit-scrollbar-thumb:hover,
+.ledger-drawer-body::-webkit-scrollbar-thumb:hover,
+.trade-detail-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-faint);
+  background-clip: padding-box;
+}
+
+/* ---------- Trade Log drawer title: mirror the Trade Log page title tile ---------- */
+.trade-drawer-head {
+  padding: 14px 56px 10px 20px;
+  background: var(--bg-raised);
+  border-bottom: 0;
+}
+.trade-drawer-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px 14px 10px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.trade-drawer-title h2 {
+  margin: 0 0 1px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.05;
+  letter-spacing: .2px;
+}
+.trade-drawer-title p {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--ink-dim);
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.trade-drawer-head .segment-tabs {
+  margin-top: 10px;
+  border-top: 1px solid var(--border);
+}
+@media (max-width: 520px) {
+  .trade-drawer-head { padding-left: 12px; padding-right: 48px; }
+  .trade-drawer-title { padding: 9px 12px 9px 14px; }
+  .trade-drawer-title h2 { font-size: 22px; }
+  .trade-drawer-title p { font-size: 12.5px; }
+}
+
+/* Trade Log drawer header: title + description mirror the main Trade Log title tile. */
+@media (min-width: 480px) {
+  .trade-drawer-title {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+  }
+  .trade-drawer-title h2 {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .trade-drawer-title p {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-left: 16px;
+    border-left: 1px solid var(--border-strong);
+  }
+}
+@media (max-width: 479px) {
+  .trade-drawer-title { flex-direction: column; align-items: stretch; gap: 4px; }
+  .trade-drawer-title p { padding-left: 0; border-left: 0; }
+}

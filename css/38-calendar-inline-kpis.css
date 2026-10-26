@@ -1,0 +1,131 @@
+/* Calendar: Gross P/L, Trading day and Trades shown inline in the period header, before the broker filter */
+.cal-inline-kpis { display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+.cal-inline-kpis:empty { display:none; }
+.cal-kpi.cal-kpi-inline { padding:5px 10px; min-width:0; display:flex; flex-direction:column; justify-content:center; }
+.cal-kpi.cal-kpi-inline::after { display:none; }
+.cal-kpi.cal-kpi-inline .value { font-size:14px; white-space:nowrap; }
+.cal-kpi.cal-kpi-inline .label { margin-top:1px; font-size:9px; }
+@media (max-width: 760px) {
+  .cal-inline-kpis { width:100%; justify-content:flex-start; }
+  .cal-kpi.cal-kpi-inline { flex:1 1 auto; }
+}
+
+/* Calendar month view: day cards a little taller (the other calendar views keep their heights) */
+#calMonthView .cal-cell { min-height:94px; }
+@media (max-width:1050px) { #calMonthView .cal-cell { min-height:88px; } }
+@media (max-width:760px)  { #calMonthView .cal-cell { min-height:80px; } }
+@media (max-width:560px)  { #calMonthView .cal-cell { min-height:72px; } }
+
+/* Calendar month view: weekday labels (Sun, Mon, …) a bit larger */
+#calMonthView .cal-dow { font-size:11px; }
+
+/* Calendar year view: weekday letters (S M T …) and day numbers a bit larger */
+#calYearView .cal-mini-dows span { font-size:10px; }
+#calYearView .cal-mini-day { font-size:10px; }
+
+/* Calendar year view: month card titles (Jan, Feb, …) a bit larger */
+#calYearView .cal-mini-head strong { font-size:15px; }
+/* Calendar year view: P/L and trade/day counts in the card title row a bit larger */
+#calYearView .cal-mini-head .cal-mini-net,
+#calYearView .cal-mini-head .cal-mini-meta { font-size:12px; }
+
+/* Calendar header: the last eight buttons (period navigation on top, view switch below) stacked on two rows, in line with the broker filter */
+.cal-stack { display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex:0 0 auto; }
+.cal-stack-top, .cal-stack-bottom { display:flex; align-items:center; gap:6px; }
+.cal-stack-top .cal-nav { display:flex; gap:4px; }
+.cal-stack-bottom .cal-view-switch { flex:0 0 auto; }
+@media (max-width: 760px) {
+  .cal-stack { width:100%; align-items:stretch; }
+  .cal-stack-top, .cal-stack-bottom { width:100%; }
+  .cal-stack-top .cal-nav { flex:1 1 auto; }
+  .cal-stack-top #calJumpDay { flex:0 0 auto; }
+  .cal-stack-bottom .cal-view-switch { flex:1 1 auto; }
+}
+
+/* Calendar header rows: every control is the same height as the broker filter (34px) and the same width, so both rows line up */
+#view-calendar .cal-stack { --cal-ctl-h: 34px; --cal-ctl-w: 40px; }
+#view-calendar .cal-stack .cal-stack-top,
+#view-calendar .cal-stack .cal-stack-bottom { height: var(--cal-ctl-h); }
+#view-calendar .cal-stack .cal-nav .btn,
+#view-calendar .cal-stack #calJumpDay {
+  width: var(--cal-ctl-w); min-width: var(--cal-ctl-w); height: var(--cal-ctl-h); min-height: var(--cal-ctl-h);
+  padding: 0; margin: 0; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
+}
+#view-calendar .cal-stack .cal-view-switch {
+  height: var(--cal-ctl-h); box-sizing: border-box; padding: 2px; align-items: stretch;
+}
+#view-calendar .cal-stack .cal-view-btn {
+  width: var(--cal-ctl-w); height: 100%; padding: 0; margin: 0; box-sizing: border-box;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+#view-calendar .cal-stack .cal-stack-top .cal-nav { gap: 6px; }
+#view-calendar .cal-stack .cal-stack-bottom .cal-view-switch { gap: 4px; }
+@media (max-width: 760px) {
+  #view-calendar .cal-stack .cal-nav .btn,
+  #view-calendar .cal-stack .cal-view-btn { width: auto; min-width: 0; flex: 1 1 0; }
+  #view-calendar .cal-stack #calJumpDay { width: var(--cal-ctl-w); }
+}
+
+/* Calendar header: each row is 26px tall (same as the Trade Log filter buttons) with a tight gap, so the two-row block matches the KPI cards beside it */
+#view-calendar .cal-stack { --cal-ctl-h: 26px; gap: 4px; }
+#view-calendar .cal-stack .cal-stack-top,
+#view-calendar .cal-stack .cal-stack-bottom { height: var(--cal-ctl-h); }
+#view-calendar .cal-stack .cal-view-switch { padding: 2px; }
+#view-calendar .cal-stack .cal-view-btn svg,
+#view-calendar .cal-stack .cal-nav svg,
+#view-calendar .cal-stack #calJumpDay svg { width: 13px; height: 13px; }
+
+/* Calendar header: one shared row height (56px = two 26px button rows + 4px gap). The KPI cards, broker filter and button block all take that height. */
+#view-calendar .cal-period-controls { --cal-row-h: 56px; align-items: center; }
+#view-calendar .cal-inline-kpis { height: var(--cal-row-h); align-items: stretch; }
+#view-calendar .cal-kpi.cal-kpi-inline { height: var(--cal-row-h); box-sizing: border-box; justify-content: center; }
+#view-calendar .cal-data-filter { height: var(--cal-row-h); }
+#view-calendar .cal-broker-select { height: var(--cal-row-h); box-sizing: border-box; }
+#view-calendar .cal-stack { height: var(--cal-row-h); justify-content: space-between; gap: 4px; }
+#view-calendar .cal-stack .cal-stack-top,
+#view-calendar .cal-stack .cal-stack-bottom { height: 26px; }
+
+/* Calendar header: one spacing value (8px) between every item, horizontal and vertical. Button rows are 24px so 24 + 8 + 24 = 56px, matching the rest of the row. */
+#view-calendar .cal-period-controls { gap: 8px; }
+#view-calendar .cal-inline-kpis { gap: 8px; }
+#view-calendar .cal-stack { gap: 8px; }
+#view-calendar .cal-stack .cal-stack-top,
+#view-calendar .cal-stack .cal-stack-bottom { height: 24px; }
+#view-calendar .cal-stack .cal-view-switch { height: 24px; }
+#view-calendar .cal-stack .cal-stack-top .cal-nav .btn,
+#view-calendar .cal-stack #calJumpDay { height: 24px; min-height: 24px; }
+
+/* The eight header buttons: 4px between them, both across each row and between the two rows. Rows are 26px so 26 + 4 + 26 = 56px. */
+#view-calendar .cal-stack { gap: 4px; }
+#view-calendar .cal-stack .cal-stack-top,
+#view-calendar .cal-stack .cal-stack-bottom { height: 26px; gap: 4px; }
+#view-calendar .cal-stack .cal-stack-top .cal-nav { gap: 4px; }
+#view-calendar .cal-stack .cal-stack-bottom .cal-view-switch { gap: 4px; height: 26px; }
+#view-calendar .cal-stack .cal-stack-top .cal-nav .btn,
+#view-calendar .cal-stack #calJumpDay { height: 26px; min-height: 26px; }
+
+/* The eight header buttons share one exact width (40px) on desktop. Locked with !important because older rules set min-widths on these buttons. */
+@media (min-width: 761px) {
+  #view-calendar .cal-stack .cal-nav .btn,
+  #view-calendar .cal-stack #calJumpDay,
+  #view-calendar .cal-stack .cal-view-btn {
+    flex: 0 0 40px !important; width: 40px !important; min-width: 40px !important; max-width: 40px !important;
+  }
+}
+
+/* Both button rows share one width: 4 buttons of 40px + 3 gaps of 4px = 172px. Each row fills it and its buttons split it equally. */
+#view-calendar .cal-stack { width: 172px; }
+#view-calendar .cal-stack .cal-stack-top,
+#view-calendar .cal-stack .cal-stack-bottom { width: 100%; }
+#view-calendar .cal-stack .cal-stack-top .cal-nav { flex: 1 1 0; min-width: 0; }
+#view-calendar .cal-stack .cal-stack-top .cal-nav .btn,
+#view-calendar .cal-stack #calJumpDay { flex: 1 1 0; width: auto; min-width: 0; }
+#view-calendar .cal-stack .cal-stack-bottom .cal-view-switch { flex: 1 1 0; width: auto; min-width: 0; }
+#view-calendar .cal-stack .cal-view-btn { flex: 1 1 0; width: auto; min-width: 0; }
+@media (max-width: 760px) {
+  #view-calendar .cal-stack { width: 100%; }
+}
+
+/* Calendar day view: the empty "No trades recorded" state is transparent, not a dark block */
+#calDayView .cal-empty { background: transparent !important; }
+#calDayView .cal-day-main:has(> .cal-empty) { background: transparent !important; }

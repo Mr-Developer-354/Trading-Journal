@@ -1,0 +1,510 @@
+/* 18-charges-redesign.css — Charges & Calculators (single source of truth for this view,
+   including the "Edit rates" popup).
+
+   Type scale — nothing on this page is smaller than 12.5px:
+     page intro 13px · tabs / buttons 13px · panel titles 15px · field labels 12.5px
+     inputs 14px · result labels 13.5px · formula hints 12.5px · values 13.5px (mono)
+   Slim = tight padding and row height, NOT tiny text. */
+
+/* ---------- page frame: title, tabs and broker pills share one compact toolbar ---------- */
+#view-charges.active {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: center;
+  gap: 10px 12px;
+}
+#view-charges .page-head {
+  flex: 1 1 100%;
+  margin: 0 0 2px;
+  padding-bottom: 8px;
+}
+#view-charges .page-head p {
+  max-width: none;
+  font-size: 13px;
+  line-height: 1.45;
+}
+#view-charges #chargesContent {
+  flex: 1 1 100%;
+  min-width: 0;
+}
+
+/* calculator tabs (left) */
+#view-charges .charges-subtabs {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  min-height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--bg-card);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+#view-charges .charges-subtabs::-webkit-scrollbar { display: none; }
+#view-charges .subtab-btn {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  padding: 0 12px;
+  font: 500 13px/28px var(--sans);
+  color: var(--ink-dim);
+  white-space: nowrap;
+  cursor: pointer;
+}
+#view-charges .subtab-btn:hover { background: var(--bg-hover); color: var(--ink); }
+#view-charges .subtab-btn.active {
+  background: var(--gold-soft);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 45%, transparent);
+}
+
+/* broker pills (right) */
+#view-charges .charges-broker-tabs {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+}
+#view-charges .broker-pill {
+  height: 36px;
+  padding: 0 13px;
+  border: 1px solid var(--border-strong);
+  border-radius: 9px;
+  background: var(--bg-card);
+  color: var(--ink-dim);
+  font: 500 13px/1 var(--sans);
+  white-space: nowrap;
+  cursor: pointer;
+}
+#view-charges .broker-pill:hover { border-color: var(--gold); color: var(--ink); }
+#view-charges .broker-pill.active {
+  background: var(--gold-soft);
+  border-color: color-mix(in srgb, var(--gold) 60%, transparent);
+  color: var(--ink);
+}
+#view-charges .rate-settings-btn {
+  margin-left: 6px;
+  background: transparent;
+  border-color: color-mix(in srgb, var(--gold) 55%, var(--border-strong));
+  color: var(--gold);
+}
+#view-charges :is(.subtab-btn, .broker-pill, .seg-pill, .btn):focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+
+/* ---------- calculator layout: inputs | breakdown ---------- */
+#view-charges .calc-layout {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  min-width: 0;
+}
+#view-charges .panel {
+  padding: 14px 16px;
+  border-radius: 10px;
+  min-width: 0;
+}
+#view-charges .calc-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  margin: 0 0 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+#view-charges .calc-panel-head h3 {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.2;
+}
+#view-charges .calc-panel-head span {
+  color: var(--ink-dim);
+  font-size: 12.5px;
+}
+#view-charges .calc-panel-head .btn {
+  align-self: center;
+  margin-left: auto;
+  padding: 5px 11px;
+  border-radius: 7px;
+  font-size: 12.5px;
+  color: var(--ink);
+}
+
+/* segment switch (Delivery / Intraday, Futures / Options …) */
+#view-charges .segment-select-row {
+  display: flex;
+  gap: 2px;
+  margin: 0 0 12px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+#view-charges .seg-pill {
+  flex: 1 1 auto;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  padding: 6px 10px;
+  font: 500 12.5px/1.2 var(--sans);
+  color: var(--ink-dim);
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+}
+#view-charges .seg-pill:hover { background: var(--bg-hover); color: var(--ink); }
+#view-charges .seg-pill.active {
+  background: var(--green-soft);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--green) 50%, transparent);
+}
+
+/* inputs */
+#view-charges .field { margin: 0 0 10px; }
+#view-charges .field label {
+  display: block;
+  margin: 0 0 4px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink-dim);
+}
+#view-charges .field input,
+#view-charges .field select {
+  width: 100%;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--ink);
+  font: 500 14px var(--sans);
+  font-variant-numeric: tabular-nums;
+}
+#view-charges .field input:focus,
+#view-charges .field select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-soft);
+}
+#view-charges .field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 10px;
+}
+#view-charges .calc-note {
+  margin: 2px 0 0;
+  padding: 8px 10px;
+  border-left: 2px solid var(--border-strong);
+  border-radius: 0 6px 6px 0;
+  background: var(--bg);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+#view-charges .calc-note b { color: var(--ink); font-weight: 600; }
+
+/* ---------- breakdown table: label | formula | value ---------- */
+#view-charges .calc-result-panel { container-type: inline-size; }
+#view-charges .calc-result-table {
+  width: 100%;
+  min-width: 0 !important;
+  max-width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+#view-charges .calc-result-table td {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  vertical-align: baseline;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+#view-charges .calc-result-table tr:last-child td { border-bottom: 0; }
+#view-charges .calc-result-table .c-label {
+  width: 33%;
+  padding-right: 12px;
+  font: 400 13.5px/1.35 var(--sans);
+  color: var(--ink);
+}
+#view-charges .calc-result-table .c-hint {
+  width: 41%;
+  padding-right: 12px;
+  font: 400 12.5px/1.35 var(--sans);
+  color: var(--ink-dim);
+}
+#view-charges .calc-result-table .c-val {
+  width: 26%;
+  text-align: right;
+  white-space: nowrap;
+  font: 600 13.5px var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+#view-charges .calc-result-table .c-val.pos { color: var(--green); }
+#view-charges .calc-result-table .c-val.neg { color: var(--red); }
+#view-charges .calc-result-table tr.total td {
+  padding-top: 8px;
+  border-top: 1px solid var(--border-strong);
+}
+#view-charges .calc-result-table tr.total .c-label { font-weight: 600; }
+#view-charges .calc-result-table tr.net td {
+  padding: 9px 0;
+  border: 0;
+  background: color-mix(in srgb, var(--gold) 8%, var(--bg-card));
+}
+#view-charges .calc-result-table tr.net .c-label {
+  padding-left: 10px;
+  border-radius: 8px 0 0 8px;
+  font: 600 14.5px/1.35 var(--sans);
+}
+#view-charges .calc-result-table tr.net .c-val {
+  padding-right: 10px;
+  border-radius: 0 8px 8px 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+#view-charges .calc-result-table tr.net .c-hint { color: var(--ink-dim); }
+
+/* narrow results panel: hint drops under the label */
+@container (max-width: 540px) {
+  #view-charges .calc-result-table,
+  #view-charges .calc-result-table tbody { display: block; }
+  #view-charges .calc-result-table tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  #view-charges .calc-result-table tr:last-child { border-bottom: 0; }
+  #view-charges .calc-result-table td {
+    display: block;
+    width: auto !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: none !important;
+    border-radius: 0 !important;
+  }
+  #view-charges .calc-result-table .c-label { grid-column: 1; grid-row: 1; }
+  #view-charges .calc-result-table .c-hint { grid-column: 1; grid-row: 2; }
+  #view-charges .calc-result-table .c-hint:empty { display: none; }
+  #view-charges .calc-result-table .c-val { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+  #view-charges .calc-result-table tr.total { border-top: 1px solid var(--border-strong); padding-top: 8px; }
+  #view-charges .calc-result-table tr.net { padding: 9px 10px; border: 0; border-radius: 8px; background: color-mix(in srgb, var(--gold) 8%, var(--bg-card)); }
+}
+
+/* ---------- one-time & other charges: balanced cards ---------- */
+#view-charges .charges-info-panel {
+  columns: 340px;
+  column-gap: 12px;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  max-width: none;
+}
+#view-charges .onetime-note {
+  column-span: all;
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-card);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+#view-charges .onetime-group {
+  break-inside: avoid;
+  margin: 0 0 12px;
+  padding: 10px 14px 6px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-card);
+}
+#view-charges .onetime-group h3 {
+  margin: 0 0 2px;
+  padding: 0 0 8px;
+  border-bottom: 1px solid var(--border);
+  font: 600 14px/1.2 var(--sans);
+  color: var(--gold);
+}
+#view-charges .onetime-group .detail-row {
+  gap: 14px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.35;
+}
+#view-charges .onetime-group .detail-row:last-child { border-bottom: 0; }
+#view-charges .onetime-group .detail-row span:first-child { color: var(--ink-dim); }
+#view-charges .onetime-group .detail-row span:last-child {
+  max-width: 58%;
+  font: 500 12.5px/1.4 var(--mono);
+  color: var(--ink);
+}
+
+/* ---------- Edit rates popup ---------- */
+.rate-editor-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0,0,0,.66);
+}
+.rate-editor {
+  width: min(720px, 100%);
+  height: min(600px, calc(100vh - 32px));
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  background: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+}
+.rate-editor-head {
+  flex: 0 0 auto;
+  padding: 12px 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.rate-editor-head-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.rate-editor-head h3 { margin: 0 0 2px; font-size: 16px; }
+.rate-editor-head p { margin: 0; font-size: 12.5px; line-height: 1.4; color: var(--ink-dim); }
+.rate-editor .close {
+  position: static;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ink-dim);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+.rate-editor .close:hover { background: var(--bg-hover); color: var(--ink); }
+.rate-editor-tabs {
+  display: flex;
+  margin-top: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.rate-editor-tabs::-webkit-scrollbar { display: none; }
+.rate-editor-tab {
+  position: relative;
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  padding: 8px 13px;
+  font: 500 13px/1.2 var(--sans);
+  color: var(--ink-dim);
+  cursor: pointer;
+}
+.rate-editor-tab:hover { color: var(--ink); }
+.rate-editor-tab.active { color: var(--gold); font-weight: 600; }
+.rate-editor-tab.active::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--gold);
+}
+.rate-editor-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 12px 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.rate-editor-pane { display: none; }
+.rate-editor-pane.active { display: block; }
+.rate-editor-segment {
+  margin-bottom: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+}
+.rate-editor-segment h4 { margin: 0 0 10px; font: 600 14px/1.2 var(--sans); color: var(--gold); }
+.rate-editor-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.rate-editor-grid label { display: flex; flex-direction: column; gap: 4px; min-width: 0; font-size: 12.5px; color: var(--ink-dim); }
+.rate-editor input,
+.rate-editor select {
+  width: 100%;
+  height: 34px;
+  padding: 0 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--ink);
+  font: 500 13.5px var(--sans);
+}
+.rate-editor input:focus,
+.rate-editor select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); }
+.rate-slab-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.rate-slab-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 120px);
+  gap: 6px 8px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--ink-dim);
+}
+.rate-editor-help,
+.rate-editor-empty { margin: 8px 0 0; font-size: 12.5px; line-height: 1.45; color: var(--ink-dim); }
+.rate-editor-foot {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+}
+.rate-editor-foot .btn { min-height: 34px; padding: 6px 13px; font-size: 13px; }
+.rate-editor-spacer { flex: 1; }
+
+/* ---------- smaller screens ---------- */
+@media (max-width: 900px) {
+  #view-charges .calc-layout { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 700px) {
+  #view-charges .charges-broker-tabs { flex: 1 1 100%; overflow-x: auto; scrollbar-width: none; }
+  #view-charges .rate-settings-btn { margin-left: auto; }
+  .rate-editor-backdrop { padding: 8px; }
+  .rate-editor { height: min(640px, calc(100vh - 16px)); }
+  .rate-editor-head { padding: 10px 12px 0; }
+  .rate-editor-body { padding: 10px 12px; }
+  .rate-editor-foot { flex-wrap: wrap; padding: 8px 12px; }
+  .rate-editor-spacer { display: none; }
+  .rate-editor-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rate-slab-list { gap: 10px; }
+  .rate-slab-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3px 8px; font-size: 12.5px; }
+  .rate-slab-row > span:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .rate-slab-row > span:nth-child(3) { grid-column: 2; grid-row: 1; }
+  .rate-slab-row > input:nth-child(2) { grid-column: 1; grid-row: 2; }
+  .rate-slab-row > input:nth-child(4) { grid-column: 2; grid-row: 2; }
+}
+@media (max-width: 460px) {
+  .rate-editor-grid { grid-template-columns: minmax(0, 1fr); }
+  #view-charges .panel { padding: 12px; }
+}
+
+/* source line under One-time charges */
+#view-charges .onetime-source { margin: 14px 0 0; padding-top: 10px; border-top: 1px dashed var(--border); color: var(--ink-faint); font-size: 11.5px; line-height: 1.5; }

@@ -1,0 +1,26 @@
+/* 41-dashboard-layout.css — Dashboard Customize panel (show/hide and reorder the widgets) */
+
+.dash-customize-btn { white-space: nowrap; }
+
+.dash-custom {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+.dash-custom[hidden] { display: none; }
+.dash-custom-head {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  padding-bottom: 10px; margin-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.dash-custom-head b { display: block; font-size: 14px; }
+.dash-custom-head span { display: block; margin-top: 2px; font-size: 12px; color: var(--ink-faint); }
+.dash-custom-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 6px 0;
+}
+.dash-custom-row label { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+.dash-custom-move { display: inline-flex; gap: 4px; }
+.dash-custom-move .btn:disabled { opacity: .35; cursor: default; }
+.dash-head .dash-customize-btn { align-self: center; margin-left: auto; }

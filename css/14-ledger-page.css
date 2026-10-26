@@ -1,0 +1,384 @@
+/* 14-ledger-page.css — Ledger page layout + shared control look */
+
+/* =====================================================================
+   Ledger + Trade log header: title panel + five summary cards
+   ---------------------------------------------------------------------
+   One layout system, driven by the width of the Ledger view itself (not
+   the browser window), so it behaves correctly whether the sidebar is
+   pinned open, collapsed, or hidden on mobile.
+
+   Width of the Ledger view      Layout
+   ≥ 1100px                      title left  |  5 cards in one row (right)
+   820 – 1099px                  title on top, 5 equal cards below
+   500 – 819px                   title on top, cards 3 + 2 (no orphan)
+   < 500px                       title on top, cards 2 + 2 + 1 (last full width)
+   ===================================================================== */
+#view-ledger,
+#view-trades { container: ledger / inline-size; }   /* Trade log reuses this header design */
+#view-trades { --card-count: 7; }   /* summary cards on one row (wide): 7 on Trade Log */
+#view-ledger { --card-count: 7; }   /* 7 on Ledger */
+
+.ledger-page-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);   /* default: stacked (also the no-container-query fallback) */
+  align-items: stretch;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Title panel: "Ledger" and its description share one row.
+   A gold accent bar marks the panel; a hairline divider separates title from description.
+   Below 480px there is no room for both side by side, so they stack. */
+.ledger-title-block {
+  display: flex;
+  width: max-content;
+  max-width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px 14px 10px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.ledger-title-block h1 { margin: 0; line-height: 1.05; letter-spacing: .2px; }
+.ledger-title-block p {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+@container ledger (min-width: 480px) {
+  .ledger-title-block { flex-direction: row; align-items: center; justify-content: flex-start; gap: 16px; }
+  .ledger-title-block h1 { flex: 0 0 auto; }
+  .ledger-title-block p {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-left: 16px;
+    border-left: 1px solid var(--border-strong);
+  }
+}
+
+/* Cards wrapper (kept as a plain pass-through so the grid below is the only layout) */
+.ledger-head-right { display: block; min-width: 0; }
+.ledger-summary-cards {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));   /* 6-col grid lets 2 / 3 cards share a row with no gaps */
+  gap: 8px;
+  min-width: 0;
+  height: 100%;
+}
+.ledger-summary-card {
+  grid-column: span 3;                    /* narrow default: 2 per row … */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 9px 11px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.ledger-summary-card:nth-child(odd):last-child { grid-column: 1 / -1; }   /* … and an odd last card fills its row */
+.ledger-summary-card .label {
+  color: var(--ink-faint);
+  font-size: 11px;
+  line-height: 1.25;
+  margin-bottom: 5px;
+  overflow-wrap: anywhere;
+}
+.ledger-summary-card .val {
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.1;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;                 /* wrap instead of clipping a number */
+}
+.ledger-summary-card .val.pos { color: var(--green); }
+.ledger-summary-card .val .val-of { margin-left: 2px; font: 500 12px/1 var(--sans); color: var(--ink-faint); white-space: nowrap; }
+.ledger-summary-card .val.neg { color: var(--red); }
+.ledger-add-btn { flex: 0 0 auto; white-space: nowrap; }
+
+/* 500 – 819px: three cards, then two */
+@container ledger (min-width: 500px) {
+  .ledger-summary-card { grid-column: span 2; }
+  .ledger-summary-card:nth-child(n+4) { grid-column: span 3; }
+  .ledger-summary-card:nth-child(odd):last-child { grid-column: span 3; }
+  .ledger-summary-card .label { white-space: nowrap; }
+  .ledger-summary-card .val { font-size: 16px; }
+}
+
+/* Desktop/tablet: keep the Ledger title and all summary cards on ONE row.
+   Cards use only the width their content needs; the title receives the remaining space. */
+@container ledger (min-width: 820px) {
+  .ledger-page-head {
+    grid-template-columns: minmax(0, 1fr) max-content;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .ledger-title-block {
+    width: auto;
+    max-width: none;
+  }
+  .ledger-head-right {
+    width: max-content;
+    max-width: 100%;
+  }
+  .ledger-summary-cards {
+    width: max-content;
+    max-width: 100%;
+    grid-template-columns: repeat(var(--card-count, 7), max-content);
+    gap: 10px;
+  }
+  .ledger-summary-card,
+  .ledger-summary-card:nth-child(n+4),
+  .ledger-summary-card:last-child {
+    grid-column: auto;
+    width: max-content;
+    max-width: 100%;
+  }
+  .ledger-summary-card { padding: 10px 14px; }
+  .ledger-summary-card .label { white-space: nowrap; }
+  .ledger-summary-card .val { font-size: 16px; white-space: nowrap; }
+}
+
+@container ledger (min-width: 1100px) {
+  .ledger-summary-card { padding: 11px 16px; }
+  .ledger-summary-card .val { font-size: 19px; }
+}
+
+/* very small phones */
+@container ledger (max-width: 359px) {
+  .ledger-title-block { padding: 9px 11px; }
+  .ledger-summary-card { padding: 8px 9px; }
+  .ledger-summary-card .val { font-size: 14px; }
+}
+
+
+
+/* Filter controls size to their visible content instead of fixed widths. */
+.filters input:not([type="date"]),
+.filters select {
+  width: max-content;
+  min-width: 0;
+  field-sizing: content;
+}
+.filters input[type="date"] {
+  width: max-content;
+  min-width: 0;
+  field-sizing: content;
+}
+.filters .btn:not(.filter-add-btn):not(.csv-icon-btn),
+.filters .btn.small:not(.filter-add-btn):not(.csv-icon-btn) {
+  width: max-content;
+  min-width: 0;
+}
+
+/* Ledger emphasis: P/L / Charges bold; Balance italic; Balance and Daily Balance stay neutral-colored. */
+.ledger-table td.ledger-bold { font-weight: 700; }
+.ledger-table td.ledger-italic { font-style: italic; }
+
+/* Ledger + Trade log pager: wrap instead of pushing the page wider on very narrow screens */
+#view-ledger .pager, #view-trades .pager { flex-wrap: wrap; gap: 8px 12px; min-width: 0; }
+#view-ledger .pager .pages, #view-trades .pager .pages { flex-wrap: wrap; justify-content: flex-end; min-width: 0; }
+
+/* =====================================================================
+   Filter bar (Trade log + Ledger)
+   ---------------------------------------------------------------------
+   One toolbar panel: add action, search, dropdowns, joined date range,
+   and a results strip (count, clear, export). Controls that are in use
+   turn gold, and Clear shows how many filters are active.
+   Layout follows the width of the view, not the window:
+     wide       everything on one row, Clear + export on the right
+     medium     controls wrap in line; the entry count lives in the summary card
+     < 480px    add button and search take full rows
+   ===================================================================== */
+:is(#view-trades, #view-ledger) .filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 8px;
+  padding: 4px 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* -- shared control look ------------------------------------------------ */
+:is(#view-trades, #view-ledger) .filter-bar > :is(input, select) {
+  box-sizing: border-box;
+  height: 26px;
+  min-height: 26px;
+  width: auto;
+  min-width: 0;
+  field-sizing: content;
+  padding: 0 10px;
+  font: 500 12.5px/1 var(--sans);
+  color: var(--ink);
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  transition: border-color .15s, box-shadow .15s, background-color .15s;
+}
+:is(#view-trades, #view-ledger) .filter-bar ::placeholder { color: var(--ink-faint); opacity: 1; }
+:is(#view-trades, #view-ledger) .filter-bar option { background: var(--bg-raised); color: var(--ink); }
+:is(#view-trades, #view-ledger) .filter-bar > :is(input, select):hover { border-color: color-mix(in srgb, var(--gold) 55%, var(--border-strong)); }
+
+/* search: magnifier icon inside the field */
+:is(#view-trades, #view-ledger) .filter-bar > input[type="text"] {
+  flex: 0 1 auto;
+  min-width: 150px;
+  max-width: 300px;
+  padding-left: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2393908a' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  background-size: 14px;
+}
+
+/* dropdowns: custom chevron */
+:is(#view-trades, #view-ledger) .filter-bar > select {
+  flex: 0 1 auto;
+  min-width: 115px;
+  max-width: 220px;
+  padding-right: 28px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2393908a' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+  background-size: 12px;
+}
+
+/* date range: two dates in one joined control */
+:is(#view-trades, #view-ledger) .filter-range {
+  display: flex;
+  align-items: center;
+  flex: 1 1 240px;
+  max-width: 300px;
+  min-width: 0;
+  height: 26px;
+  box-sizing: border-box;
+  overflow: hidden;
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  transition: border-color .15s, box-shadow .15s, background-color .15s;
+}
+:is(#view-trades, #view-ledger) .filter-range:hover { border-color: color-mix(in srgb, var(--gold) 55%, var(--border-strong)); }
+:is(#view-trades, #view-ledger) .filter-range input {
+  flex: 0 1 auto;
+  min-width: 112px;
+  width: auto;
+  height: 100%;
+  min-height: 0;
+  field-sizing: content;
+  padding: 0 8px;
+  font: 500 12.5px/1 var(--sans);
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  outline: none;
+}
+:is(#view-trades, #view-ledger) .range-sep { flex: 0 0 1px; height: 16px; background: var(--border-strong); }
+
+/* focus: one ring, on the control (or on the whole range group) */
+:is(#view-trades, #view-ledger) .filter-bar > :is(input, select):focus-visible,
+:is(#view-trades, #view-ledger) .filter-range:focus-within {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-soft);
+}
+
+/* in use: gold border + soft gold fill */
+:is(#view-trades, #view-ledger) .filter-bar > :is(input, select).is-active,
+:is(#view-trades, #view-ledger) .filter-range.is-active {
+  border-color: var(--gold);
+  background-color: var(--gold-soft);
+}
+
+/* -- add action ---------------------------------------------------------- */
+:is(#view-trades, #view-ledger) .filter-bar .filter-add-btn {
+  flex: 0 0 auto;
+  width: auto;
+  height: 26px;
+  min-height: 26px;
+  padding: 0 11px;
+  gap: 6px;
+  justify-content: center;
+  font: 600 12.5px/1 var(--sans);
+  white-space: nowrap;
+  color: var(--gold);
+  background: var(--gold-soft);
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  border-radius: 7px;
+}
+:is(#view-trades, #view-ledger) .filter-bar .filter-add-btn:hover { color: #201a06; background: var(--gold); border-color: var(--gold); }
+:root[data-theme="light"] :is(#view-trades, #view-ledger) .filter-bar .filter-add-btn { color: #a3491c; }
+:root[data-theme="light"] :is(#view-trades, #view-ledger) .filter-bar .filter-add-btn:hover { color: #fff; background: var(--gold); }
+
+/* -- tools: clear, export ------------------------------------------------ */
+:is(#view-trades, #view-ledger) .filter-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+:is(#view-trades, #view-ledger) .filter-bar .filter-clear {
+  height: 26px;
+  min-height: 26px;
+  padding: 0 12px;
+  font: 500 12.5px/1 var(--sans);
+  color: var(--ink-dim);
+  background: transparent;
+  border-color: transparent;
+}
+:is(#view-trades, #view-ledger) .filter-bar .filter-clear:hover { color: var(--red); border-color: color-mix(in srgb, var(--red) 45%, transparent); background: var(--red-soft); }
+:is(#view-trades, #view-ledger) .filter-bar .filter-clear[data-n="0"] { opacity: .5; }
+:is(#view-trades, #view-ledger) .filter-bar .filter-clear:not([data-n="0"])[data-n]::after {
+  content: attr(data-n);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  box-sizing: border-box;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #201a06;
+  background: var(--gold);
+  border-radius: 999px;
+}
+:is(#view-trades, #view-ledger) .filter-bar .csv-icon-btn {
+  flex: 0 0 auto;
+  width: 28px;
+  min-width: 28px;
+  height: 26px;
+  min-height: 26px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 7px;
+}
+:is(#view-trades, #view-ledger) .filter-bar .csv-icon-btn img { width: 18px; height: 18px; }
+
+/* -- responsive ---------------------------------------------------------- */
+/* Neither screen shows a count in its bar any more (it lives in the summary card), so Clear + export
+   simply wrap in line with the other controls. */
+/* phones: add button and search each get a full row; range fills its row */
+@container ledger (max-width: 479.98px) {
+  :is(#view-trades, #view-ledger) .filter-bar .filter-add-btn,
+  :is(#view-trades, #view-ledger) .filter-bar > input[type="text"] { flex: 1 1 100%; max-width: none; }
+  :is(#view-trades, #view-ledger) .filter-range { flex: 1 1 100%; max-width: none; }
+  :is(#view-trades, #view-ledger) .filter-bar > select { max-width: none; }
+}

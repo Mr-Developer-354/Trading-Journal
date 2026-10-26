@@ -1,0 +1,164 @@
+/* 21-overrides.css — Final tweaks that used to sit inside <style> tags in index.html.
+   Loaded last so they win over everything above. */
+
+.csv-icon-btn { width: 34px; min-width: 34px; height: 34px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; line-height: 1; }
+.csv-icon-btn img { width: 22px; height: 22px; display: block; object-fit: contain; }
+
+        .calendar-title-wrap.calendar-description-only p {
+          margin: 0;
+          font-size: 13px;
+          line-height: 1.45;
+          color: var(--muted);
+          font-weight: 600;
+        }
+
+.ledger-table td,.ledger-table th{white-space:nowrap;}
+
+/* Trade Log: slightly smaller typography */
+.trade-log-table th { font-size: 11px !important; }
+.trade-log-table td { font-size: 12px !important; }
+
+/* Calendar profit heat palette — intentionally distinct mid-tones. */
+.cal-cell.g1, .cal-mini-day.g1, .cal-legend-swatch.g1 { background:#A5D6A7 !important; }
+.cal-cell.g2, .cal-mini-day.g2, .cal-legend-swatch.g2 { background:#66BB6A !important; }
+.cal-cell.g3, .cal-mini-day.g3, .cal-legend-swatch.g3 { background:#48A111 !important; }
+.cal-cell.g4, .cal-mini-day.g4, .cal-legend-swatch.g4 { background:#1B5E20 !important; }
+.cal-cell.g1, .cal-mini-day.g1 { color:#173b20 !important; border-color:#91c996 !important; }
+.cal-cell.g2, .cal-mini-day.g2 { color:#0e3015 !important; border-color:#4ea955 !important; }
+.cal-cell.g3, .cal-mini-day.g3, .cal-cell.g4, .cal-mini-day.g4 { color:#fff !important; border-color:rgba(0,0,0,.16) !important; }
+.cal-cell.g1 .p,.cal-cell.g2 .p,.cal-cell.g3 .p,.cal-cell.g4 .p,
+.cal-cell.g1 .d,.cal-cell.g2 .d,.cal-cell.g3 .d,.cal-cell.g4 .d,
+.cal-cell.g1 .cal-day-tag,.cal-cell.g2 .cal-day-tag,.cal-cell.g3 .cal-day-tag,.cal-cell.g4 .cal-day-tag,
+.cal-cell.g1 .cal-cell-foot,.cal-cell.g2 .cal-cell-foot,.cal-cell.g3 .cal-cell-foot,.cal-cell.g4 .cal-cell-foot { color:inherit !important; }
+.cal-cell.g1 .cal-bar,.cal-cell.g2 .cal-bar,.cal-cell.g3 .cal-bar,.cal-cell.g4 .cal-bar { background:rgba(255,255,255,.34) !important; }
+.cal-cell.g1 .cal-bar > span,.cal-cell.g2 .cal-bar > span,.cal-cell.g3 .cal-bar > span,.cal-cell.g4 .cal-bar > span { background:rgba(255,255,255,.94) !important; }
+
+/* FINAL calendar profit heat override: exact user-selected green palette.
+   High-specificity selectors intentionally win over theme defaults. */
+[data-theme="dark"] #calMonthView .cal-cell.g1,
+[data-theme="dark"] #calYearView .cal-mini-day.g1,
+#calMonthView .cal-cell.g1, #calYearView .cal-mini-day.g1 { background:#A5D6A7 !important; border-color:#91c996 !important; color:#173b20 !important; }
+[data-theme="dark"] #calMonthView .cal-cell.g2,
+[data-theme="dark"] #calYearView .cal-mini-day.g2,
+#calMonthView .cal-cell.g2, #calYearView .cal-mini-day.g2 { background:#66BB6A !important; border-color:#4ea955 !important; color:#0e3015 !important; }
+[data-theme="dark"] #calMonthView .cal-cell.g3,
+[data-theme="dark"] #calYearView .cal-mini-day.g3,
+#calMonthView .cal-cell.g3, #calYearView .cal-mini-day.g3 { background:#48A111 !important; border-color:#3a8d0e !important; color:#fff !important; }
+[data-theme="dark"] #calMonthView .cal-cell.g4,
+[data-theme="dark"] #calYearView .cal-mini-day.g4,
+#calMonthView .cal-cell.g4, #calYearView .cal-mini-day.g4 { background:#1B5E20 !important; border-color:#154b19 !important; color:#fff !important; }
+#calMonthView .cal-cell.g1 .p, #calMonthView .cal-cell.g2 .p, #calMonthView .cal-cell.g3 .p, #calMonthView .cal-cell.g4 .p,
+#calMonthView .cal-cell.g1 .d, #calMonthView .cal-cell.g2 .d, #calMonthView .cal-cell.g3 .d, #calMonthView .cal-cell.g4 .d,
+#calMonthView .cal-cell.g1 .cal-cell-foot, #calMonthView .cal-cell.g2 .cal-cell-foot, #calMonthView .cal-cell.g3 .cal-cell-foot, #calMonthView .cal-cell.g4 .cal-cell-foot { color:inherit !important; }
+.cal-legend-swatch.g1 { background:#A5D6A7 !important; }
+.cal-legend-swatch.g2 { background:#66BB6A !important; }
+.cal-legend-swatch.g3 { background:#48A111 !important; }
+.cal-legend-swatch.g4 { background:#1B5E20 !important; }
+
+/* Final calendar readability: stronger hierarchy and contrast without making the slim grid taller. */
+#calMonthView .cal-cell .d { font-size:11px !important; font-weight:700 !important; }
+#calMonthView .cal-cell .p { font-size:12.5px !important; font-weight:700 !important; }
+#calMonthView .cal-cell .cal-day-tag { font-size:8.5px !important; font-weight:600 !important; }
+#calMonthView .cal-cell .cal-cell-foot { font-size:9px !important; font-weight:600 !important; }
+#calMonthView .cal-cell.g1 .d,#calMonthView .cal-cell.g1 .p,#calMonthView .cal-cell.g1 .cal-day-tag,#calMonthView .cal-cell.g1 .cal-cell-foot { color:#173b20 !important; }
+#calMonthView .cal-cell.g2 .d,#calMonthView .cal-cell.g2 .p,#calMonthView .cal-cell.g2 .cal-day-tag,#calMonthView .cal-cell.g2 .cal-cell-foot { color:#092b12 !important; }
+#calMonthView .cal-cell.g3 .d,#calMonthView .cal-cell.g3 .p,#calMonthView .cal-cell.g3 .cal-day-tag,#calMonthView .cal-cell.g3 .cal-cell-foot,#calMonthView .cal-cell.g4 .d,#calMonthView .cal-cell.g4 .p,#calMonthView .cal-cell.g4 .cal-day-tag,#calMonthView .cal-cell.g4 .cal-cell-foot,#calMonthView .cal-cell.l3 .d,#calMonthView .cal-cell.l3 .p,#calMonthView .cal-cell.l3 .cal-day-tag,#calMonthView .cal-cell.l3 .cal-cell-foot,#calMonthView .cal-cell.l4 .d,#calMonthView .cal-cell.l4 .p,#calMonthView .cal-cell.l4 .cal-day-tag,#calMonthView .cal-cell.l4 .cal-cell-foot { color:#fff !important; }
+#calMonthView .cal-cell.l1 .d,#calMonthView .cal-cell.l1 .p,#calMonthView .cal-cell.l1 .cal-day-tag,#calMonthView .cal-cell.l1 .cal-cell-foot { color:#65151a !important; }
+#calMonthView .cal-cell.l2 .d,#calMonthView .cal-cell.l2 .p,#calMonthView .cal-cell.l2 .cal-day-tag,#calMonthView .cal-cell.l2 .cal-cell-foot { color:#5a080c !important; }
+#calYearView .cal-mini-day { font-weight:700 !important; }
+#calYearView .cal-mini-day.g1 { color:#173b20 !important; }
+#calYearView .cal-mini-day.g2 { color:#092b12 !important; }
+#calYearView .cal-mini-day.g3,#calYearView .cal-mini-day.g4,#calYearView .cal-mini-day.l3,#calYearView .cal-mini-day.l4 { color:#fff !important; }
+#calYearView .cal-mini-day.l1 { color:#65151a !important; }
+#calYearView .cal-mini-day.l2 { color:#5a080c !important; }
+
+
+/* Excel template download buttons */
+.import-template-btn { text-decoration:none; }
+.import-template-btn:hover { text-decoration:none; }
+
+/* Trade Log + Ledger: keep the page title and summary cards on the same row.
+   The title expands into the remaining space while cards stay content-sized. */
+@media (min-width: 700px) {
+  .ledger-page-head {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .ledger-title-block {
+    flex: 1 1 auto;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+  }
+  .ledger-head-right {
+    flex: 0 0 auto;
+    width: max-content;
+    max-width: 100%;
+  }
+  .ledger-summary-cards {
+    width: max-content;
+    max-width: 100%;
+    grid-template-columns: repeat(7, max-content);
+    height: 100%;
+  }
+  .ledger-summary-card,
+  .ledger-summary-card:nth-child(n+4),
+  .ledger-summary-card:nth-child(odd):last-child {
+    grid-column: auto;
+    width: max-content;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 699px) {
+  .trade-page-head .ledger-title-block p {
+    display: none;
+  }
+}
+
+/* FINAL Trade Log/Ledger header responsiveness: never crop the page title. */
+.ledger-title-block h1 {
+  min-width: 0;
+  max-width: 100%;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 700px) and (max-width: 1099px) {
+  .ledger-page-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .ledger-title-block {
+    width: auto;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .ledger-head-right,
+  .ledger-summary-cards {
+    width: 100%;
+    max-width: 100%;
+  }
+  .ledger-summary-cards {
+    grid-template-columns: repeat(var(--card-count, 7), minmax(0, auto));
+  }
+  .ledger-summary-card,
+  .ledger-summary-card:nth-child(n+4),
+  .ledger-summary-card:nth-child(odd):last-child {
+    width: auto;
+    max-width: none;
+  }
+}
+
+@media (max-width: 699px) {
+  .ledger-title-block {
+    width: auto;
+    max-width: 100%;
+  }
+  .ledger-title-block h1 { white-space: normal; }
+}

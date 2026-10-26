@@ -1,0 +1,100 @@
+/* 33-frozen-columns.css — Trade Log: the Date and Symbol columns stay on the left
+   while the table scrolls sideways (Raw mode, narrow windows, zoom).
+
+   - The table scrolls inside .table-wrap when it is wider than its box (.is-wide, see 23-sticky.css).
+     Sticky cells pin to that scroll box, so the first two columns stay put while the rest slide under them.
+   - Date is column 1 and Symbol is column 2, in normal and Raw mode alike (js/trades.js).
+   - Symbol sits just to the right of Date. Its `left` is the Date column's width, which js/layout.js
+     measures into --frozen-date-w. Hidden columns (display:none) measure 0, so the pin still lines up.
+   - The pinned header copy (.sticky-ghost, also a scroll box) gets the same pinning.
+   - Detail rows (one cell spanning the whole table) and the "No trades match" row are left alone.
+   - Nothing here applies when the table fits its box, so the normal layout is unchanged.      */
+
+/* ---- Body cells: opaque, so scrolled content never shows through ---- */
+#view-trades .table-wrap.is-wide tbody td:nth-child(-n+2):not([colspan]):not(.inline-detail-cell) {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: var(--bg-card);
+}
+#view-trades .table-wrap.is-wide tbody td:nth-child(2):not([colspan]):not(.inline-detail-cell) {
+  left: var(--frozen-date-w, 0px);
+  box-shadow: 1px 0 0 var(--border-strong), 8px 0 10px -8px rgba(0, 0, 0, .3);
+}
+
+/* Hover and the open row paint the frozen cells too, so the row highlight stays continuous */
+#view-trades .table-wrap.is-wide tbody tr:hover td:nth-child(-n+2):not([colspan]):not(.inline-detail-cell),
+#view-trades .table-wrap.is-wide tbody tr.row-open td:nth-child(-n+2):not([colspan]):not(.inline-detail-cell) {
+  background: var(--bg-hover);
+}
+
+/* ---- Header cells: the real header and the pinned header copy ---- */
+#view-trades .table-wrap.is-wide thead th:nth-child(-n+2),
+#view-trades .table-wrap.sticky-ghost thead th:nth-child(-n+2) {
+  position: sticky;
+  left: 0;
+  z-index: 7;                        /* above the scrolling header cells (5) and the pinned header row (5) */
+}
+#view-trades .table-wrap.is-wide thead th:nth-child(2),
+#view-trades .table-wrap.sticky-ghost thead th:nth-child(2) {
+  left: var(--frozen-date-w, 0px);
+  box-shadow: 1px 0 0 var(--border-strong), 8px 0 10px -8px rgba(0, 0, 0, .3);
+}
+/* keep the gold sort underline on the Symbol header when it is the sort column */
+#view-trades .table-wrap.is-wide thead th.sort-active:nth-child(2),
+#view-trades .table-wrap.sticky-ghost thead th.sort-active:nth-child(2) {
+  box-shadow: inset 0 -2px 0 var(--gold), 1px 0 0 var(--border-strong), 8px 0 10px -8px rgba(0, 0, 0, .3);
+}
+
+/* ======================================================================
+   Ledger: Date and Day stay on the left.
+   Date is column 1 in normal and Raw mode. Day is column 2 only in normal mode:
+   in Raw mode column 2 is Brokerage, so Day is not pinned there (table.raw-mode).
+   Day's `left` is the Date width, the same --frozen-date-w that js/layout.js measures.
+   ====================================================================== */
+#view-ledger { --pin-shadow: 1px 0 0 var(--border-strong), 8px 0 10px -8px rgba(0, 0, 0, .3); }
+
+/* Date (column 1): body + header + pinned header copy, both modes */
+#view-ledger .table-wrap.is-wide tbody td:nth-child(1):not([colspan]):not(.inline-detail-cell),
+#view-ledger .table-wrap.is-wide thead th:nth-child(1),
+#view-ledger .table-wrap.sticky-ghost thead th:nth-child(1) {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+}
+#view-ledger .table-wrap.is-wide thead th:nth-child(1),
+#view-ledger .table-wrap.sticky-ghost thead th:nth-child(1) { z-index: 7; }
+
+/* Day (column 2): normal table only */
+#view-ledger .table-wrap.is-wide table:not(.raw-mode) tbody td:nth-child(2):not([colspan]):not(.inline-detail-cell),
+#view-ledger .table-wrap.is-wide table:not(.raw-mode) thead th:nth-child(2),
+#view-ledger .table-wrap.sticky-ghost table:not(.raw-mode) thead th:nth-child(2) {
+  position: sticky;
+  left: var(--frozen-date-w, 0px);
+  z-index: 3;
+}
+#view-ledger .table-wrap.is-wide table:not(.raw-mode) thead th:nth-child(2),
+#view-ledger .table-wrap.sticky-ghost table:not(.raw-mode) thead th:nth-child(2) { z-index: 7; }
+
+/* Opaque body cells, with the same hover and open-row paint as the rest of the row */
+#view-ledger .table-wrap.is-wide tbody td:nth-child(1):not([colspan]):not(.inline-detail-cell),
+#view-ledger .table-wrap.is-wide table:not(.raw-mode) tbody td:nth-child(2):not([colspan]):not(.inline-detail-cell) {
+  background: var(--bg-card);
+}
+#view-ledger .table-wrap.is-wide tbody tr:hover td:nth-child(1):not([colspan]):not(.inline-detail-cell),
+#view-ledger .table-wrap.is-wide table:not(.raw-mode) tbody tr:hover td:nth-child(2):not([colspan]):not(.inline-detail-cell),
+#view-ledger .table-wrap.is-wide tbody tr.row-open td:nth-child(1):not([colspan]):not(.inline-detail-cell),
+#view-ledger .table-wrap.is-wide table:not(.raw-mode) tbody tr.row-open td:nth-child(2):not([colspan]):not(.inline-detail-cell) {
+  background: var(--bg-hover);
+}
+
+/* Divider after the last pinned column: Date in Raw mode, Day in normal mode */
+#view-ledger .table-wrap.is-wide table.raw-mode tbody td:nth-child(1):not([colspan]),
+#view-ledger .table-wrap.is-wide table.raw-mode thead th:nth-child(1),
+#view-ledger .table-wrap.sticky-ghost table.raw-mode thead th:nth-child(1),
+#view-ledger .table-wrap.is-wide table:not(.raw-mode) tbody td:nth-child(2):not([colspan]):not(.inline-detail-cell),
+#view-ledger .table-wrap.is-wide table:not(.raw-mode) thead th:nth-child(2),
+#view-ledger .table-wrap.sticky-ghost table:not(.raw-mode) thead th:nth-child(2) {
+  box-shadow: var(--pin-shadow);
+}
+#view-ledger .table-wrap.is-wide table.raw-mode tbody td:nth-child(1):not([colspan]) { box-shadow: var(--pin-shadow); }

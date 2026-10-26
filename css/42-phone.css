@@ -1,0 +1,68 @@
+/* 42-phone.css — phone view (≤ 600px). Loaded last.
+   Bottom tab bar (Home · Trades · + · Reports · More), the Trade log as cards, and a stacked dashboard header.
+   Desktop and tablet widths are not affected: the bar is hidden above 600px. */
+
+.phone-tabbar { display: none; }
+
+@media (max-width: 600px) {
+  /* the sidebar is opened from "More" in the tab bar, so its edge handles are not needed */
+  .sidebar-toggle-btn,
+  .sidebar-edge-tab,
+  .sidebar-edge-hover-zone,
+  #rawTradesBtn { display: none !important; }
+
+  /* ---- bottom tab bar ---- */
+  .phone-tabbar {
+    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 45;
+    justify-content: space-around; align-items: flex-end; gap: 4px;
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+    background: var(--bg-card); border-top: 1px solid var(--border);
+  }
+  .phone-tab {
+    flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    padding: 4px 0; background: none; border: 0; color: var(--ink-faint);
+    font: 500 11px var(--sans); cursor: pointer;
+  }
+  .phone-tab svg { width: 22px; height: 22px; }
+  .phone-tab.active { color: var(--gold); font-weight: 600; }
+  .phone-tab-add {
+    flex: 0 0 auto; flex-basis: 56px; width: 56px; height: 56px; margin-bottom: 4px; padding: 0;
+    justify-content: center; border-radius: 18px; background: var(--gold); color: #1c130e;
+    box-shadow: 0 10px 24px -8px rgba(218,119,86,.6);
+  }
+  .phone-tab-add svg { width: 24px; height: 24px; }
+
+  /* keep the last rows of every view clear of the tab bar */
+  .main { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
+  .page-head h1 { font-size: 24px; }
+
+  /* ---- Trade log as cards: each trade is one card, cells are labelled by their column ---- */
+  #view-trades table.trade-log-table thead { display: none; }
+  #view-trades table.trade-log-table,
+  #view-trades table.trade-log-table tbody { display: block; width: 100%; }
+  #view-trades table.trade-log-table tbody { display: flex; flex-direction: column; gap: 8px; }
+  #view-trades table.trade-log-table tr[data-id] {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; padding: 12px 14px;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+  }
+  #view-trades table.trade-log-table td {
+    display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 0; border: 0;
+    text-align: left; position: static !important;
+  }
+  #view-trades table.trade-log-table td::before {
+    content: attr(data-label); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint);
+  }
+  /* the symbol is the card title: full width, no label */
+  #view-trades table.trade-log-table td[data-label="Symbol"] {
+    grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: center;
+    font-size: 15px; font-weight: 600;
+  }
+  #view-trades table.trade-log-table td[data-label="Symbol"]::before { display: none; }
+
+  /* ---- dashboard header: title, then the controls stacked ---- */
+  #view-dashboard .db-head { flex-direction: column; align-items: stretch; }
+  #view-dashboard .db-title h1 { font-size: 26px; }
+  #view-dashboard .db-controls { align-items: stretch; }
+  #view-dashboard .db-filter-row { justify-content: space-between; }
+  #view-dashboard .db-filter-bar { flex-wrap: wrap; justify-content: flex-start; }
+}

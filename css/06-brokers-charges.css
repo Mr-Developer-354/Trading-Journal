@@ -1,0 +1,9 @@
+/* 06-brokers-charges.css — Broker cards (Charges & Calculators styles live in 18-charges-redesign.css) */
+
+/* ---------- broker cards ---------- */
+.broker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+.broker-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
+.broker-card h4 { font-family: var(--serif); font-size: 18px; margin: 0 0 10px; }
+.broker-card .row { display: flex; justify-content: space-between; font-size: 12.5px; padding: 5px 0; border-bottom: 1px dashed var(--border); color: var(--ink-dim); }
+.broker-card .row:last-child { border-bottom: none; }
+.broker-card .row b { color: var(--ink); font-family: var(--mono); font-variant-numeric: tabular-nums; }

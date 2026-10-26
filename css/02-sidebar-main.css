@@ -1,0 +1,182 @@
+/* 02-sidebar-main.css — Sidebar, menu button, main content area */
+
+/* ---------- sidebar ---------- */
+.sidebar {
+  width: 240px;
+  flex: 0 0 240px;
+  border-right: 1px solid var(--border);
+  padding: 16px 10px 16px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.brand-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-left: 40px; }
+/* single fixed menu button, on every screen size: toggles the sidebar on click (open/close on
+   mobile, pin/unpin on desktop), and peeks it open on hover while collapsed on desktop.
+   Left edge lines up with the sidebar's own left padding, so it sits in the same column as
+   the brand mark and every nav icon below it. */
+.sidebar-toggle-btn {
+  position: fixed; top: 14px; left: 10px; z-index: 46;
+  width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--ink); cursor: pointer; font-size: 15px;
+  display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+  transition: background .15s, color .15s;
+}
+.sidebar-toggle-btn:hover { background: var(--bg-hover); }
+/* small-screen-only handle: replaces the ☰ button with a slim ">" tab flush against the
+   left edge of the screen. Sits after the sidebar in the DOM so the sibling selector below
+   can hide it while the sidebar is open, then it reappears once the sidebar closes. */
+.sidebar-edge-tab { display: none; }
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 6px;
+}
+.brand .mark {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+.brand .mark .dot { color: var(--gold); }
+.brand .sub {
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: 0.03em;
+}
+.nav { display: flex; flex-direction: column; gap: 2px; }
+.nav button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--ink-dim);
+  padding: 9px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background .15s, color .15s;
+}
+.nav button svg { width: 16px; height: 16px; opacity: 0.85; flex-shrink: 0; }
+.nav button:hover { background: var(--bg-hover); color: var(--ink); }
+.nav button.active { background: var(--gold-soft); color: var(--ink); font-weight: 500; }
+.nav button.active svg { opacity: 1; }
+
+.sidebar-add-btn {
+  width: 100%;
+  min-height: 28px;
+  height: 28px;
+  padding: 0 10px;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 7px;
+}
+
+.sidebar-foot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 6px;
+}
+.sidebar-bottom-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.settings-nav-btn {
+  flex: 1;
+  min-width: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: none;
+  color: var(--ink-dim);
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.settings-nav-btn svg { width: 16px; height: 16px; opacity: 0.85; flex-shrink: 0; }
+.settings-nav-btn:hover { background: var(--bg-hover); color: var(--ink); }
+.settings-nav-btn.active { background: var(--gold-soft); color: var(--ink); font-weight: 500; border-color: var(--border); }
+.settings-nav-btn.active svg { opacity: 1; }
+.theme-icon {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--ink-dim);
+  cursor: pointer;
+  background: var(--bg-raised);
+  padding: 2px 9px;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.theme-icon:hover { background: var(--bg-hover); color: var(--ink); }
+.theme-icon svg { width: 16px; height: 16px; }
+.datastat { font-size: 11px; color: var(--ink-faint); line-height: 1.5; }
+
+/* ---------- main ---------- */
+.main { padding: 13px 14px 50px; max-width: 1400px; width: 100%; min-width: 0; flex: 1 1 auto; }
+.view { display: none; }
+.view.active { display: block; animation: rise .35s ease; }
+@keyframes rise { from { opacity: 0; transform: translateY(6px);} to {opacity:1; transform:none;} }
+@media (prefers-reduced-motion: reduce) { .view.active { animation: none; } }
+
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-head h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 30px;
+  margin: 0 0 4px;
+}
+.page-head p { margin: 0; color: var(--ink-dim); font-size: 14px; max-width: 60ch; }
+
+.btn {
+  border: 1px solid var(--border-strong);
+  background: var(--bg-raised);
+  color: var(--ink);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: border-color .15s, background .15s, transform .1s;
+}
+.btn:hover { border-color: var(--gold); }
+.btn:active { transform: scale(0.98); }
+.btn.primary { background: var(--gold); color: #201a06; border-color: var(--gold); font-weight: 600; }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; }
+.btn.danger { border-color: var(--red); color: var(--red); background: transparent; }
+.btn.small { padding: 6px 11px; font-size: 12.5px; }
+.btn:disabled { opacity: 0.4; cursor: default; pointer-events: none; }

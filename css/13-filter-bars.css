@@ -1,0 +1,83 @@
+/* 13-filter-bars.css — Compact filter bars */
+
+/* ---------- compact filter bar ---------- */
+.filters {
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.filters input,
+.filters select,
+.filters .btn,
+.filters .btn.small {
+  box-sizing: border-box;
+  height: 32px;
+  min-height: 32px;
+}
+.filters input,
+.filters select {
+  padding: 6px 10px;
+}
+.filters .btn,
+.filters .btn.small {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+/* ---------- slim filter bar ---------- */
+.filters {
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.filters input,
+.filters select,
+.filters .btn,
+.filters .btn.small {
+  height: 28px;
+  min-height: 28px;
+}
+.filters input,
+.filters select {
+  padding: 4px 8px;
+}
+.filters .btn,
+.filters .btn.small {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+/* ---------- extra-slim filter bar ---------- */
+.filters input[type="text"] { min-width: 150px; width: 150px; }
+.filters select { width: 115px; }
+.filters input[type="date"] { width: 115px; }
+.filters { gap: 5px; margin-bottom: 6px; }
+.filters input,
+.filters select,
+.filters .btn,
+.filters .btn.small { height: 26px; min-height: 26px; }
+.filters input,
+.filters select { padding: 3px 7px; font-size: 12px; }
+.filters .btn,
+.filters .btn.small { padding: 2px 9px; font-size: 12px; }
+.filters .csv-icon-btn { width: 28px; min-width: 28px; height: 26px; }
+.filters .csv-icon-btn img { width: 18px; height: 18px; }
+
+/* Filter-row add actions: full text, sized to content. */
+.filter-add-btn {
+  width: max-content;
+  min-width: 0;
+  height: 26px;
+  min-height: 26px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+  border-radius: 7px;
+  color: var(--ink);
+}
+.filter-add-btn:hover {
+  color: var(--gold);
+}

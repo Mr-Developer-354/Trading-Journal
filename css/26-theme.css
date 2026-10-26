@@ -1,0 +1,99 @@
+/* 26-theme.css — Unified professional theme. Loaded LAST: one palette, one type system,
+   one radius/shadow scale. Edit the tokens below to re-skin the whole app. */
+
+:root {
+  /* Dark: cool slate neutrals, single blue accent, calibrated profit/loss colours */
+  --bg:#0b0f14; --bg-card:#111720; --bg-raised:#161d28; --bg-hover:#1b2430;
+  --border:rgba(148,163,184,.13); --border-strong:rgba(148,163,184,.24);
+  --ink:#e8edf4; --ink-dim:#a6b1c2; --ink-faint:#718096;
+  --gold:#5b8def; --gold-soft:rgba(91,141,239,.16);   /* "gold" = accent (name kept for compatibility) */
+  --green:#2fb170; --green-soft:rgba(47,177,112,.14);
+  --red:#e5534b;   --red-soft:rgba(229,83,75,.14);
+  --on-accent:#fff;
+  --serif:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono','IBM Plex Mono',SFMono-Regular,Consolas,monospace;
+  --r-sm:6px; --r-md:8px; --r-lg:12px;
+  --radius:var(--r-lg);
+  --shadow-1:0 1px 2px rgba(0,0,0,.35);
+  --shadow-2:0 8px 24px -12px rgba(0,0,0,.55);
+}
+:root[data-theme="light"] {
+  --bg:#f4f6f9; --bg-card:#ffffff; --bg-raised:#ffffff; --bg-hover:#edf1f6;
+  --border:rgba(15,23,34,.09); --border-strong:rgba(15,23,34,.18);
+  --ink:#0f1722; --ink-dim:#475467; --ink-faint:#8190a5;
+  --gold:#2f64d6; --gold-soft:rgba(47,100,214,.11);
+  --green:#168a55; --green-soft:rgba(22,138,85,.10);
+  --red:#c8392f;   --red-soft:rgba(200,57,47,.10);
+  --shadow-1:0 1px 2px rgba(16,24,40,.06);
+  --shadow-2:0 8px 24px -14px rgba(16,24,40,.18);
+}
+
+/* ---------- typography ---------- */
+body { font-family:var(--sans); font-size:14px; line-height:1.5; font-feature-settings:'cv11','ss01'; }
+h1,h2,h3,h4,.brand .mark,.hero-figure { font-family:var(--sans); font-weight:600; letter-spacing:-.015em; }
+.brand .mark { font-size:20px; }
+.mono,.val,.kpi-val,.pnl,.value,td.num,.cal-trade-pnl,.detail-pnl { font-family:var(--mono); font-variant-numeric:tabular-nums; }
+.eyebrow,.cal-kpi .label,.cal-kpi .meta,.cal-legend,.settings-kicker { font-size:10.5px; letter-spacing:.06em; }
+
+/* ---------- surfaces: one card look everywhere ---------- */
+#view-dashboard { --card-r:var(--r-lg); --glow:var(--shadow-2); }
+:is(body,#view-dashboard) :is(.panel,.kpi,.stat-card,.goal-card,.streak-card,.equity-card,.broker-card,
+  .settings-card,.settings-broker-card,.broker-setting-card,.cal-kpi,.calendar-hero,
+  .ledger-summary-card,.rate-editor) {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--r-lg); box-shadow:var(--shadow-1);
+}
+.kpi:hover,.stat-card:hover { border-color:var(--border-strong); transform:none; }
+
+/* ---------- sidebar & navigation ---------- */
+.sidebar { background:var(--bg-card); border-right:1px solid var(--border); }
+.nav button { border-radius:var(--r-md); color:var(--ink-dim); font-weight:500; transition:background .15s,color .15s; }
+.nav button:hover { background:var(--bg-hover); color:var(--ink); }
+.nav button.active { background:var(--gold-soft); color:var(--gold); box-shadow:none; }
+.sidebar-toggle-btn { border-radius:var(--r-md); background:var(--bg-card); }
+
+/* ---------- buttons ---------- */
+.btn { border-radius:var(--r-md); font-weight:500; background:var(--bg-raised); border:1px solid var(--border-strong); color:var(--ink); transition:background .15s,border-color .15s,box-shadow .15s; }
+.btn:hover { border-color:var(--gold); background:var(--bg-hover); }
+.btn.primary { background:var(--gold); border-color:var(--gold); color:var(--on-accent); font-weight:600; }
+.btn.primary:hover { filter:brightness(1.1); background:var(--gold); }
+.btn.ghost { background:transparent; }
+.btn.danger { color:var(--red); border-color:var(--red); background:transparent; }
+.btn.danger:hover { background:var(--red-soft); }
+.btn:focus-visible,.nav button:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+
+/* ---------- form controls ---------- */
+input,select,textarea { font-family:var(--sans); }
+:is(.field,.filters,.trade-form .field,.ledger-form .field,#view-charges .field) :is(input,select,textarea),
+.filters :is(input,select) {
+  background:var(--bg); border:1px solid var(--border-strong); border-radius:var(--r-md); color:var(--ink);
+}
+:is(input,select,textarea):focus { outline:none; border-color:var(--gold)!important; box-shadow:0 0 0 3px var(--gold-soft)!important; }
+input[type=checkbox],input[type=radio] { accent-color:var(--gold); }
+
+/* ---------- tables ---------- */
+.trade-log-table th,.ledger-table th,.imp-table th,.table-wrap th {
+  font-size:11px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); background:var(--bg-card);
+}
+.trade-log-table td,.ledger-table td { border-color:var(--border); }
+.trade-log-table tbody tr:hover td,.ledger-table tbody tr:hover td { background:var(--bg-hover); }
+
+/* ---------- drawers, dialogs, toasts ---------- */
+.overlay,.sidebar-backdrop,.rate-editor-backdrop { background:rgba(5,8,12,.6); backdrop-filter:blur(2px); }
+.toast { border-radius:var(--r-md); background:var(--bg-raised); color:var(--ink); border:1px solid var(--border-strong); box-shadow:var(--shadow-2); }
+
+/* ---------- chips, tags, segmented controls ---------- */
+.chip,.tag,.pill-count,.streak-chip,.broker-status { border-radius:999px; }
+.seg,.cal-view-switch,.rate-editor-tabs { border-radius:var(--r-md); }
+.seg button,.cal-view-btn,.rate-editor-tab,.settings-nav-btn { border-radius:var(--r-sm); }
+.seg button.active,.cal-view-btn.active,.rate-editor-tab.active { background:var(--gold-soft); color:var(--gold); }
+
+/* ---------- semantic colours ---------- */
+.pos,.val.pos { color:var(--green); } .neg,.val.neg { color:var(--red); }
+.bar-fill,.goal-bar-fill { background:var(--gold); }
+.ring-fg { stroke:var(--gold); }
+
+/* ---------- Excel icons in the Trade Log / Ledger filter bars (icon-only; text lives in the tooltip) ---------- */
+:is(#view-trades, #view-ledger) .filter-bar :is(.import-xlsx-btn,.import-template-btn) { width:30px; min-width:30px; height:28px; min-height:28px; padding:0; gap:0; justify-content:center; }
+:is(#view-trades, #view-ledger) .filter-bar :is(.import-xlsx-btn,.import-template-btn) .xl-icon { width:22px; height:22px; flex:0 0 auto; display:block; }
+:is(#view-trades, #view-ledger) .filter-bar :is(.import-xlsx-btn,.import-template-btn):hover { border-color:#21a366; background:rgba(33,163,102,.10); }

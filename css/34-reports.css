@@ -1,0 +1,344 @@
+/* ======================================================================
+   34-reports.css — Reports view (js/reports.js). Uses the theme tokens
+   from 26-theme.css, so it follows light / dark and every palette.
+   ====================================================================== */
+.rep-page-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 0 16px; border-bottom: 0; padding-bottom: 0; }   /* the bar's border is the one separator line; no gap under the title */
+.rep-page-head > div:first-child h1 { margin-bottom: 0; }
+.rep-page-head .rep-bar { margin-top: 6px; }
+.rep-page-head .rep-bar .rep-tabs { margin: 0; }
+/* the tab row and the broker filter share one line: tabs on the left, filter on the right */
+.rep-bar { flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--border); }   /* the one full-width separator line */
+.rep-broker-pick { display: flex; align-items: center; flex: 0 0 auto; margin: 0 0 6px; }
+.rep-broker-pick select {
+  background: var(--bg-raised); color: var(--ink); border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm, 4px); padding: 3px 24px 3px 8px; font: inherit; font-size: 12px; line-height: 1.3;
+  min-width: 140px; cursor: pointer;
+}
+
+/* tabs */
+.rep-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin: 18px 0 12px; }   /* wraps instead of scrolling: no scrollbar */
+/* the period tabs sit inside the page header, as a full-width row under the title and broker picker */
+.rep-page-head .rep-bar .rep-tabs { flex: 1 1 auto; min-width: 0; margin: 6px 0 0; }
+.rep-tab {
+  background: none; border: 0; border-bottom: 2px solid transparent; color: var(--ink-dim);
+  padding: 10px 12px; font: inherit; font-size: 14px; cursor: pointer; white-space: nowrap; margin-bottom: -1px;
+}
+.rep-tab:hover { color: var(--ink); }
+.rep-tab.active { color: var(--ink); border-bottom-color: var(--gold); font-weight: 600; }
+
+
+/* status: KPI cards and panels */
+.rep-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 14px; }
+.rep-kpi {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-lg);
+  padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; min-width: 0;
+}
+.rep-kpi > span { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); }
+.rep-kpi > strong { font-family: var(--mono); font-size: 21px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.rep-kpi > em { font-style: normal; font-size: 12px; color: var(--ink-faint); }
+.rep-kpi > strong.pos { color: var(--green); }
+.rep-kpi > strong.neg { color: var(--red); }
+
+.rep-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.rep-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px 16px; min-width: 0; }
+.rep-panel h3 { margin: 0 0 6px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+.rep-kv { margin: 0; display: flex; flex-direction: column; }
+.rep-kv-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 7px 0; border-top: 1px dashed var(--border); }
+.rep-kv-row:first-child { border-top: 0; }
+.rep-kv-row dt { color: var(--ink-dim); font-size: 13px; min-width: 0; }
+.rep-kv-row dd { margin: 0; font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.rep-kv-row dd.pos { color: var(--green); }
+.rep-kv-row dd.neg { color: var(--red); }
+
+/* tables */
+.rep-scroll {
+  max-width: 100%; overflow-x: clip; overflow-y: visible; border: 1px solid var(--border); border-radius: var(--r-lg);
+  background: var(--bg-card); scrollbar-width: thin;
+}
+/* same density as the Trade Log (31-compact-tables.css also applies: these are the fallbacks) */
+/* separate borders (not collapse): with collapsed borders a sticky header leaves a gap under it while scrolling */
+/* the fixed first-two-columns overlay (reports.js: buildFrozenColumns) sits on top of the frame's left edge */
+.rep-framed { position: relative; }
+.rep-frozen { position: absolute; top: 0; left: 0; z-index: 7; }
+.rep-frozen-table { table-layout: fixed; width: auto; }
+.rep-table { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 0; font-size: 12px; }
+.rep-table th, .rep-table td { padding: 2px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; text-align: left; }
+.rep-table td { height: 24px; line-height: 1.1; box-sizing: border-box; }
+.rep-table th {
+  position: sticky; top: 0; z-index: 1; background: var(--bg-card); color: var(--ink-faint);
+  padding: 5px 8px; font-size: 10.5px; line-height: 1.1; border-bottom: 1px solid var(--border);
+}
+.rep-table th.num, .rep-table td.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.rep-table td.rep-first { font-weight: 600; }
+.rep-table tbody tr:hover td { background: var(--bg-hover); }
+.rep-table tbody tr:hover td.rep-first { background: var(--bg-hover); }
+.rep-table tr.rep-total td { background: var(--bg-raised); font-weight: 700; }
+.rep-table tr.rep-total td.rep-first { background: var(--bg-raised); }
+/* Stacking order, top to bottom: frozen header (6), header (5), frozen Total cells (4), Total row (3),
+   frozen body cells (2), everything else. Without this the scrolling rows paint over the pinned header and Total row. */
+.rep-table thead th { z-index: 5; }
+.rep-table thead th:nth-child(-n+2) { z-index: 6; }
+
+/* the Total row stays visible under the sticky header while the page scrolls (--rep-head-h is measured in reports.js) */
+.rep-table tr.rep-total td { position: sticky; top: var(--rep-head-h, 28px); z-index: 3; }
+.rep-table tbody tr.rep-total td:nth-child(-n+2) { z-index: 4; }
+
+/* the first two columns are the fixed overlay (reports.js buildFrozenColumns); the table moves under it, so
+   these cells keep an opaque background. */
+.rep-table tbody tr:not(.rep-total) td:nth-child(-n+2) { position: relative; z-index: 2; background: var(--bg-card); }
+.rep-table tbody tr:not(.rep-total):hover td:nth-child(-n+2) { background: var(--bg-hover); }
+.rep-table :is(th, td):nth-child(-n+2) { border-right: 1px solid var(--border); }
+.rep-table td.pos, .rep-table td.pos-soft, .rep-table th.pos-soft { color: var(--green); }
+.rep-table td.neg, .rep-table td.neg-soft, .rep-table th.neg-soft { color: var(--red); }
+.rep-table th.pos-soft { color: var(--green); }
+.rep-table th.neg-soft { color: var(--red); }
+.rep-table th.pos-soft, .rep-table th.neg-soft { font-family: var(--mono); font-size: 11px; }
+/* taller, more prominent header bar. Same selector weight as 31-compact-tables.css so it wins over that file. */
+:root:not([data-density="xslim"]) :is(#view-reports, #view-risk) .rep-table thead th {
+  padding: 9px 10px;
+  font-size: 11.5px;
+  line-height: 1.2;
+  font-weight: 600;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--gold) 12%, var(--bg-card));
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--gold) 45%, transparent);
+}
+:root:not([data-density="xslim"]) :is(#view-reports, #view-risk) .rep-table thead th.pos-soft { color: var(--green); }
+:root:not([data-density="xslim"]) :is(#view-reports, #view-risk) .rep-table thead th.neg-soft { color: var(--red); }
+.rep-na { color: var(--ink-faint); }
+
+.rep-note { color: var(--ink-faint); font-size: 12px; line-height: 1.55; margin: 10px 2px 0; max-width: 90ch; }
+.rep-sub { margin: 22px 2px 0; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+
+.rep-empty {
+  text-align: center; padding: 40px 16px; border: 1px dashed var(--border-strong);
+  border-radius: var(--r-lg); background: var(--bg-card); display: flex; flex-direction: column; gap: 6px;
+}
+.rep-empty strong { font-size: 15px; }
+.rep-empty span { color: var(--ink-faint); font-size: 13px; }
+
+/* privacy blur (Settings → Privacy): same behaviour as the other views, for every figure on this page */
+html[data-privacy] :is(#view-reports, #view-risk) :is(.rep-kv-row dd, .rep-kpi > strong, .rep-table tbody td) { filter: blur(6px); transition: filter .15s; }
+html[data-privacy] :is(#view-reports, #view-risk) :is(.rep-kv-row dd, .rep-kpi > strong, .rep-table tbody td):hover { filter: none; }
+
+@media (max-width: 600px) {
+  .rep-page-head { flex-direction: column; align-items: stretch; }
+  .rep-broker-pick select { min-width: 120px; }
+  .rep-kpis { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .rep-kpi > strong { font-size: 18px; }
+  .rep-panels { grid-template-columns: 1fr; }
+  .rep-table { font-size: 12px; }
+}
+
+/* footer: pinned to the bottom of the screen and carries the sideways scrollbar, like the Trade Log
+   footer (23-sticky.css). The table has no scrollbar of its own: it is moved by this track. */
+/* no scrollbar-width here: Chromium ignores ::-webkit-scrollbar rules once it is set, so the native sideways bar would show */
+/* same layout as the Trade Log (23-sticky.css): the page has no bottom padding, so the footer sits on the very bottom */
+.main:has(> :is(#view-reports, #view-risk).active) {
+  display: flex; flex-direction: column;
+  min-height: 100vh; min-height: 100dvh;
+  padding-bottom: 0;
+}
+.main:has(> :is(#view-reports, #view-risk).active) > :is(#view-reports, #view-risk).active { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
+:is(#view-reports, #view-risk) .rep-body { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+:is(#view-reports, #view-risk) .rep-framed { margin-bottom: 8px; }   /* the gap above the footer (as .table-wrap on the Trade Log) */
+.rep-foot {
+  position: sticky; bottom: 0; z-index: 40;
+  display: flex; align-items: center; gap: 12px;
+  margin: auto 0 0; padding: 4px 6px;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-lg);
+  box-shadow: 0 calc(var(--sticky-gap, 8px) * -1) 0 0 var(--bg);
+}
+.rep-track {
+  position: relative; flex: 1 1 auto; min-width: 0; height: 12px; border-radius: 999px;
+  background: var(--bg-hover); overflow: hidden; cursor: pointer; touch-action: none;
+}
+.rep-thumb {
+  position: absolute; top: 2px; bottom: 2px; left: 0; min-width: 40px;
+  border-radius: 999px; background: var(--ink-faint); cursor: grab;
+}
+.rep-thumb:hover, .rep-thumb.dragging { background: var(--ink-dim); }
+.rep-thumb.dragging { cursor: grabbing; }
+.rep-track.is-idle .rep-thumb { opacity: .45; cursor: default; }
+.rep-count { font-size: 12px; color: var(--ink-faint); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* risk management · status: redesigned layout (risk map, headline tiles, histogram + donut, tags + profile) */
+.rsk-page { display: flex; flex-direction: column; gap: 14px; }
+.rsk-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.rsk-tile {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-lg);
+  padding: 14px 16px 13px 18px; position: relative; overflow: hidden; min-width: 0;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.rsk-tile::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px; border-radius: 0 3px 3px 0; background: var(--ink-faint); }
+.rsk-tile.pos::before { background: var(--green); }
+.rsk-tile.neg::before { background: var(--red); }
+.rsk-tile > span { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); }
+.rsk-tile > strong { font-family: var(--mono); font-size: 24px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.rsk-tile.pos > strong { color: var(--green); }
+.rsk-tile.neg > strong { color: var(--red); }
+.rsk-tile > em { font-style: normal; font-size: 12px; color: var(--ink-faint); }
+.rsk-row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(230px, 1fr); gap: 14px; align-items: stretch; }
+.rsk-row-2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.rsk-row > .rep-panel, .rsk-row-2 > .rep-panel { margin: 0; }
+.rsk-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.rsk-head h3 { margin: 0; }
+.rsk-seg { display: inline-flex; border: 1px solid var(--border-strong); border-radius: var(--r-md); overflow: hidden; }
+.rsk-seg button { background: none; border: 0; color: var(--ink-dim); font: inherit; font-size: 11px; padding: 4px 10px; cursor: pointer; }
+.rsk-seg button + button { border-left: 1px solid var(--border-strong); }
+.rsk-seg button.active { background: var(--gold-soft); color: var(--gold); font-weight: 600; }
+.rsk-split { display: flex; justify-content: space-between; gap: 12px; font-size: 11px; letter-spacing: .03em; margin-bottom: 8px; }
+.rsk-split .neg { color: var(--red); }
+.rsk-split .pos { color: var(--green); }
+.rsk-scroll { overflow-x: auto; }
+.rsk-plot { min-width: 520px; height: 240px; display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 4px; border-bottom: 1px solid var(--border-strong); }
+.rsk-col { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; min-width: 0; }
+.rsk-n { font-family: var(--mono); font-size: 11px; color: var(--ink-dim); text-align: center; min-height: 14px; margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+.rsk-bar { border-radius: 3px 3px 0 0; transition: height .3s; }
+.rsk-bar.neg { background: var(--red); }
+.rsk-bar.pos { background: var(--green); }
+.rsk-axis { min-width: 520px; display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 4px; margin-top: 6px; }
+.rsk-lbl { font-size: 9.5px; line-height: 1.25; color: var(--ink-faint); text-align: center; overflow-wrap: anywhere; }
+.rsk-donut-panel { display: flex; flex-direction: column; }
+.rsk-donut { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+.rsk-donut svg { width: 150px; height: 150px; }
+.rsk-donut-val { font-family: var(--mono); font-size: 17px; font-weight: 600; fill: var(--ink); }
+.rsk-donut-cap { font-size: 9px; letter-spacing: .08em; text-transform: uppercase; fill: var(--ink-faint); }
+.rsk-legend { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--ink-dim); align-self: stretch; }
+.rsk-legend div { display: flex; align-items: center; gap: 8px; }
+.rsk-legend b { margin-left: auto; font-family: var(--mono); font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.rsk-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: 0 0 auto; }
+.rsk-dot.pos { background: var(--green); }
+.rsk-dot.neg { background: var(--red); }
+.rsk-tags { display: flex; flex-direction: column; gap: 10px; }
+.rsk-tag { display: grid; grid-template-columns: minmax(96px, auto) minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: 12.5px; }
+.rsk-tag-name { color: var(--ink-dim); white-space: nowrap; }
+.rsk-tag-track { height: 10px; background: var(--bg-raised); border-radius: 4px; overflow: hidden; }
+.rsk-tag-fill { height: 100%; border-radius: 4px; transition: width .3s; }
+.rsk-tag-fill.neg { background: var(--red); }
+.rsk-tag-fill.pos { background: var(--green); }
+.rsk-tag-fill.flat { background: var(--ink-faint); }
+.rsk-tag-n { font-family: var(--mono); font-size: 12px; color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; }
+.rsk-tag-n i { font-style: normal; color: var(--ink-faint); margin-left: 6px; }
+/* risk map: four quadrants built from the risk bands */
+.rsk-map-panel { margin: 0; }
+.rsk-map-sub { font-size: 12px; color: var(--ink-faint); margin: 0 0 12px; }
+.rsk-qmap { display: grid; grid-template-columns: 26px minmax(0, 1fr) minmax(0, 1fr); grid-auto-rows: minmax(0, auto); gap: 10px; }
+.rsk-qcol { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); text-align: center; }
+.rsk-qcol:nth-child(2) { color: var(--red); }
+.rsk-qcol:nth-child(3) { color: var(--green); }
+.rsk-qrow { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); text-align: center; align-self: stretch; }
+.rsk-q {
+  border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 6px; min-width: 0; background: var(--bg-card);
+}
+.rsk-q.loss-big { background: var(--red-soft); border-color: var(--red); }
+.rsk-q.loss-small { background: var(--red-soft); }
+.rsk-q.profit-big { background: var(--green-soft); border-color: var(--green); }
+.rsk-q.profit-small { background: var(--green-soft); }
+.rsk-q-name { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-dim); font-weight: 600; }
+.rsk-q-count { font-family: var(--mono); font-size: 28px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.rsk-q-meta { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+.rsk-q-note { font-style: normal; font-size: 11.5px; color: var(--ink-faint); line-height: 1.4; margin-top: auto; padding-top: 6px; }
+.rsk-map-now { font-size: 12.5px; color: var(--ink-dim); margin: 12px 0 0; }
+@media (max-width: 1000px) { .rsk-strip { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 760px) {
+  .rsk-row, .rsk-row-2, .rsk-map { grid-template-columns: 1fr; }
+  .rsk-tile > strong { font-size: 20px; }
+}
+
+/* reports · analysis tab: headline tiles and chart grid */
+.ana-field { display: flex; align-items: center; gap: 8px; }
+.ana-field span { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); }
+.ana-field select { background: var(--bg-raised); color: var(--ink); border: 1px solid var(--border-strong); border-radius: var(--r-sm, 4px); padding: 4px 22px 4px 8px; font: inherit; font-size: 12px; cursor: pointer; }
+.ana-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 14px; }
+.ana-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+.ana-grid > .rep-panel { margin: 0; min-width: 0; }
+.ana-wide { grid-column: 1 / -1; }
+.ana-grid svg { display: block; width: 100%; height: auto; overflow: visible; }
+.ana-grid svg text { font-family: var(--mono); font-size: 10px; fill: var(--ink-faint); }
+.ana-pos { fill: var(--green); }
+.ana-neg { fill: var(--red); }
+.ana-foot { font-size: 11.5px; color: var(--ink-faint); margin: 8px 0 0; }
+.ana-more { font-size: 11.5px; color: var(--ink-faint); margin: 6px 0 0; }
+@media (max-width: 900px) { .ana-grid { grid-template-columns: 1fr; } .ana-wide { grid-column: auto; } }
+
+.ana-ins { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 22px; }
+.ana-ins li { position: relative; padding-left: 14px; font-size: 13px; line-height: 1.5; color: var(--ink-dim); }
+.ana-ins li::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+@media (max-width: 900px) { .ana-ins { grid-template-columns: 1fr; } }
+
+/* risk map tab: hero, sections, charts, rules, planning */
+.rm-page { display: flex; flex-direction: column; gap: 14px; }
+.rm-hero { position: relative; overflow: hidden; border: 1px solid var(--gold); border-radius: var(--r-lg); padding: 22px 24px 20px; background: linear-gradient(135deg, var(--gold-soft), var(--bg-card) 70%); }
+.rm-badge { display: inline-block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold); border-radius: 999px; padding: 3px 10px; margin-bottom: 10px; }
+.rm-hero h2 { margin: 0 0 6px; font-family: var(--serif); font-size: 30px; font-weight: 600; }
+.rm-lede { margin: 0 0 16px; font-size: 14px; line-height: 1.6; color: var(--ink-dim); max-width: 90ch; }
+.rm-hero-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.rm-hero-tiles > div { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-md); padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.rm-hero-tiles span { font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-faint); }
+.rm-hero-tiles strong { font-family: var(--mono); font-size: 22px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.rm-hero-tiles strong.pos { color: var(--green); }
+.rm-hero-tiles strong.neg { color: var(--red); }
+.rm-hero-tiles em { font-style: normal; font-size: 12px; color: var(--ink-faint); }
+.rm-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+.rm-card { margin: 0; min-width: 0; }
+.rm-card p { font-size: 13px; line-height: 1.6; color: var(--ink-dim); margin: 0 0 8px; }
+.rm-wide { grid-column: 1 / -1; }
+.rm-list { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.7; color: var(--ink-dim); }
+.rm-list li + li { margin-top: 4px; }
+.rm-list b { color: var(--ink); }
+.rm-plan { margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.7; color: var(--ink-dim); }
+.rm-plan li + li { margin-top: 6px; }
+.rm-rules { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.rm-rules li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 10px; align-items: start; font-size: 13px; line-height: 1.5; color: var(--ink-dim); padding: 8px 10px; border-radius: var(--r-md); border: 1px solid var(--border); }
+.rm-rules li span { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-align: center; padding: 3px 0; border-radius: 6px; }
+.rm-rules li.ok span { background: var(--green-soft); color: var(--green); }
+.rm-rules li.warn { border-color: var(--red); background: var(--red-soft); }
+.rm-rules li.warn span { background: var(--red); color: #fff; }
+.rm-important { border-color: var(--gold); }
+/* descriptions: the four quadrants */
+.rm-qmap { display: grid; grid-template-columns: 26px minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.rm-qcol { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; text-align: center; color: var(--ink-faint); }
+.rm-qcol:nth-child(2) { color: var(--red); }
+.rm-qcol:nth-child(3) { color: var(--green); }
+.rm-qrow { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); text-align: center; }
+.rm-q { border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0; background: var(--bg-card); }
+.rm-q.loss-big { background: var(--red-soft); border-color: var(--red); }
+.rm-q.loss-small { background: var(--red-soft); }
+.rm-q.profit-big { background: var(--green-soft); border-color: var(--green); }
+.rm-q.profit-small { background: var(--green-soft); }
+.rm-q-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.rm-q-name { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-dim); font-weight: 600; }
+.rm-q-share { font-family: var(--mono); font-size: 12px; color: var(--ink-dim); }
+.rm-q-count { font-family: var(--mono); font-size: 30px; font-weight: 600; color: var(--ink); }
+.rm-q-meta { font-size: 12px; color: var(--ink-dim); font-family: var(--mono); }
+.rm-q-what { font-size: 12.5px; line-height: 1.55; color: var(--ink-dim); margin: 4px 0 0; }
+.rm-q-rule { font-size: 12.5px; line-height: 1.55; color: var(--ink); margin: 0; }
+.rm-q-rule b { color: var(--gold); font-weight: 600; margin-right: 4px; }
+/* charts */
+.rm-charts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.rm-donut svg, .rm-gauge svg { display: block; width: 100%; max-width: 200px; height: auto; margin: 0 auto; }
+.rm-gauge svg { max-width: 240px; }
+.rm-donut-val { font-family: var(--mono); font-size: 18px; font-weight: 600; fill: var(--ink); }
+.rm-donut-cap { font-size: 9px; letter-spacing: .06em; text-transform: uppercase; fill: var(--ink-faint); }
+.rm-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; }
+.rm-key { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-dim); }
+.rm-key i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.rm-key b { font-family: var(--mono); color: var(--ink); }
+.rm-foot { font-size: 11.5px; color: var(--ink-faint); margin: 8px 0 0; }
+.rm-charts .rep-panel svg text { font-family: var(--mono); font-size: 10px; fill: var(--ink-faint); }
+.rm-charts .rep-panel svg { display: block; width: 100%; height: auto; }
+@media (max-width: 1000px) { .rm-charts { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 760px) {
+  .rm-two, .rm-charts { grid-template-columns: 1fr; }
+  .rm-hero-tiles { grid-template-columns: 1fr 1fr; }
+  .rm-qmap { gap: 8px; }
+  .rm-q-count { font-size: 24px; }
+}
+
+/* small bottom space for risk map, status and analysis views */
+.rm-page, .rsk-page, .ana-grid { padding-bottom: 6px; }
+
+/* Risk management table: every column from the first to Total is centred (overrides the .num right alignment) */
+.rep-table.rep-risk th, .rep-table.rep-risk td, .rep-table.rep-risk th.num, .rep-table.rep-risk td.num { text-align: center; }

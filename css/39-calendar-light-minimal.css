@@ -1,0 +1,123 @@
+/* 39-calendar-light-minimal.css
+   Light theme only.
+   - Non-trading days show just the date, with no card.
+   - Trading-day cards use the same colours as the dark theme (fills, borders,
+     text, P/L bar and hover border), so both themes read the same way.
+   Dark theme is untouched. */
+
+/* ---------- no-trade days: date only ---------- */
+:root[data-theme="light"] #calMonthView .cal-cell.flat,
+:root[data-theme="light"] #calMonthView .cal-cell.flat:focus,
+:root[data-theme="light"] .cal-year .cal-mini-day.flat {
+  background:#f1f3f6 !important;
+  border-color:#e3e6ea !important;
+  filter:none !important;
+  color:#8a929b !important;
+}
+:root[data-theme="light"] #calMonthView .cal-cell.flat:hover,
+:root[data-theme="light"] .cal-year .cal-mini-day.flat:hover {
+  background:#eaedf1 !important;
+  border-color:#d8dde3 !important;
+  filter:none !important;
+  color:#8a929b !important;
+}
+:root[data-theme="light"] #calMonthView .cal-cell.flat .d,
+:root[data-theme="light"] #calMonthView .cal-cell.flat .cal-cell-foot {
+  color:#8a929b !important;
+}
+
+/* ---------- trading days: card colours copied from dark theme ---------- */
+/* Profit: fill / border / text */
+:root[data-theme="light"] #calMonthView .cal-cell.g1,
+:root[data-theme="light"] .cal-year .cal-mini-day.g1 { background:#A5D6A7 !important; border-color:#91c996 !important; color:#173b20 !important; }
+:root[data-theme="light"] #calMonthView .cal-cell.g2,
+:root[data-theme="light"] .cal-year .cal-mini-day.g2 { background:#66BB6A !important; border-color:#4ea955 !important; color:#0e3015 !important; }
+:root[data-theme="light"] #calMonthView .cal-cell.g3,
+:root[data-theme="light"] .cal-year .cal-mini-day.g3 { background:#48A111 !important; border-color:#3a8d0e !important; color:#fff !important; }
+:root[data-theme="light"] #calMonthView .cal-cell.g4,
+:root[data-theme="light"] .cal-year .cal-mini-day.g4 { background:#1B5E20 !important; border-color:#154b19 !important; color:#fff !important; }
+
+/* Loss: fill / border / text */
+:root[data-theme="light"] #calMonthView .cal-cell.l1,
+:root[data-theme="light"] .cal-year .cal-mini-day.l1 { background:#ffb6b8 !important; border-color:#f19a9e !important; color:#65151a !important; }
+:root[data-theme="light"] #calMonthView .cal-cell.l2,
+:root[data-theme="light"] .cal-year .cal-mini-day.l2 { background:#ff6268 !important; border-color:#ed4c52 !important; color:#5a080c !important; }
+:root[data-theme="light"] #calMonthView .cal-cell.l3,
+:root[data-theme="light"] .cal-year .cal-mini-day.l3 { background:#F62477 !important; border-color:#D61B62 !important; color:#fff !important; }
+:root[data-theme="light"] #calMonthView .cal-cell.l4,
+:root[data-theme="light"] .cal-year .cal-mini-day.l4 { background:#a30f15 !important; border-color:#870b10 !important; color:#fff !important; }
+
+/* Hover: same border and saturation as dark theme */
+:root[data-theme="light"] #calMonthView .cal-cell.g1:hover,
+:root[data-theme="light"] #calMonthView .cal-cell.g2:hover,
+:root[data-theme="light"] #calMonthView .cal-cell.g3:hover,
+:root[data-theme="light"] #calMonthView .cal-cell.g4:hover,
+:root[data-theme="light"] #calMonthView .cal-cell.l1:hover,
+:root[data-theme="light"] #calMonthView .cal-cell.l2:hover,
+:root[data-theme="light"] #calMonthView .cal-cell.l3:hover,
+:root[data-theme="light"] #calMonthView .cal-cell.l4:hover {
+  filter:saturate(1.05) !important;
+  border-color:#273038 !important;
+}
+
+/* Day number, P/L and footer inherit the card text colour, as in dark theme */
+:root[data-theme="light"] #calMonthView .cal-cell.g1 .d,
+:root[data-theme="light"] #calMonthView .cal-cell.g1 .p,
+:root[data-theme="light"] #calMonthView .cal-cell.g1 .cal-cell-foot,
+:root[data-theme="light"] #calMonthView .cal-cell.g2 .d,
+:root[data-theme="light"] #calMonthView .cal-cell.g2 .p,
+:root[data-theme="light"] #calMonthView .cal-cell.g2 .cal-cell-foot,
+:root[data-theme="light"] #calMonthView .cal-cell.g3 .d,
+:root[data-theme="light"] #calMonthView .cal-cell.g3 .p,
+:root[data-theme="light"] #calMonthView .cal-cell.g3 .cal-cell-foot,
+:root[data-theme="light"] #calMonthView .cal-cell.g4 .d,
+:root[data-theme="light"] #calMonthView .cal-cell.g4 .p,
+:root[data-theme="light"] #calMonthView .cal-cell.g4 .cal-cell-foot,
+:root[data-theme="light"] #calMonthView .cal-cell.l3 .d,
+:root[data-theme="light"] #calMonthView .cal-cell.l3 .p,
+:root[data-theme="light"] #calMonthView .cal-cell.l3 .cal-cell-foot,
+:root[data-theme="light"] #calMonthView .cal-cell.l4 .d,
+:root[data-theme="light"] #calMonthView .cal-cell.l4 .p,
+:root[data-theme="light"] #calMonthView .cal-cell.l4 .cal-cell-foot {
+  color:inherit !important;
+}
+:root[data-theme="light"] #calMonthView .cal-cell.l1 .d,
+:root[data-theme="light"] #calMonthView .cal-cell.l1 .p,
+:root[data-theme="light"] #calMonthView .cal-cell.l1 .cal-cell-foot { color:#65151a !important; }
+:root[data-theme="light"] #calMonthView .cal-cell.l2 .d,
+:root[data-theme="light"] #calMonthView .cal-cell.l2 .p,
+:root[data-theme="light"] #calMonthView .cal-cell.l2 .cal-cell-foot { color:#5a080c !important; }
+
+/* P/L bar: white track and fill on the card, as in dark theme */
+:root[data-theme="light"] #calMonthView .cal-cell.g1 .cal-bar,
+:root[data-theme="light"] #calMonthView .cal-cell.g2 .cal-bar,
+:root[data-theme="light"] #calMonthView .cal-cell.g3 .cal-bar,
+:root[data-theme="light"] #calMonthView .cal-cell.g4 .cal-bar { background:rgba(255,255,255,.34) !important; }
+:root[data-theme="light"] #calMonthView .cal-cell.l1 .cal-bar,
+:root[data-theme="light"] #calMonthView .cal-cell.l2 .cal-bar,
+:root[data-theme="light"] #calMonthView .cal-cell.l3 .cal-bar,
+:root[data-theme="light"] #calMonthView .cal-cell.l4 .cal-bar { background:rgba(255,255,255,.35) !important; }
+:root[data-theme="light"] #calMonthView .cal-cell.g1 .cal-bar > span,
+:root[data-theme="light"] #calMonthView .cal-cell.g2 .cal-bar > span,
+:root[data-theme="light"] #calMonthView .cal-cell.g3 .cal-bar > span,
+:root[data-theme="light"] #calMonthView .cal-cell.g4 .cal-bar > span { background:rgba(255,255,255,.94) !important; }
+:root[data-theme="light"] #calMonthView .cal-cell.l1 .cal-bar > span,
+:root[data-theme="light"] #calMonthView .cal-cell.l2 .cal-bar > span,
+:root[data-theme="light"] #calMonthView .cal-cell.l3 .cal-bar > span,
+:root[data-theme="light"] #calMonthView .cal-cell.l4 .cal-bar > span { background:rgba(255,255,255,.95) !important; }
+
+/* ---------- legend matches the cards ---------- */
+:root[data-theme="light"] .cal-legend-swatch.flat { background:transparent !important; border:1px solid #cfd4da !important; }
+:root[data-theme="light"] .cal-legend-swatch.g1 { background:#A5D6A7 !important; border-color:#91c996 !important; }
+:root[data-theme="light"] .cal-legend-swatch.g2 { background:#66BB6A !important; border-color:#4ea955 !important; }
+:root[data-theme="light"] .cal-legend-swatch.g3 { background:#48A111 !important; border-color:#3a8d0e !important; }
+:root[data-theme="light"] .cal-legend-swatch.g4 { background:#1B5E20 !important; border-color:#154b19 !important; }
+:root[data-theme="light"] .cal-legend-swatch.l1 { background:#ffb6b8 !important; border-color:#f19a9e !important; }
+:root[data-theme="light"] .cal-legend-swatch.l2 { background:#ff6268 !important; border-color:#ed4c52 !important; }
+:root[data-theme="light"] .cal-legend-swatch.l3 { background:#F62477 !important; border-color:#D61B62 !important; }
+:root[data-theme="light"] .cal-legend-swatch.l4 { background:#a30f15 !important; border-color:#870b10 !important; }
+
+/* ---------- month cells: trade and note counts with icons (inside the existing footer) ---------- */
+.cal-cell-foot .cal-metric { display:inline-flex; align-items:center; gap:3px; }
+.cal-cell-foot .cal-metric svg { width:10px; height:10px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+.cal-cell-foot .cal-metric.none { opacity:.45; }

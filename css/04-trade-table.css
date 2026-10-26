@@ -1,0 +1,116 @@
+/* 04-trade-table.css — Filters and the Trade Log table */
+
+/* ---------- filters / table ---------- */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+.filters input, .filters select {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-strong);
+  color: var(--ink);
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: var(--sans);
+}
+.filters input[type="text"] { min-width: 180px; }
+.filters .spacer { flex: 1; }
+.pill-count { font-size: 12.5px; color: var(--ink-faint); }
+
+.table-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: auto;
+  background: var(--bg-card);
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 920px; }
+thead th {
+  text-align: left;
+  padding: 11px 14px;
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  white-space: nowrap;
+  position: sticky; top: 0; background: var(--bg-card);
+  user-select: none;
+}
+thead th:hover { color: var(--ink); }
+#view-trades .table-wrap thead th.sort-active {
+  color: var(--ink);
+  background: var(--bg-hover);
+  box-shadow: inset 0 -2px 0 var(--gold);
+}
+#view-trades .table-wrap thead th.sort-active::after {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 9px;
+  color: var(--gold);
+  font-family: var(--sans);
+  font-weight: 700;
+  line-height: 1;
+}
+#view-trades .table-wrap thead th.sort-active[aria-sort="ascending"]::after { content: '▲'; }
+#view-trades .table-wrap thead th.sort-active[aria-sort="descending"]::after { content: '▼'; }
+tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); white-space: nowrap; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+tbody td.sym { font-family: var(--sans); font-weight: 600; }
+
+.qty-value { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.qty-value.long { color: var(--green); }
+.qty-value.short { color: var(--red); }
+
+/* Column alignment now lives in 24-table-look.css (class-based: .num / .ctr), not by column position. */
+tbody tr:hover { background: var(--bg-hover); cursor: pointer; }
+.tag {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  border: 1px solid var(--border-strong);
+  color: var(--ink-dim);
+}
+.tag.long { color: var(--green); border-color: var(--green); background: var(--green-soft); }
+.tag.short { color: var(--red); border-color: var(--red); background: var(--red-soft); }
+/* Risk-tag identification in the Trade Log. */
+.tag.risk-tag { font-weight: 600; }
+.tag.risk-small-loss { color: var(--gold); border-color: var(--gold); background: var(--gold-soft); }
+.tag.risk-big-loss { color: var(--red); border-color: var(--red); background: var(--red-soft); }
+.tag.risk-very-big-loss { color: #ff8b8b; border-color: #ff8b8b; background: rgba(255,139,139,0.16); }
+.tag.risk-small-profit { color: var(--green); border-color: var(--green); background: var(--green-soft); }
+.tag.risk-big-profit { color: #8fc99a; border-color: #8fc99a; background: rgba(143,201,154,0.16); }
+.tag.risk-big-profit-1 { color: #c78bff; border-color: #c78bff; background: rgba(199,139,255,0.16); }
+.tag.risk-big-profit-2 { color: #ff9f5a; border-color: #ff9f5a; background: rgba(255,159,90,0.16); }
+.tag.risk-big-profit-3 { color: #5ed6c0; border-color: #5ed6c0; background: rgba(94,214,192,0.16); }
+:root[data-theme="light"] .tag.risk-big-profit-1 { color: #7b43b5; border-color: #7b43b5; background: rgba(123,67,181,0.12); }
+:root[data-theme="light"] .tag.risk-big-profit-2 { color: #b65d1d; border-color: #b65d1d; background: rgba(182,93,29,0.12); }
+:root[data-theme="light"] .tag.risk-big-profit-3 { color: #197c6d; border-color: #197c6d; background: rgba(25,124,109,0.12); }
+.tag.risk-safe { color: #7eb8d8; border-color: #7eb8d8; background: rgba(126,184,216,0.16); }
+.tag.risk-neutral { color: var(--ink-dim); border-color: var(--border-strong); background: transparent; }
+:root[data-theme="light"] .tag.risk-very-big-loss { color: #b34a44; border-color: #b34a44; background: rgba(179,74,68,0.14); }
+:root[data-theme="light"] .tag.risk-big-profit { color: #2f7a4f; border-color: #2f7a4f; background: rgba(47,122,79,0.12); }
+:root[data-theme="light"] .tag.risk-safe { color: #39779c; border-color: #39779c; background: rgba(57,119,156,0.12); }
+.pnl.pos { color: var(--green); }
+.pnl.neg { color: var(--red); }
+.pager { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 13px; color: var(--ink-dim); }
+.pager .pages { display: flex; gap: 6px; align-items: center; }
+.page-jump {
+  width: 48px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-strong);
+  color: var(--ink);
+  padding: 7px 6px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: var(--mono);
+  text-align: center;
+  -moz-appearance: textfield;
+}
+.page-jump::-webkit-outer-spin-button, .page-jump::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.page-jump:focus { outline: none; border-color: var(--gold); }

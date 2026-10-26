@@ -1,0 +1,159 @@
+/* 23-sticky.css — Trade Log + Ledger: filter bar, table header and pager (footer) stay visible while you scroll.
+
+   How it works (the PAGE scrolls; there is no inner scroll box / extra scrollbar)
+   - The filter bar is `position: sticky; top: 0`, so it rides up and then pins to the top.
+   - The header row pins just underneath it. Its offset = filter-bar height, which
+     js/layout.js measures into --sticky-bar-h (the bar wraps onto more rows on phones).
+   - When the columns do not fit the width (Raw mode, small screens) the table needs its own
+     sideways scroll, and CSS sticky cannot cross that. js/layout.js then marks the wrapper
+     `.is-wide` and shows a fixed copy of the header instead.                              */
+
+:is(#view-trades, #view-ledger) {
+  --sticky-gap: 6px;                 /* breathing space between the bar and the pinned header */
+}
+
+/* Filter bar: pins to the top. The bg-coloured halo hides rows / corners peeking around it. */
+:is(#view-trades, #view-ledger) .filter-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  box-shadow: 0 0 0 var(--sticky-gap) var(--bg);
+}
+
+/* Table wrapper: `clip` keeps the rounded corners WITHOUT making it a scroll container,
+   so the header can stick to the page instead of to the wrapper. */
+:is(#view-trades, #view-ledger) .table-wrap { overflow: clip; }
+:is(#view-trades, #view-ledger) table { border-collapse: separate; border-spacing: 0; }  /* borders stay on pinned cells */
+
+:is(#view-trades, #view-ledger) .table-wrap thead th {
+  position: sticky;
+  top: calc(var(--sticky-bar-h, 36px) + var(--sticky-gap));
+  z-index: 5;
+  background: var(--bg-card);
+}
+
+/* Wide table: normal sideways scrollbar (its own header stays put; a fixed copy takes over, see below) */
+:is(#view-trades, #view-ledger) .table-wrap.is-wide { overflow-x: auto; }
+:is(#view-trades, #view-ledger) .table-wrap.is-wide thead th {
+  position: relative;
+  top: auto;
+}
+
+/* Wide table: the header copy that js/layout.js shows while the real header is scrolled away.
+   position:fixed = the browser holds it still, so nothing moves or flickers while scrolling. */
+:is(#view-trades, #view-ledger) .table-wrap.sticky-ghost {
+  position: fixed;
+  display: none;                     /* JS turns it on when needed */
+  z-index: 25;                       /* under the filter bar (30), above the rows */
+  overflow: hidden;                  /* JS keeps its scrollLeft equal to the table's */
+  margin: 0;
+  border-bottom: 0;
+  border-radius: var(--radius) var(--radius) 0 0;
+  box-shadow: 0 calc(var(--sticky-gap) * -1) 0 0 var(--bg);   /* page-coloured strip above it: rows cannot peek through */
+}
+:is(#view-trades, #view-ledger) .table-wrap.sticky-ghost thead th {
+  position: relative;                /* relative (not static) so the sort arrow anchors to its own header cell */
+  top: auto;
+}
+
+/* Footer (pager): pins to the bottom of the screen in the same compact card style as the filter bar.
+   Same halo trick: the page-coloured shadow hides rows peeking around its corners. Sits above the header copy (25). */
+:is(#view-trades, #view-ledger) .pager {
+  position: sticky;
+  bottom: 0;
+  z-index: 30;
+  margin: 8px 0 0;
+  padding: 4px 6px;
+  gap: 6px 12px;
+  font-size: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 0 0 var(--sticky-gap) var(--bg);
+}
+:is(#view-trades, #view-ledger) .pager .pages { gap: 6px; }
+:is(#view-trades, #view-ledger) .pager .btn.small { padding: 2px 9px; font-size: 12px; min-height: 26px; }
+:is(#view-trades, #view-ledger) .pager .page-jump { height: 26px; min-height: 26px; padding: 2px 6px; font-size: 12px; box-sizing: border-box; }
+
+/* Phones: the filter bar wraps onto ~4 rows (about 160px), too much to keep on screen.
+   Only the table header pins there, right at the top. */
+@media (max-width: 600px) {
+  :is(#view-trades, #view-ledger) { --sticky-gap: 0px; }
+  :is(#view-trades, #view-ledger) .filter-bar { position: static; box-shadow: none; }
+}
+
+/* ======================================================================
+   Footer owns the sideways scrollbar + sits flush with the bottom edge
+   - The table's own bottom scrollbar is hidden; a mirror scrollbar lives in the footer
+     (js/layout.js keeps the two in sync), so it is always on screen.
+   - The page area is at least one screen tall and the footer is pushed to its end,
+     and the padding under the footer is removed, so there is no gap below it.
+   ====================================================================== */
+:is(#view-trades, #view-ledger) .table-wrap.is-wide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+:is(#view-trades, #view-ledger) .table-wrap.is-wide::-webkit-scrollbar { display: none; }
+
+/* The footer scrollbar: custom track + thumb, visible only when the table overflows sideways (js/layout.js). */
+:is(#view-trades, #view-ledger) .pager .pager-scroll {
+  display: none;                     /* shown only while the table overflows (.has-hscroll, set by js/layout.js) */
+  order: -1;
+  flex: 1 1 100%;
+  min-width: 0;
+  position: relative;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--bg-hover, rgba(128,128,128,.15));
+  overflow: hidden;
+  cursor: pointer;
+  touch-action: none;
+}
+:is(#view-trades, #view-ledger) .pager.has-hscroll .pager-scroll { display: block; }
+:is(#view-trades, #view-ledger) .pager .pager-thumb {
+  position: absolute;
+  top: 2px; bottom: 2px; left: 0;
+  min-width: 40px;
+  border-radius: 999px;
+  background: var(--ink-faint);
+  cursor: grab;
+}
+:is(#view-trades, #view-ledger) .pager .pager-thumb:hover,
+:is(#view-trades, #view-ledger) .pager .pager-thumb.dragging { background: var(--ink-dim); }
+:is(#view-trades, #view-ledger) .pager .pager-thumb.dragging { cursor: grabbing; }
+:is(#view-trades, #view-ledger) .pager .pager-scroll.is-idle .pager-thumb { opacity: .45; cursor: default; }
+
+/* Footer flush with the bottom: no halo below it, no padding under it */
+:is(#view-trades, #view-ledger) .pager {
+  margin: auto 0 0;
+  box-shadow: 0 calc(var(--sticky-gap) * -1) 0 0 var(--bg);
+}
+:is(#view-trades, #view-ledger) .table-wrap { margin-bottom: 8px; }
+
+/* Page fills the screen; view is a column so the footer is pushed to the very bottom */
+.main:has(> #view-trades.active, > #view-ledger.active) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: 0;
+}
+.main:has(> #view-trades.active, > #view-ledger.active) > :is(#view-trades, #view-ledger).active {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+:is(#view-trades, #view-ledger) > * { flex-shrink: 0; }
+
+/* Footer page counter: "Page [ 2 ] of 133" - the jump box sits inside the sentence */
+:is(#view-trades, #view-ledger) .pager .pager-info { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+:is(#view-trades, #view-ledger) .pager .pager-info .page-jump {
+  width: calc(var(--digits, 2) * 1ch + 18px);
+  min-width: 34px;
+  margin: 0;
+}
+:is(#view-trades, #view-ledger) .pager .pager-info .pager-range { color: var(--ink-faint); margin-left: 4px; }
+
+/* Ledger sync button: same look as the Trade Log "+" button, icon sized to match */
+#view-ledger .filter-bar .sync-ledger-btn svg { width: 14px; height: 14px; }

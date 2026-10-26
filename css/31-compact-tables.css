@@ -1,0 +1,29 @@
+/* 31-compact-tables.css — One compact style for the Trade Log and Ledger tables.
+   Loads last so it wins over 04/12/21/24/28. X-compact density (28-slim.css) stays even tighter. */
+:root:not([data-density="xslim"]) :is(#view-trades, #view-ledger, #view-reports, #view-risk) .table-wrap { border-radius: 6px; }
+:root:not([data-density="xslim"]) :is(#view-trades, #view-ledger, #view-reports, #view-risk) table { font-size: 12px; }
+
+/* header */
+:root:not([data-density="xslim"]) :is(#view-trades, #view-ledger, #view-reports, #view-risk) .table-wrap thead th {
+  padding: 5px 8px;
+  font-size: 10.5px;
+  line-height: 1.1;
+}
+:root:not([data-density="xslim"]) :is(#view-trades, #view-ledger, #view-reports, #view-risk) .table-wrap thead th.sort-active { padding-right: 20px; }
+
+/* body rows: ~24px tall, same in both tables */
+:root:not([data-density="xslim"]) :is(#view-trades, #view-ledger, #view-reports, #view-risk) tbody td {
+  padding: 2px 8px;
+  height: 24px;
+  font-size: 12px !important;
+  line-height: 1.1;
+  box-sizing: border-box;
+}
+/* tags / pills shrink so they don't force taller rows */
+:root:not([data-density="xslim"]) :is(#view-trades, #view-ledger, #view-reports, #view-risk) tbody td .tag {
+  font-size: 10px;
+  padding: 1px 6px;
+  line-height: 1.2;
+}
+:root:not([data-density="xslim"]) :is(#view-trades, #view-ledger, #view-reports, #view-risk) tbody td .exit-period { font-size: 8.5px; }
+:root:not([data-density="xslim"]) :is(#view-trades, #view-ledger, #view-reports, #view-risk) tbody td .exit-price-wrap { gap: 0; }

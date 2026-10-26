@@ -1,0 +1,73 @@
+/* 24-table-look.css — One look for the Trade Log and Ledger tables.
+
+   1. Column alignment: numbers right, Day centred, text left — header matches its column.
+   2. The Ledger body matches the Trade Log: same monospaced font and the same row height. */
+
+/* ---- 1. Column alignment (header and body always agree) ----
+   Cells carry a class set by js (see config.js: tradeAlignClass / ledgerAlignClass):
+     .num  numbers, prices, P/L, quantities   -> right
+     .ctr  short fixed codes (Ledger Day)     -> centre
+     (none) text, dates, symbols, tags        -> left
+   The header cell of a column gets the same class as its body cells, so a column can never
+   drift out of line when columns are added, removed, hidden or reordered. */
+:is(#view-trades, #view-ledger) .table-wrap :is(th, td) { text-align: left; }
+:is(#view-trades, #view-ledger) .table-wrap :is(th, td).num { text-align: right; font-variant-numeric: tabular-nums; }
+:is(#view-trades, #view-ledger) .table-wrap :is(th, td).ctr { text-align: center; }
+
+/* ---- 2. Ledger rows look like Trade Log rows ---- */
+#view-ledger tbody td {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  height: 30px;                      /* Trade Log rows are 30px tall */
+  box-sizing: border-box;
+}
+.ledger-table td.ledger-italic { font-style: normal; }   /* Balance no longer italic */
+
+
+/* ---- 3. Identical header cells (both tables, and the pinned header copy) ----
+   Same padding, size, font, colour, sort highlight and hover. This block comes last so
+   nothing else in the CSS can make one header look different from the other. */
+:is(#view-trades, #view-ledger) .table-wrap thead th {
+  padding: 7px 10px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink-faint);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid var(--border);
+}
+:is(#view-trades, #view-ledger) .table-wrap thead th:hover { color: var(--ink); }
+:is(#view-trades, #view-ledger) .table-wrap thead th.sort-active {
+  color: var(--ink);
+  background: var(--bg-hover);
+  box-shadow: inset 0 -2px 0 var(--gold);
+}
+:is(#view-trades, #view-ledger) .table-wrap thead th.sort-active::after {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 9px;
+  color: var(--gold);
+  font-family: var(--sans);
+  font-weight: 700;
+  line-height: 1;
+}
+:is(#view-trades, #view-ledger) .table-wrap thead th.sort-active[aria-sort="ascending"]::after { content: '▲'; }
+:is(#view-trades, #view-ledger) .table-wrap thead th.sort-active[aria-sort="descending"]::after { content: '▼'; }
+/* Header cells follow their column: right-aligned for .num, centred for .ctr, left otherwise.
+   The sort arrow stays on the right edge (see below). */
+:is(#view-trades, #view-ledger) .table-wrap thead th.sort-active::after { right: 6px; left: auto; }
+:is(#view-trades, #view-ledger) .table-wrap thead th.sort-active { padding-right: 22px; }
+/* Raw mode keeps its own lighter header weight in both tables */
+:is(#view-trades, #view-ledger) .table-wrap table.raw-mode thead th { font-weight: 600; }
+
+
+/* Delivery / overnight exit rows: show the matched holding period directly with ExitPrice. */
+.exit-price-wrap { display:inline-flex; flex-direction:column; align-items:flex-end; gap:2px; line-height:1.05; }
+.exit-period { font-size:9px; font-weight:600; color:var(--ink-faint); white-space:nowrap; }

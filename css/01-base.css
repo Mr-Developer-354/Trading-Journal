@@ -1,0 +1,77 @@
+/* 01-base.css — Colour variables (dark + light theme), reset, page shell */
+
+:root {
+  /* Recolored to Claude's palette: warm charcoal/cream backgrounds with
+     the terracotta (#da7756) accent replacing the old gold. */
+  box-sizing: border-box;
+  --bg: #080808;
+  --bg-raised: #232321;
+  --bg-card: #121212;
+  --bg-hover: #202020;
+  --border: rgba(244,241,234,0.09);
+  --border-strong: rgba(244,241,234,0.16);
+  --ink: #f4f1ea;
+  --ink-dim: #b8b4a8;
+  --ink-faint: #83807a;
+  --gold: #da7756;
+  --gold-soft: rgba(218,119,86,0.16);
+  --green: #629a6e;
+  --green-soft: rgba(98,154,110,0.14);
+  --red: #c1666b;
+  --red-soft: rgba(193,102,107,0.14);
+  --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+  --radius: 10px;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+:root[data-theme="light"] {
+  /* Light-mode counterpart of the Claude palette recolor above. */
+  --bg: #faf9f5;
+  --bg-raised: #ffffff;
+  --bg-card: #fdfcf9;
+  --bg-hover: #f0eee6;
+  --border: rgba(38,38,36,0.1);
+  --border-strong: rgba(38,38,36,0.18);
+  --ink: #262624;
+  --ink-dim: #5f5c56;
+  --ink-faint: #93908a;
+  --gold: #c9622f;
+  --gold-soft: rgba(201,98,47,0.12);
+  --green: #2f7a4f;
+  --green-soft: rgba(47,122,79,0.1);
+  --red: #b34a44;
+  --red-soft: rgba(179,74,68,0.1);
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+  background: var(--bg);
+  color-scheme: dark;
+}
+:root[data-theme="light"] { color-scheme: light; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100%;
+  overscroll-behavior-y: none;
+}
+
+::-webkit-scrollbar { width: 16px; height: 16px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; border: 4px solid transparent; background-clip: padding-box; min-height: 44px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); background-clip: padding-box; }
+* { scrollbar-color: var(--border-strong) transparent; scrollbar-width: auto; }
+::selection { background: var(--gold-soft); color: var(--ink); }
+a { color: inherit; }
+button { font-family: inherit; }
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}

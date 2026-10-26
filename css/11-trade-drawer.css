@@ -1,0 +1,210 @@
+/* 11-trade-drawer.css — Trade Log add/view drawer */
+
+/* Trade entry detail drawer: keep the full record in its own scroll container. */
+.trade-detail-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding: 0 16px 20px 0;
+  box-sizing: border-box;
+  scrollbar-gutter: stable;
+  scrollbar-width: auto;
+  scrollbar-color: rgba(244,241,234,.42) rgba(244,241,234,.07);
+}
+.trade-detail-scroll::-webkit-scrollbar { width: 16px; }
+.trade-detail-scroll::-webkit-scrollbar-track {
+  background: rgba(244,241,234,.07);
+  border-radius: 999px;
+}
+.trade-detail-scroll::-webkit-scrollbar-thumb {
+  background: rgba(244,241,234,.42);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  min-height: 44px;
+}
+.trade-detail-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(244,241,234,.62);
+  background-clip: padding-box;
+}
+
+/* ---------- redesigned Trade Log drawer ---------- */
+.trade-drawer-head { flex: 0 0 auto; padding: 4px 34px 0 0; border-bottom: 1px solid var(--border); margin-bottom: 0; }
+.trade-drawer-title h2 { margin-bottom: 5px; }
+.trade-drawer-title p { margin: 0; color: var(--ink-dim); font-size: 12.5px; line-height: 1.55; }
+.drawer-section { padding: 17px 0 19px; border-bottom: 1px solid var(--border); }
+.drawer-section:last-of-type { border-bottom: 0; }
+.drawer-section-title { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.drawer-section-title > span { width:25px; height:25px; border:1px solid var(--border-strong); border-radius:7px; display:grid; place-items:center; font:600 10px var(--mono); color:var(--gold); }
+.drawer-section-title b { display:block; font-size:13px; }
+.drawer-section-title small { display:block; color:var(--ink-faint); font-size:10.5px; margin-top:2px; }
+.field-grid { display:grid; grid-template-columns:1fr 1fr; gap:0 12px; }
+.field-grid .field-full { grid-column:1 / -1; }
+.trade-form .field { margin-bottom:11px; }
+.trade-form .field label { font-size:10.5px; letter-spacing:.02em; }
+.trade-form .field input, .trade-form .field select, .trade-form .field textarea { min-height:39px; }
+.trade-form .field textarea { min-height:76px; }
+.financial-grid { grid-template-columns:1fr 1fr; }
+.drawer-check { display:flex; align-items:center; gap:9px; grid-column:1 / -1; margin:2px 0 13px; color:var(--ink-dim); font-size:12px; cursor:pointer; }
+.drawer-check input { width:15px; height:15px; accent-color:var(--gold); }
+.calc-preview { display:grid; grid-template-columns:auto 1fr auto 1fr; gap:8px 10px; align-items:center; padding:11px 12px; margin-top:4px; border-radius:9px; }
+.calc-preview span { color:var(--ink-faint); font-size:10.5px; }
+.calc-preview b { font-size:13px; text-align:right; }
+.calc-preview .positive { color:var(--green); }
+.calc-preview .negative { color:var(--red); }
+.trade-form { display:flex; flex-direction:column; flex:1 1 auto; min-height:0; overflow:hidden; }
+/* Keep the drawer scrollbar flush with the viewport edge, aligned with the
+   main page scrollbar position. The drawer content itself keeps the original inset. */
+.trade-drawer-body {
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:scroll;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+  width:100%;
+  margin:0;
+  padding-right:12px;
+  box-sizing:border-box;
+  scrollbar-gutter:stable;
+}
+.trade-drawer-head,
+.trade-form > .drawer-actions { padding-right:12px; }
+.drawer-actions { flex:0 0 auto; display:flex; gap:9px; padding:15px 0 18px; background:var(--bg-raised); border-top:1px solid var(--border); }
+.drawer-actions .btn.primary { flex:1; justify-content:center; }
+.drawer-actions .btn.ghost { min-width:90px; justify-content:center; }
+@media (max-width:520px) { .field-grid, .financial-grid { grid-template-columns:1fr; } .field-grid .field-full, .drawer-check { grid-column:auto; } .calc-preview { grid-template-columns:auto 1fr; } }
+
+/* ---------- compact Trade Log drawer ---------- */
+.trade-drawer-head { padding-bottom: 0; }
+.trade-drawer-title h2 { margin-bottom: 3px; }
+.trade-drawer-title p { line-height: 1.35; }
+.drawer-section { padding: 11px 0 13px; }
+.drawer-section-title { gap: 8px; margin-bottom: 9px; }
+.drawer-section-title > span { width: 22px; height: 22px; border-radius: 6px; }
+.drawer-section-title small { margin-top: 1px; }
+.field-grid { gap: 0 10px; }
+.trade-form .field { margin-bottom: 7px; }
+.trade-form .field label { margin-bottom: 3px; font-size: 10px; }
+.trade-form .field input,
+.trade-form .field select,
+.trade-form .field textarea {
+  box-sizing: border-box;
+  min-height: 34px;
+  height: 34px;
+  padding: 6px 9px;
+  border-radius: 6px;
+  font-size: 12.5px;
+}
+.trade-form .field textarea { height: auto; min-height: 58px; }
+.drawer-check { gap: 7px; margin: 1px 0 8px; }
+.calc-preview { gap: 6px 8px; padding: 8px 10px; margin-top: 2px; border-radius: 7px; }
+.drawer-actions { gap: 7px; padding: 10px 0 12px; }
+
+/* ---------- Trade Log segment tabs ---------- */
+.trade-drawer-head .segment-tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-bottom: 0;
+  scrollbar-width: auto;
+  background: transparent;
+  padding: 0;
+  margin-top: 10px;
+}
+.trade-drawer-head .segment-tab {
+  flex: 0 0 auto;
+  appearance: none;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 9px 16px 10px;
+  margin: 0;
+  min-height: 32px;
+  color: var(--ink-dim);
+  font: 500 11px var(--sans);
+  cursor: pointer;
+  position: relative;
+}
+.trade-drawer-head .segment-tab:hover {
+  color: var(--ink);
+  background: transparent !important;
+}
+.trade-drawer-head .segment-tab.active,
+.trade-drawer-head .segment-tab[aria-selected="true"] {
+  color: var(--gold);
+  font-weight: 600;
+}
+.trade-drawer-head .segment-tab.active::after,
+.trade-drawer-head .segment-tab[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--gold);
+}
+
+  .trade-form .segment-tab { flex: 0 0 auto; }
+
+/* ---------- ChatGPT-style drawer scrollbar ---------- */
+.trade-drawer-body::-webkit-scrollbar {
+  width: 14px;
+}
+.trade-drawer-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+.trade-drawer-body::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border: 4px solid transparent;
+  background-clip: padding-box;
+  border-radius: 999px;
+  min-height: 44px;
+}
+.trade-drawer-body::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-faint);
+  background-clip: padding-box;
+}
+
+/* ---------- Trade Log product / type selector (Intraday·Delivery, Futures·Options) ---------- */
+.trade-form .product-select-row {
+  display: flex;
+  gap: 2px;
+  margin: 0 0 12px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+}
+.trade-form .product-pill {
+  flex: 1 1 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  padding: 7px 10px;
+  font: 500 12.5px/1.2 var(--sans);
+  color: var(--ink-dim);
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.trade-form .product-pill:hover { background: var(--bg-hover); color: var(--ink); }
+.trade-form .product-pill.active {
+  background: var(--green-soft);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--green) 50%, transparent);
+}
+
+/* ---------- Segment row: Exchange and the product selector share one line ---------- */
+.segment-top-row { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 0 12px; }
+.trade-form .segment-top-row .field-grid.segment-field { flex: 0 0 150px; grid-template-columns: 1fr; }
+#segmentPills { flex: 1 1 240px; min-width: 0; }
+.trade-form .segment-top-row .product-select-row { margin: 0 0 12px; }
+.inline-detail.inline-edit .segment-top-row .field-grid.segment-field { flex: 0 0 150px; grid-template-columns: 1fr; }
+.inline-detail.inline-edit .segment-top-row .product-select-row { margin: 0 0 6px; }

@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en" data-density="slim" data-chrome-density="slim">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Apply saved theme / palette / density before first paint (prevents the blue-default flash). Keep in sync with layout.js -->
+  <script>
+    (function () {
+      try {
+        var r = document.documentElement, ls = window.localStorage;
+        var pal = ls.getItem('tb_palette'), th = ls.getItem('tb_theme'), de = ls.getItem('tb_density');
+        if (pal && pal !== 'ocean') r.setAttribute('data-palette', pal);
+        if (th === 'light') r.setAttribute('data-theme', 'light');
+        var ok = function (v) { return v === 'normal' || v === 'slim' || v === 'xslim'; };
+        if (ok(de)) { r.setAttribute('data-density', de); r.setAttribute('data-chrome-density', de); }
+        // per-page density (Settings → Page density): use the start page's override before first paint
+        var pr = JSON.parse(ls.getItem('tb_prefs_v1') || '{}'), sp = pr.startPage || 'dashboard';
+        if (pr.pageDensity && ok(pr.pageDensity[sp])) r.setAttribute('data-density', pr.pageDensity[sp]);
+      } catch (e) {}
+    })();
+  </script>
+  <title>The Book — Trading Journal</title>
+  <link rel="icon" type="image/x-icon" href="images/icon/favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="images/icon/csv-icon.png">
+  <link rel="apple-touch-icon" href="images/icon/csv-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="css/01-base.css">
+  <link rel="stylesheet" href="css/02-sidebar-main.css">
+  <link rel="stylesheet" href="css/03-dashboard.css">
+  <link rel="stylesheet" href="css/04-trade-table.css">
+  <link rel="stylesheet" href="css/06-brokers-charges.css">
+  <link rel="stylesheet" href="css/07-drawer-goal-streak.css">
+  <link rel="stylesheet" href="css/08-calendar.css">
+  <link rel="stylesheet" href="css/09-responsive-misc.css">
+  <link rel="stylesheet" href="css/11-trade-drawer.css">
+  <link rel="stylesheet" href="css/12-ledger.css">
+  <link rel="stylesheet" href="css/13-filter-bars.css">
+  <link rel="stylesheet" href="css/14-ledger-page.css">
+  <link rel="stylesheet" href="css/15-dashboard-redesign.css">
+  <link rel="stylesheet" href="css/16-calendar-colors.css">
+  <link rel="stylesheet" href="css/17-drawers-scrollbars.css">
+  <link rel="stylesheet" href="css/18-charges-redesign.css">
+  <link rel="stylesheet" href="css/19-brokers-view.css">
+  <link rel="stylesheet" href="css/20-settings.css">
+  <link rel="stylesheet" href="css/21-overrides.css">
+  <link rel="stylesheet" href="css/22-raw-columns.css">
+  <link rel="stylesheet" href="css/23-sticky.css">
+  <link rel="stylesheet" href="css/24-table-look.css">
+  <link rel="stylesheet" href="css/25-import-review.css">
+  <link rel="stylesheet" href="css/26-theme.css">
+  <link rel="stylesheet" href="css/27-palettes.css">
+  <link rel="stylesheet" href="css/28-slim.css">
+  <link rel="stylesheet" href="css/29-inline-detail.css">
+  <link rel="stylesheet" href="css/30-settings-charges.css">
+  <link rel="stylesheet" href="css/31-compact-tables.css">
+  <link rel="stylesheet" href="css/32-summary-cards.css">
+  <link rel="stylesheet" href="css/33-frozen-columns.css">
+  <link rel="stylesheet" href="css/34-reports.css">
+  <link rel="stylesheet" href="css/35-opening-credit.css">
+  <link rel="stylesheet" href="css/36-target-heat.css">
+  <link rel="stylesheet" href="css/37-risk-date-filters.css">
+  <link rel="stylesheet" href="css/38-calendar-inline-kpis.css">
+  <link rel="stylesheet" href="css/39-calendar-light-minimal.css">
+  <link rel="stylesheet" href="css/40-calendar-title.css">
+  <link rel="stylesheet" href="css/41-dashboard-v2.css">
+  <link rel="stylesheet" href="css/41-dashboard-layout.css">
+  <link rel="stylesheet" href="css/42-phone.css">
+  <link rel="stylesheet" href="css/43-screens.css">
+
+
+
+
+
+    <!-- Trading Journal favicon -->
+    <link rel="icon" type="image/x-icon" href="images/icon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/icon/favicon-16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/icon/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="images/icon/favicon-48.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/icon/favicon-180.png">
+
+</head>
+<body>
+
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<div class="sidebar-edge-hover-zone" id="sidebarEdgeHoverZone" aria-hidden="true"></div>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand-row">
+      <div class="brand">
+        <span class="mark">The Book<span class="dot">.</span></span>
+        <span class="sub">Ledger</span>
+      </div>
+    </div>
+    <nav class="nav">
+      <button data-view="dashboard" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 13h4v8H3zM10 9h4v12h-4zM17 3h4v18h-4z"/></svg>Dashboard</button>
+      <button data-view="trades"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Trade Log</button>
+      <button data-view="ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg>Ledger</button>
+      <button data-view="calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendar</button>
+      <button data-view="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h5M10 17h5M10 9h1"/></svg>Reports</button>
+      <button data-view="risk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z"/><path d="M9.5 12l2 2 3.5-4"/></svg>Risk management</button>
+      <button data-view="charges"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="17" rx="1.5"/><path d="M7 9h10M7 13h10M7 17h6"/></svg>Charges &amp; Calculators</button>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="datastat" id="sidebarStat">— trades on record</div>
+      <button class="btn primary sidebar-add-btn" id="addTradeBtn" type="button">✚ Log a trade</button>
+      <div class="sidebar-bottom-actions">
+        <button class="settings-nav-btn" data-view="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          <span>Settings</span>
+        </button>
+        <button class="theme-icon" id="themeToggle" type="button" aria-label="Switch theme" title="Switch theme">
+          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+  <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle sidebar" title="Toggle sidebar">☰</button>
+  <button class="sidebar-edge-tab" id="sidebarEdgeTab" aria-label="Open sidebar" title="Open sidebar">&gt;</button>
+
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <section class="view active" id="view-dashboard">
+      <div class="db-head">
+        <div class="db-title">
+          <h1>Dashboard</h1>
+          <p>Net results after estimated charges, with risk, expectancy and behaviour for the period you pick.</p>
+        </div>
+        <div class="db-controls">
+          <div class="rsk-title-row db-filter-row">
+            <div class="rsk-seg rsk-range" id="dashRangeSeg" role="group" aria-label="Date range"></div>
+            <label class="rep-broker-pick">
+              <select id="dashBrokerFilter" aria-label="Broker for the dashboard"></select>
+            </label>
+          </div>
+          <div class="rep-bar db-filter-bar">
+            <label class="rep-broker-pick rep-date-pick"><select id="dashDayFilter" aria-label="Date for the dashboard"></select></label>
+            <label class="rep-broker-pick rep-date-pick"><select id="dashWeekFilter" aria-label="Week for the dashboard"></select></label>
+            <label class="rep-broker-pick rep-date-pick"><select id="dashMonthFilter" aria-label="Month for the dashboard"></select></label>
+            <label class="rep-broker-pick rep-date-pick"><select id="dashYearFilter" aria-label="Year for the dashboard"></select></label>
+            <button type="button" class="btn small dash-customize-btn" id="dashCustomizeBtn" aria-expanded="false" aria-controls="dashCustomPanel">Customize</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-custom" id="dashCustomPanel" hidden></div>
+
+      <!-- Hero: net P/L, equity curve, goal and runs -->
+      <div class="dash-widget" data-widget="hero">
+        <div class="db-hero">
+          <div class="db-card">
+            <div class="db-card-head">
+              <div>
+                <div class="db-eyebrow">Net P/L after estimated charges</div>
+                <div class="db-big" id="heroNet">₹0</div>
+                <div class="db-muted" id="heroFoot">no trades in this period</div>
+              </div>
+              <div class="db-chips" id="heroChips"></div>
+            </div>
+            <div class="db-chart-lg" id="equityChart"></div>
+            <div class="db-foot" id="equityFoot"></div>
+          </div>
+          <div class="db-side">
+            <div class="db-card db-goal">
+              <div class="db-goal-ring">
+                <svg viewBox="0 0 120 120" aria-hidden="true">
+                  <circle class="db-ring-bg" cx="60" cy="60" r="50"></circle>
+                  <circle class="db-ring-fg" id="goalRing" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="314.16"></circle>
+                </svg>
+                <div class="db-ring-center"><b id="goalPct">—</b><span>of goal</span></div>
+              </div>
+              <div class="db-goal-info">
+                <div class="db-eyebrow">This month's goal</div>
+                <div class="db-goal-status" id="goalStatus">—</div>
+                <div class="db-goal-edit">
+                  <span>₹</span>
+                  <input type="number" id="goalInput" step="any" placeholder="Target" aria-label="Monthly profit target">
+                  <button class="btn small" id="goalSave">Set</button>
+                </div>
+              </div>
+            </div>
+            <div class="db-card">
+              <div class="db-eyebrow">Last 24 trades</div>
+              <div class="db-pips" id="streakPips"></div>
+              <div class="db-chips db-chips-gap" id="streakChips"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key metrics -->
+      <div class="dash-widget" data-widget="kpis">
+        <div class="db-kpis" id="kpiGrid"></div>
+      </div>
+
+      <!-- Drawdown & risk -->
+      <div class="dash-widget" data-widget="risk">
+        <div class="db-grid-2">
+          <div class="db-card">
+            <div class="db-card-head"><h3>Drawdown</h3><span class="db-sub" id="ddSub"></span></div>
+            <div class="db-chart" id="drawdownChart"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>Risk profile</h3></div>
+            <div class="db-tiles" id="riskTiles"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expectancy & R-multiples -->
+      <div class="dash-widget" data-widget="expectancy">
+        <div class="db-grid-2">
+          <div class="db-card">
+            <div class="db-card-head"><h3>R-multiple distribution</h3><span class="db-sub" id="rSub"></span></div>
+            <div class="db-chart" id="rMultipleChart"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>Expectancy</h3></div>
+            <div class="db-tiles" id="expTiles"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Distribution: histogram, scatter and box plot -->
+      <div class="dash-widget" data-widget="distribution">
+        <div class="db-grid-3">
+          <div class="db-card">
+            <div class="db-card-head"><h3>Net P/L per trade</h3><span class="db-sub">histogram</span></div>
+            <div class="db-chart" id="pnlHistogram"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>R-multiple vs net P/L</h3><span class="db-sub">one dot per trade</span></div>
+            <div class="db-chart" id="rScatter"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>Spread by option type</h3><span class="db-sub">box = middle 50%</span></div>
+            <div class="db-chart" id="optionBox"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly result, wins vs losses, win/loss split, trades by broker -->
+      <div class="dash-widget" data-widget="charts">
+        <div class="db-grid-2">
+          <div class="db-card">
+            <div class="db-card-head"><h3>Monthly result</h3><span class="db-sub" id="monthlySub"></span></div>
+            <div class="db-chart" id="monthlyChart"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>Monthly winners vs losers</h3><span class="db-sub">stacked, net per trade</span></div>
+            <div class="db-chart" id="monthlyStack"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>Win / loss split</h3></div>
+            <div class="db-chart db-chart-donut" id="winLossChart"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>Trades by broker</h3><span class="db-sub">share of trade count</span></div>
+            <div class="db-chart db-chart-donut" id="brokerPie"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile: broker radar, weekday × month heatmap, gauges -->
+      <div class="dash-widget" data-widget="profile">
+        <div class="db-grid-3">
+          <div class="db-card">
+            <div class="db-card-head"><h3>Broker profile</h3><span class="db-sub">top 4 by trades</span></div>
+            <div class="db-chart db-chart-radar" id="brokerRadar"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>Weekday × month</h3><span class="db-sub">net P/L, all years</span></div>
+            <div class="db-chart db-chart-heat" id="weekMonthHeat"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>Gauges</h3></div>
+            <div class="db-gauges">
+              <div class="db-chart db-chart-gauge" id="winGauge"></div>
+              <div class="db-chart db-chart-gauge" id="greenGauge"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Time analysis -->
+      <div class="dash-widget" data-widget="time">
+        <div class="db-grid-3">
+          <div class="db-card">
+            <div class="db-card-head"><h3>By weekday</h3><span class="db-sub" id="weekdaySub"></span></div>
+            <div class="db-chart" id="weekdayChart"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>By month of year</h3><span class="db-sub" id="monthOfYearSub"></span></div>
+            <div class="db-chart" id="monthOfYearChart"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>Rolling 30-day average</h3><span class="db-sub" id="rollingSub"></span></div>
+            <div class="db-chart" id="rollingChart"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Daily rhythm & best / worst days -->
+      <div class="dash-widget" data-widget="rhythm">
+        <div class="db-grid-2">
+          <div class="db-card">
+            <div class="db-card-head"><h3>Daily rhythm</h3><span class="db-sub" id="heatSub">Last 26 weeks</span></div>
+            <div class="heat-scroll">
+              <div class="heat-months" id="heatMonths"></div>
+              <div class="heat-body">
+                <div class="heat-dow"><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span></div>
+                <div class="heat-grid" id="heatGrid"></div>
+              </div>
+            </div>
+            <div class="heat-legend"><span>Loss</span><i class="l4"></i><i class="l2"></i><i class="l0"></i><i class="g2"></i><i class="g4"></i><span>Profit</span></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>Best & worst days</h3><span class="db-sub">in this period</span></div>
+            <div class="db-two-lists">
+              <div><div class="db-eyebrow">Best</div><div id="bestDays"></div></div>
+              <div><div class="db-eyebrow">Worst</div><div id="worstDays"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Breakdown by broker, symbol and option type -->
+      <div class="dash-widget" data-widget="breakdown">
+        <div class="db-grid-2">
+          <div class="db-card">
+            <div class="db-card-head"><h3>Net P/L build-up by broker</h3><span class="db-sub">each broker's contribution</span></div>
+            <div class="db-chart" id="brokerWaterfall"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>Net P/L by symbol</h3><span class="db-sub">top 10 by trade count</span></div>
+            <div class="db-chart" id="symbolBars"></div>
+          </div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-head"><h3>By broker & account</h3><span class="db-sub">click a row to open it in the Trade log</span></div>
+          <div class="db-table-wrap" id="brokerTable"></div>
+        </div>
+        <div class="db-grid-2">
+          <div class="db-card">
+            <div class="db-card-head"><h3>Most traded symbols</h3><span class="db-sub">click a row to open it in the Trade log</span></div>
+            <div class="db-table-wrap" id="symbolTable"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>By option type</h3></div>
+            <div class="db-table-wrap" id="optionTable"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trade review tags -->
+      <div class="dash-widget" data-widget="review">
+        <div class="db-grid-2">
+          <div class="db-card">
+            <div class="db-card-head"><h3>Net P/L by review tag</h3><span class="db-sub">top 8 by trade count</span></div>
+            <div class="db-chart" id="reviewBars"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-head"><h3>Trade review tags</h3><span class="db-sub">the review written against each trade</span></div>
+            <div class="db-table-wrap" id="reviewTable"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRADES -->
+    <section class="view" id="view-trades">
+      <div class="page-head ledger-page-head trade-page-head">
+        <div class="ledger-title-block">
+          <h1 title="Every entry, exit and thought behind it. Click a row to open the full record.">Trade log</h1>
+        </div>
+        <div class="ledger-head-right">
+          <div class="ledger-summary-cards" aria-label="Trade log summary">
+            <div class="ledger-summary-card" title="Trades: number of trades in the list. Shows 'x of y' while filters are active."><div class="label">Trades</div><div class="val" id="tradeStatCount">0</div></div>
+            <div class="ledger-summary-card" title="Gross P/L: sum of GrossPL for the trades shown. GrossPL = (ExitPrice − EntryPrice) × Qty. An exit-only row = −Qty × ExitPrice."><div class="label">Gross P/L</div><div class="val" id="tradeStatNet">₹0.00</div></div>
+            <div class="ledger-summary-card" title="Win Rate: winning trades ÷ all trades shown × 100. A winning trade has GrossPL above 0."><div class="label">Win Rate</div><div class="val" id="tradeStatWinRate">—</div></div>
+            <div class="ledger-summary-card" title="Profit Factor: total GrossPL of winning trades ÷ |total GrossPL of losing trades|. Shows ∞ when there are wins and no losses."><div class="label">Profit Factor</div><div class="val" id="tradeStatPF">—</div></div>
+            <div class="ledger-summary-card" title="Charges: sum of ExpChgs (expected charges, stored as negative) for the trades shown."><div class="label">Charges</div><div class="val" id="tradeStatCharges">₹0.00</div></div>
+            <div class="ledger-summary-card" title="Avg Win: total GrossPL of winning trades ÷ number of winning trades."><div class="label">Avg Win</div><div class="val" id="tradeStatAvgWin">—</div></div>
+            <div class="ledger-summary-card" title="Avg Loss: −(|total GrossPL of losing trades| ÷ number of losing trades), shown as a negative number."><div class="label">Avg Loss</div><div class="val" id="tradeStatAvgLoss">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="filters filter-bar" role="search" aria-label="Trade log filters">
+        <button class="btn filter-add-btn" id="addTradeFilterBtn" type="button" aria-label="Log a trade" title="Log a trade">✚</button>
+        <input type="text" id="fSearch" placeholder="Search symbol…" aria-label="Search symbol">
+        <select id="fBroker" aria-label="Broker"><option value="all">All broker</option></select>
+        <div class="filter-range" role="group" aria-label="Date range">
+          <input type="date" id="fFrom" title="From date" aria-label="From date">
+          <span class="range-sep" aria-hidden="true"></span>
+          <input type="date" id="fTo" title="To date" aria-label="To date">
+        </div>
+        <div class="filter-tools">
+          <button class="btn small filter-clear" id="clearFilters">Clear</button>
+          <button class="btn small raw-toggle-btn cols-btn" id="colsTradesBtn" type="button" aria-haspopup="true" aria-expanded="false" title="Add or remove columns" aria-label="Add or remove columns"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 4v16M15 12h4M17 10v4"/></svg></button>
+          <button class="btn small raw-toggle-btn" id="rawTradesBtn" type="button" aria-pressed="false" title="Show all raw database columns" aria-label="Toggle raw database columns"><span class="raw-label">Nml</span></button>
+          <button class="btn small raw-toggle-btn import-xlsx-btn" id="importTradesXlsx" type="button" title="Import Excel (.xlsx) into the Trade Log — one sheet per broker" aria-label="Import Excel into the Trade log"><img class="xl-icon" src="images/icon/excel-import-icon.svg" alt="" aria-hidden="true"></button>
+          <a class="btn small raw-toggle-btn import-template-btn" href="templates/TradeLog_Import_Template.xlsx" download="TradeLog_Import_Template.xlsx" title="Download Trade Log Excel template" aria-label="Download Trade Log Excel template"><img class="xl-icon" src="images/icon/excel-template-icon.svg" alt="" aria-hidden="true"></a>
+          <input type="file" id="importTradesXlsxFile" accept=".xlsx,.xls" hidden>
+          <button class="btn small csv-icon-btn" id="exportCsv" aria-label="Export CSV" title="Export CSV"><img src="images/icon/csv-icon.png" alt=""></button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="trade-log-table">
+          <thead>
+            <tr>
+              <th data-k="date">Date</th>
+              <th data-k="symbol">Symbol</th>
+              <th data-k="broker">Broker</th>
+              <th data-k="exchange">Exchange</th>
+              <th class="ctr" data-k="qty">Qty</th>
+              <th class="num" data-k="entry">EntryPrice</th>
+              <th class="num" data-k="sl">Stoploss</th>
+              <th class="num" data-k="exit" title="ExitPrice only">ExitPrice</th>
+              <th class="num" data-k="pnl" title="GrossPL = (ExitPrice − EntryPrice) × Qty">GrossPL</th>
+              <th class="num" data-k="pnlPct" title="PerPL = GrossPL ÷ |EntryPrice × Qty|">PerPL</th>
+              <th class="ctr" data-k="rrr" title="RRR = (ExitPrice − EntryPrice) ÷ (EntryPrice − Stoploss); blank Stoploss = 0">RRR</th>
+              <th class="num" data-k="losses" title="Losses = −(EntryPrice − Stoploss) × Qty">Losses</th>
+              <th class="ctr" data-k="period" title="Intraday = EntryTime to ExitTime; other trades = holding period">Time</th>
+              <th class="num" data-k="riskMgmt" title="RiskMgmt = band of PerPL: ≤−0.8% Big Loss · &lt;0.11% Small Loss · &lt;0.5% Safe · &lt;1% Small Profit · &lt;2% Big Profit +1% · &lt;3% Big Profit +2% · ≥3% Big Profit +3%">RiskMgmt</th>
+            </tr>
+          </thead>
+          <tbody id="tradeRows"></tbody>
+        </table>
+      </div>
+      <div class="pager">
+        <span class="pager-info" id="pagerInfo">Page <input type="number" id="pageJump" class="page-jump" min="1" step="1" inputmode="numeric" aria-label="Jump to page" title="Jump to page"> of <span id="pagerTotal">1</span></span>
+        <div class="pages">
+          <button class="btn small" id="firstPage" title="First page">« First</button>
+          <button class="btn small" id="prevPage">← Prev</button>
+          <button class="btn small" id="nextPage">Next →</button>
+          <button class="btn small" id="lastPage" title="Last page">Last »</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEDGER -->
+    <section class="view" id="view-ledger">
+      <div class="page-head ledger-page-head">
+        <div class="ledger-title-block">
+          <h1 title="Separate broker and platform ledger records. Every stored field is retained in the ledger database.">Ledger</h1>
+        </div>
+        <div class="ledger-head-right">
+          <div class="ledger-summary-cards" aria-label="Ledger summary">
+            <div class="ledger-summary-card" title="Trading day: number of distinct trading dates among the ledger rows shown. Shows 'x of y' while filters are active."><div class="label">Trading day</div><div class="val" id="ledgerStatTradingDay">0</div></div>
+            <div class="ledger-summary-card" title="Pay In / Out: per row, the broker's GrossPL from the Trade Log on that date, minus Brokerage for Kotak. Summed for the rows shown."><div class="label">Pay In / Out</div><div class="val" id="ledgerStatPayInOut">₹0.00</div></div>
+            <div class="ledger-summary-card" title="Charges: per row, −(Brokerage + Exchange + IPFT + Sebi + IGST + STT + Stamp + SqrOff + DP-Chr.). Summed for the rows shown."><div class="label">Charges</div><div class="val" id="ledgerStatRealChr">₹0.00</div></div>
+            <div class="ledger-summary-card" title="Net P/L: per row, Pay In / Out + Charges. For Kotak, Brokerage is added back once, because its Pay In / Out already has it deducted. Summed for the rows shown."><div class="label">Net P/L</div><div class="val" id="ledgerStatNet">₹0.00</div></div>
+            <div class="ledger-summary-card" title="Balance: the Balance of the latest-dated row shown. Balance is kept per broker in date order: previous Balance + Net P/L + Credit + Debit, starting from 0."><div class="label">Balance</div><div class="val" id="ledgerStatBalance">₹0.00</div></div>
+            <div class="ledger-summary-card" title="DailyTA: the stored DailyTA (daily balance) of the latest-dated row shown."><div class="label">DailyTA</div><div class="val" id="ledgerStatDailyTA">₹0.00</div></div>
+            <div class="ledger-summary-card" title="Credit/Debit Net: sum of Credit + Debit over the rows shown. Debit is stored negative, so this is the net cash in or out."><div class="label">Credit/Debit Net</div><div class="val" id="ledgerStatCreditDebitNet">₹0.00</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="filters filter-bar" role="search" aria-label="Ledger filters">
+        <button class="btn filter-add-btn sync-ledger-btn" id="syncLedgerBtn" type="button" title="Sync ledger rows from Trade Log" aria-label="Sync ledger rows from Trade Log"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.5L4 8.5M4 4v4.5h4.5M4 13a8 8 0 0 0 14.3 4.5L20 15.5M20 20v-4.5h-4.5"/></svg></button>
+        <input type="text" id="ledgerSearch" placeholder="Search ledger…" aria-label="Search ledger">
+        <select id="ledgerBrokerFilter" aria-label="Broker"><option value="all">All broker</option></select>
+        <div class="filter-range" role="group" aria-label="Date range">
+          <input type="date" id="ledgerFrom" title="From date" aria-label="From date">
+          <span class="range-sep" aria-hidden="true"></span>
+          <input type="date" id="ledgerTo" title="To date" aria-label="To date">
+        </div>
+        <div class="filter-tools">
+          <button class="btn small filter-clear" id="clearLedgerFilters">Clear</button>
+          <button class="btn small raw-toggle-btn cols-btn" id="colsLedgerBtn" type="button" aria-haspopup="true" aria-expanded="false" title="Add or remove columns" aria-label="Add or remove columns"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 4v16M15 12h4M17 10v4"/></svg></button>
+          <button class="btn small raw-toggle-btn" id="rawLedgerBtn" type="button" aria-pressed="false" title="Show all raw database columns" aria-label="Toggle raw database columns"><span class="raw-label">Nml</span></button>
+          <button class="btn small raw-toggle-btn import-xlsx-btn" id="importLedgerXlsx" type="button" title="Import Excel (.xlsx) into the Ledger — one sheet per broker" aria-label="Import Excel into the Ledger"><img class="xl-icon" src="images/icon/excel-import-icon.svg" alt="" aria-hidden="true"></button>
+          <a class="btn small raw-toggle-btn import-template-btn" href="templates/Ledger_Import_Template.xlsx" download="Ledger_Import_Template.xlsx" title="Download Ledger Excel template" aria-label="Download Ledger Excel template"><img class="xl-icon" src="images/icon/excel-template-icon.svg" alt="" aria-hidden="true"></a>
+          <input type="file" id="importLedgerXlsxFile" accept=".xlsx,.xls" hidden>
+          <button class="btn small csv-icon-btn" id="exportLedgerCsv" aria-label="Export CSV" title="Export CSV"><img src="images/icon/csv-icon.png" alt=""></button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="ledger-table">
+          <thead><tr><th data-ledger-k="Date">Date</th><th class="ctr" data-ledger-k="Day">Day</th><th class="num" data-ledger-k="PayInOut">PayInOut</th><th class="num" data-ledger-k="Brokerage">Brokerage</th><th class="num" data-ledger-k="Exchange">Exchange</th><th class="num" data-ledger-k="IPFT">IPFT</th><th class="num" data-ledger-k="SEBI">SEBI</th><th class="num" data-ledger-k="IGST">IGST</th><th class="num" data-ledger-k="STT">STT</th><th class="num" data-ledger-k="Stamp">Stamp</th><th class="num" data-ledger-k="SqrOff">SqrOff</th><th class="num" data-ledger-k="DPChgs">DPChgs</th><th class="num" data-ledger-k="RealChgs">RealChgs</th><th class="num" data-ledger-k="NetPL">NetPL</th><th class="num" data-ledger-k="Taxable">Taxable</th><th class="num" data-ledger-k="Credit">Credit</th><th class="num" data-ledger-k="Debit">Debit</th><th class="num" data-ledger-k="Balance">Balance</th><th class="num" data-ledger-k="DailyTA">DailyTA</th><th data-ledger-k="Notes">Notes</th></tr></thead>
+          <tbody id="ledgerRows"></tbody>
+        </table>
+      </div>
+      <div class="pager">
+        <span class="pager-info" id="ledgerPagerInfo">Page <input type="number" id="ledgerPageJump" class="page-jump" min="1" step="1" inputmode="numeric" aria-label="Jump to ledger page" title="Jump to page"> of <span id="ledgerPagerTotal">1</span><span class="pager-range" id="ledgerPagerRange"></span></span>
+        <div class="pages">
+          <button class="btn small" id="ledgerFirstPage">« First</button>
+          <button class="btn small" id="ledgerPrevPage">← Prev</button>
+          <button class="btn small" id="ledgerNextPage">Next →</button>
+          <button class="btn small" id="ledgerLastPage">Last »</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALENDAR -->
+    <section class="view" id="view-calendar">
+      <div class="calendar-shell">
+        <div class="cal-period-head">
+          <div class="cal-period-title ledger-title-block">
+            <h1 class="cal-period-label" id="calMonthLabel">—</h1>
+          </div>
+          <div class="cal-period-controls">
+            <div class="cal-inline-kpis" id="calInlineKpis"></div>
+            <div class="cal-data-filter">
+              <select id="calBrokerFilter" class="cal-broker-select" aria-label="Calendar broker filter"></select>
+            </div>
+            <div class="cal-stack">
+              <div class="cal-stack-top">
+              <div class="cal-nav">
+                <button class="btn small" id="calPrev" aria-label="Previous period" title="Previous period"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <button class="btn small cal-today" id="calToday" aria-label="Today" title="Today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button>
+                <button class="btn small" id="calNext" aria-label="Next period" title="Next period"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+              </div>
+              <button class="btn small ghost" id="calJumpDay" aria-label="Open selected day" title="Open selected day"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></button>
+              </div>
+              <div class="cal-stack-bottom">
+              <div class="cal-view-switch" role="tablist" aria-label="Calendar view">
+                <button class="cal-view-btn" data-cal-view="fy" role="tab" aria-label="Financial year" title="Financial year"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M7 15h10M9 13l-2 2 2 2M15 13l2 2-2 2"/></svg></button>
+                <button class="cal-view-btn" data-cal-view="year" role="tab" aria-label="Year" title="Year"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></button>
+                <button class="cal-view-btn active" data-cal-view="month" role="tab" aria-label="Month" title="Month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2M7 17h2M11 17h2"/></svg></button>
+                <button class="cal-view-btn" data-cal-view="day" role="tab" aria-label="Day" title="Day"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><rect x="11" y="13" width="2.5" height="2.5" rx=".6" fill="currentColor"/></svg></button>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="calendar-view-panel" id="calYearView"></div>
+
+        <div class="calendar-view-panel active" id="calMonthView">
+          <div class="cal-weekdays" id="calDow"></div>
+          <div class="cal-grid" id="calGrid"></div>
+          <div class="cal-legend">
+            <span class="cal-legend-scale"><b>Loss</b><i class="cal-legend-swatch l1"></i><i class="cal-legend-swatch l2"></i><i class="cal-legend-swatch l3"></i><i class="cal-legend-swatch l4"></i></span>
+            <span class="cal-legend-scale"><b>Profit</b><i class="cal-legend-swatch g1"></i><i class="cal-legend-swatch g2"></i><i class="cal-legend-swatch g3"></i><i class="cal-legend-swatch g4"></i></span>
+            <span class="cal-legend-scale"><i class="cal-legend-swatch flat"></i><b>No trade</b></span>
+            <span class="cal-legend-note">Darker = larger daily result</span>
+          </div>
+        </div>
+
+        <div class="calendar-view-panel" id="calDayView"></div>
+      </div>
+    </section>
+
+    <!-- REPORTS -->
+    <section class="view" id="view-reports">
+      <div class="page-head rep-page-head">
+        <div class="rsk-title-row">
+          <h1 title="Status, daily, weekly, monthly, yearly and symbol reports. Pick one broker, the Real or Paper group, or all of them.">Reports</h1>
+          <div class="rsk-seg rsk-range" id="reportRangeSeg" role="group" aria-label="Report date range"></div>
+          <label class="rep-broker-pick">
+            <select id="reportBrokerFilter" aria-label="Broker for the report"></select>
+          </label>
+        </div>
+        <div class="rep-bar">
+          <nav class="rep-tabs" id="reportTabs" aria-label="Report"></nav>
+          <label class="rep-broker-pick rep-date-pick"><select id="reportDayFilter" aria-label="Date for the report"></select></label>
+          <label class="rep-broker-pick rep-date-pick"><select id="reportWeekFilter" aria-label="Week for the report"></select></label>
+          <label class="rep-broker-pick rep-date-pick"><select id="reportMonthFilter" aria-label="Month for the report"></select></label>
+          <label class="rep-broker-pick rep-date-pick"><select id="reportYearFilter" aria-label="Year for the report"></select></label>
+        </div>
+      </div>
+      <div id="reportBody" class="rep-body"></div>
+    </section>
+
+    <!-- RISK MANAGEMENT -->
+    <section class="view" id="view-risk">
+      <div class="page-head rep-page-head">
+        <div class="rsk-title-row">
+          <h1 title="How the trades are spread over the Gross P/L % bands, for status, daily, weekly, monthly and yearly periods. Pick one broker, the Real or Paper group, or all of them.">Risk management</h1>
+          <div class="rsk-seg rsk-range" id="riskRangeSeg" role="group" aria-label="Risk date range"></div>
+          <label class="rep-broker-pick">
+            <select id="riskBrokerFilter" aria-label="Broker for the risk management"></select>
+          </label>
+        </div>
+        <div class="rep-bar">
+          <nav class="rep-tabs" id="riskTabs" aria-label="Risk period"></nav>
+          <label class="rep-broker-pick rep-date-pick"><select id="riskDayFilter" aria-label="Date for the risk management"></select></label>
+          <label class="rep-broker-pick rep-date-pick"><select id="riskWeekFilter" aria-label="Week for the risk management"></select></label>
+          <label class="rep-broker-pick rep-date-pick"><select id="riskMonthFilter" aria-label="Month for the risk management"></select></label>
+          <label class="rep-broker-pick rep-date-pick"><select id="riskYearFilter" aria-label="Year for the risk management"></select></label>
+        </div>
+      </div>
+      <div id="riskBody" class="rep-body"></div>
+    </section>
+
+    <!-- CHARGES & CALCULATORS -->
+    <section class="view" id="view-charges">
+      <div class="page-head">
+        <div>
+          <h1>Charges &amp; Calculators</h1>
+          <p>Brokerage, taxes and fees per broker — view them, try the calculators, or edit the rates.</p>
+        </div>
+        <div class="charges-mode" id="chargesModeBar" role="tablist" aria-label="Mode"></div>
+      </div>
+      <div class="charges-subtabs" id="chargesSubTabs"></div>
+      <div class="charges-broker-tabs" id="chargesBrokerTabs"></div>
+      <div id="chargesContent"></div>
+      <div id="chargesScHost" class="settings-charges-host"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="view" id="view-settings">
+      <div class="settings-page-head">
+        <div>
+          <div class="settings-kicker"><span class="settings-kicker-dot"></span>JOURNAL PREFERENCES</div>
+          <h1>Settings</h1>
+          <p>Manage appearance, formats, local data, broker classifications, imports, and everyday shortcuts.</p>
+        </div>
+        <div class="settings-safety-badge">
+          <span class="settings-safety-icon">✓</span>
+          <span><strong>Local only</strong><small>Your journal stays in this browser</small></span>
+        </div>
+      </div>
+
+      <div class="settings-layout">
+        <aside class="settings-index" aria-label="Settings sections">
+          <div class="settings-index-title">SETTINGS</div>
+          <a href="#settings-appearance" class="settings-index-item">
+            <span class="settings-index-icon">◐</span><span><strong>Appearance</strong><small>Mode, density, colours</small></span>
+          </a>
+          <a href="#settings-formats" class="settings-index-item">
+            <span class="settings-index-icon">Aa</span><span><strong>Display &amp; formats</strong><small>Dates, numbers, rows</small></span>
+          </a>
+          <a href="#settings-workspace" class="settings-index-item">
+            <span class="settings-index-icon">▣</span><span><strong>Workspace</strong><small>Start page, privacy</small></span>
+          </a>
+          <a href="#settings-data" class="settings-index-item is-active">
+            <span class="settings-index-icon">↳</span><span><strong>Data &amp; backup</strong><small>Export and reset</small></span>
+          </a>
+          <a href="#settings-import" class="settings-index-item">
+            <span class="settings-index-icon">↑</span><span><strong>Import trades</strong><small>CSV or JSON</small></span>
+          </a>
+          <a href="#settings-brokers" class="settings-index-item">
+            <span class="settings-index-icon">◎</span><span><strong>Broker accounts</strong><small>Real or paper</small></span>
+          </a>
+          <a href="#settings-shortcuts" class="settings-index-item">
+            <span class="settings-index-icon">⌘</span><span><strong>Shortcuts</strong><small>Keyboard commands</small></span>
+          </a>
+        </aside>
+
+        <div class="settings-content">
+          <section class="settings-card" id="settings-appearance">
+            <div class="settings-card-head">
+              <div class="settings-card-icon">◐</div>
+              <div class="settings-card-title">
+                <h2>Appearance</h2>
+                <p>Pick light or dark mode, how compact the layout is, and a colour palette. Saved in this browser.</p>
+              </div>
+              <span class="settings-card-tag">THEME</span>
+            </div>
+            <div class="appearance-row">
+              <span><strong>Mode</strong><small>Dark is easier on the eyes at night</small></span>
+              <div class="mode-switch" id="modeSwitch">
+                <button type="button" data-mode="dark">Dark</button>
+                <button type="button" data-mode="light">Light</button>
+              </div>
+            </div>
+            <div class="appearance-row">
+              <span><strong>Density</strong><small>How compact the layout is: text size, spacing, sidebar and table rows</small></span>
+              <div class="mode-switch" id="densitySwitch">
+                <button type="button" data-density="normal">Normal</button>
+                <button type="button" data-density="slim">Slim</button>
+                <button type="button" data-density="xslim">Extra slim</button>
+              </div>
+            </div>
+            <div class="appearance-row">
+              <span><strong>Colour palette</strong><small>Changes the accent, backgrounds and charts</small></span>
+              <div class="palette-grid" id="paletteGrid"></div>
+            </div>
+          </section>
+
+          <section class="settings-card" id="settings-formats">
+            <div class="settings-card-head">
+              <div class="settings-card-icon">Aa</div>
+              <div class="settings-card-title">
+                <h2>Display &amp; formats</h2>
+                <p>How dates, numbers and tables are shown across the journal. Saved in this browser.</p>
+              </div>
+              <span class="settings-card-tag">FORMATS</span>
+            </div>
+            <div class="appearance-row">
+              <span><strong>Date format</strong><small>Used in tables, calendar and drawers</small></span>
+              <select class="st-select" data-pref="dateFmt">
+                <option value="dmy-mon">04-Dec-2023</option>
+                <option value="dmy-slash">04/12/2023</option>
+                <option value="mdy-slash">12/04/2023</option>
+                <option value="iso">2023-12-04</option>
+              </select>
+            </div>
+            <div class="appearance-row">
+              <span><strong>Number grouping</strong><small>Lakh / crore or million style</small></span>
+              <div class="mode-switch">
+                <button type="button" data-pref="numFmt" data-val="in">1,23,456</button>
+                <button type="button" data-pref="numFmt" data-val="intl">123,456</button>
+              </div>
+            </div>
+            <div class="appearance-row">
+              <span><strong>Rows per page</strong><small>Trade Log and Ledger tables</small></span>
+              <select class="st-select" data-pref="rows">
+                <option value="25">25</option><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="500">500</option>
+              </select>
+            </div>
+            <div class="st-preview" id="stPreview" aria-live="polite"></div>
+          </section>
+
+          <section class="settings-card" id="settings-workspace">
+            <div class="settings-card-head">
+              <div class="settings-card-icon">▣</div>
+              <div class="settings-card-title">
+                <h2>Workspace</h2>
+                <p>Start-up page, content width and everyday behaviour.</p>
+              </div>
+              <button type="button" class="settings-card-tag st-reset" id="stResetPrefs" title="Restore every preference to its default">RESET PREFERENCES</button>
+            </div>
+            <div class="appearance-row">
+              <span><strong>Open on</strong><small>The page shown when the journal starts</small></span>
+              <select class="st-select" data-pref="startPage">
+                <option value="dashboard">Dashboard</option><option value="trades">Trade Log</option><option value="ledger">Ledger</option><option value="calendar">Calendar</option><option value="reports">Reports</option><option value="risk">Risk management</option><option value="charges">Charges &amp; Calculators</option>
+              </select>
+            </div>
+            <div class="appearance-row">
+              <span><strong>Content width</strong><small>Boxed stops at 1400px; full width uses the whole window</small></span>
+              <div class="mode-switch">
+                <button type="button" data-pref="width" data-val="boxed">Boxed</button>
+                <button type="button" data-pref="width" data-val="full">Full width</button>
+              </div>
+            </div>
+            <div class="appearance-row">
+              <span><strong>Collapse sidebar at start</strong><small>Desktop only · hover the left edge to peek</small></span>
+              <label class="st-switch"><input type="checkbox" data-pref="sidebarCollapsed"><i></i></label>
+            </div>
+            <div class="appearance-row">
+              <span><strong>Privacy blur</strong><small>Blurs amounts and charts, hover to reveal · press <kbd>P</kbd></small></span>
+              <label class="st-switch"><input type="checkbox" data-pref="privacy"><i></i></label>
+            </div>
+            <div class="appearance-row">
+              <span><strong>Reduce motion</strong><small>Turns off page and chart animation</small></span>
+              <label class="st-switch"><input type="checkbox" data-pref="reduceMotion"><i></i></label>
+            </div>
+          </section>
+
+          <section class="settings-card" id="settings-data">
+            <div class="settings-card-head">
+              <div class="settings-card-icon settings-card-icon-data">↳</div>
+              <div class="settings-card-title">
+                <h2>Data &amp; backup</h2>
+                <p>Back up your Trade Log, Ledger and settings to one file, restore from it, or clear local data.</p>
+              </div>
+              <span class="settings-card-tag">LOCAL DATA</span>
+            </div>
+            <div class="settings-info-strip">
+              <span class="settings-info-mark">i</span>
+              <span>Everything is stored in this browser only; nothing is sent anywhere. A full backup saves the Trade Log, Ledger and preferences in one JSON file. Restoring a backup replaces the matching data here, so export a backup first if you want to keep what is there now.</span>
+            </div>
+
+            <div class="settings-group-label">Back up</div>
+            <div class="settings-actions">
+              <button class="btn settings-action" id="exportJson"><span class="settings-action-icon">↓</span><span><strong>Full backup</strong><small>JSON · trades, ledger &amp; settings</small></span></button>
+              <button class="btn settings-action" id="exportCsv2"><span class="settings-action-icon">↓</span><span><strong>Trade Log CSV</strong><small>CSV · trade records</small></span></button>
+              <button class="btn settings-action" id="exportLedgerCsv"><span class="settings-action-icon">↓</span><span><strong>Ledger CSV</strong><small>CSV · ledger records</small></span></button>
+              <button class="btn settings-action" id="exportPrefs"><span class="settings-action-icon">↓</span><span><strong>Preferences only</strong><small>JSON · these settings</small></span></button>
+            </div>
+
+            <div class="settings-group-label">Restore</div>
+            <div class="settings-actions">
+              <button class="btn settings-action" id="restoreBackup"><span class="settings-action-icon">↑</span><span><strong>Restore full backup</strong><small>Choose a backup JSON file</small></span></button>
+            </div>
+            <input type="file" id="restoreFile" accept=".json,application/json" hidden>
+
+            <div class="settings-group-label settings-group-danger">Danger zone</div>
+            <div class="settings-actions">
+              <button class="btn danger settings-action settings-action-danger" id="clearTradeDatabase"><span class="settings-action-icon">⌫</span><span><strong>Clear Trade Log</strong><small>Delete every trade record</small></span></button>
+              <button class="btn danger settings-action settings-action-danger" id="clearLedgerDatabase"><span class="settings-action-icon">⌫</span><span><strong>Clear Ledger</strong><small>Delete every ledger record</small></span></button>
+              <button class="btn danger settings-action settings-action-danger" id="resetData"><span class="settings-action-icon">↺</span><span><strong>Start fresh</strong><small>Restore original trades, ledger and settings</small></span></button>
+            </div>
+          </section>
+
+          <section class="settings-card" id="settings-import">
+            <div class="settings-card-head">
+              <div class="settings-card-icon settings-card-icon-import">↑</div>
+              <div class="settings-card-title">
+                <h2>Import trades</h2>
+                <p>Add trades in bulk without changing the rest of your journal settings.</p>
+              </div>
+              <span class="settings-card-tag">CSV / JSON</span>
+            </div>
+            <div class="settings-import-grid">
+              <label class="dropzone settings-dropzone" id="dropzone" for="importFile">
+                <input type="file" id="importFile" accept=".csv,.json">
+                <span class="settings-drop-icon">↑</span>
+                <span id="dropzoneLabel"><strong>Choose a CSV or JSON file</strong><small>or drag one here</small></span>
+              </label>
+              <div class="settings-format-note">
+                <div class="settings-format-title">Accepted fields</div>
+                <p><code>date</code> <code>symbol</code> <code>broker</code> <code>side</code> <code>qty</code> <code>entry</code> <code>exit</code></p>
+                <p class="settings-format-muted">Extra fields such as <code>strategy</code> and <code>notes</code> are picked up too. To restore a full backup, use <em>Restore full backup</em> under Data &amp; backup.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="settings-card settings-broker-card" id="settings-brokers">
+            <div class="settings-card-head">
+              <div class="settings-card-icon settings-card-icon-broker">◎</div>
+              <div class="settings-card-title">
+                <h2>Broker &amp; account type</h2>
+                <p>Choose how each broker or trading platform is classified. This controls the Real Broker / Paper Trading option in the Calendar, Trade Log and Ledger broker filters.</p>
+              </div>
+              <span class="settings-card-tag">REAL / PAPER</span>
+            </div>
+            <div class="settings-broker-legend">
+              <span><i class="settings-legend-dot is-real"></i> Real Broker</span>
+              <span><i class="settings-legend-dot is-paper"></i> Paper Trading</span>
+            </div>
+            <div id="brokerSettingsCards" class="broker-settings-cards"></div>
+          </section>
+
+          <section class="settings-card settings-shortcuts-card" id="settings-shortcuts">
+            <div class="settings-card-head">
+              <div class="settings-card-icon settings-card-icon-key">⌘</div>
+              <div class="settings-card-title">
+                <h2>Keyboard shortcuts</h2>
+                <p>Quick actions for common journal tasks.</p>
+              </div>
+            </div>
+            <div class="settings-shortcuts">
+              <div class="settings-shortcut"><span>New trade</span><kbd>N</kbd></div>
+              <div class="settings-shortcut"><span>Search trades</span><kbd>/</kbd></div>
+              <div class="settings-shortcut"><span>Privacy blur</span><kbd>P</kbd></div>
+              <div class="settings-shortcut"><span>Close panel</span><kbd>Esc</kbd></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- phone bottom tab bar (shown only at phone width, css/42-phone.css) -->
+<nav class="phone-tabbar" aria-label="Main">
+  <button class="phone-tab" data-phone-view="dashboard" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+  <button class="phone-tab" data-phone-view="trades" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg>Trades</button>
+  <button class="phone-tab phone-tab-add" data-phone-view="add" type="button" aria-label="Log a trade"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+  <button class="phone-tab" data-phone-view="reports" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Reports</button>
+  <button class="phone-tab" data-phone-view="more" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>More</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+
+
+<script src="data/seed-trades.js"></script>
+<script src="data/seed-ledger.js"></script>
+<script src="js/config.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/preferences.js"></script>
+<script src="js/stats.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/viz.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/trades.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/brokers.js"></script>
+<script src="js/charges-rates.js"></script>
+<script src="js/charges.js"></script>
+<script src="js/settings-charges.js"></script>
+<script src="js/trade-drawer.js"></script>
+<script src="js/ledger.js"></script>
+<script src="js/import-export.js"></script>
+<script src="js/import-excel.js"></script>
+<script src="js/columns.js"></script>
+<script src="js/inline-detail.js"></script>
+<script src="js/reports.js"></script>
+<script src="js/main.js"></script>
+<script src="js/phone.js"></script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+/* 28-slim.css — Density modes, chosen in Settings → Appearance → Density.
+   <html data-density="normal | slim | xslim">
+     normal : none of these rules apply (the roomy look from the theme files)
+     slim   : compact type + spacing, thin scrollbars, 208px sidebar
+     xslim  : extra slim — applied on top of slim, even tighter, 184px sidebar
+   Edit the numbers in the SLIM / EXTRA SLIM sections below to tune a mode. Loaded LAST.
+   (":is(body,#view-…)" only raises specificity so these beat older ID-scoped rules.) */
+
+/* ============================ SLIM ============================ */
+:root:is([data-density="slim"],[data-density="xslim"]) {--r-lg: 10px; --r-md: 6px; --r-sm: 5px; --radius: 10px; --shadow-1: none; --shadow-2: 0 4px 14px -8px rgba(0,0,0,.4); --app-scrollbar-width: 10px; }
+:root:is([data-density="slim"],[data-density="xslim"]) #view-dashboard {--card-r: 10px; --glow: var(--shadow-2); }
+:root:is([data-density="slim"],[data-density="xslim"]) body {font-size: 13px; line-height: 1.45; }
+:root:is([data-density="slim"],[data-density="xslim"]) .btn {padding: 6px 12px; font-size: 12.5px; gap: 6px; border-radius: var(--r-md); }
+:root:is([data-density="slim"],[data-density="xslim"]) .btn.small {padding: 4px 9px; font-size: 12px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .field input,
+:root:is([data-density="slim"],[data-density="xslim"]) .field select,
+:root:is([data-density="slim"],[data-density="xslim"]) .field textarea,
+:root:is([data-density="slim"],[data-density="xslim"]) .filters input,
+:root:is([data-density="slim"],[data-density="xslim"]) .filters select {padding: 6px 9px; font-size: 12.5px; border-radius: var(--r-md); }
+:root:is([data-density="slim"],[data-density="xslim"]) ::-webkit-scrollbar {width: 10px; height: 10px; }
+:root:is([data-density="slim"],[data-density="xslim"]) ::-webkit-scrollbar-thumb {border-width: 2.5px; min-height: 32px; }
+:root:is([data-density="slim"],[data-density="xslim"]) * {scrollbar-width: thin; }
+:root:is([data-density="slim"],[data-density="xslim"]) .sidebar,
+:root:is([data-density="slim"],[data-density="xslim"]) .app.sidebar-collapsed .sidebar {width: 208px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .sidebar {flex-basis: 208px; padding: 12px 8px; gap: 10px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .app.sidebar-collapsed .sidebar {flex-basis: 0; }
+:root:is([data-density="slim"],[data-density="xslim"]) .brand .mark {font-size: 18px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .brand .sub {font-size: 10.5px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .nav {gap: 1px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .nav button {padding-top: 6px; padding-bottom: 6px; font-size: 13px; gap: 9px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .nav button svg {width: 16px; height: 16px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .settings-nav-btn {font-size: 13px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .datastat {font-size: 10.5px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .main {padding: 10px 12px 36px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .page-head {gap: 10px; margin-bottom: 10px; padding-bottom: 4px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .page-head h1 {font-size: 22px; margin: 0 0 2px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .page-head p {font-size: 12.5px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .dash-head {margin-bottom: 12px; gap: 10px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .dash-head h1 {font-size: clamp(20px, 2.2vw, 24px); margin: 2px 0; }
+:root:is([data-density="slim"],[data-density="xslim"]) .dash-head p {font-size: 12.5px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .eyebrow {font-size: 10px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .hero {gap: 12px; margin-bottom: 12px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .kpi-grid {gap: 8px; margin-bottom: 10px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .stat-grid {gap: 8px; }
+:root:is([data-density="slim"],[data-density="xslim"]) :is(body,#view-dashboard) .kpi {padding: 10px 12px 9px; border-radius: var(--r-lg); }
+:root:is([data-density="slim"],[data-density="xslim"]) :is(body,#view-dashboard) .kpi::before {top: 10px; bottom: 10px; width: 2px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .kpi:hover {transform: none; }
+:root:is([data-density="slim"],[data-density="xslim"]) .kpi-label {font-size: 10px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .kpi-val {font-size: 18px; margin: 5px 0 2px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .kpi-note {font-size: 11px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .kpi-bar {height: 4px; margin-top: 6px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .stat-card {padding: 10px 12px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .stat-card .label {font-size: 11px; margin-bottom: 3px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .stat-card .val {font-size: 17px; }
+:root:is([data-density="slim"],[data-density="xslim"]) :is(body,#view-dashboard) :is(.equity-card, .hero-figure) {padding: 14px 16px 10px; gap: 8px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .equity-card .big {font-size: clamp(30px, 3.6vw, 40px); margin-top: 4px; }
+:root:is([data-density="slim"],[data-density="xslim"]) :is(body,#view-dashboard) :is(.goal-card, .streak-card) {padding: 12px 14px; }
+:root:is([data-density="slim"],[data-density="xslim"]) :is(body,#view-dashboard) .panel {padding: 12px 14px; border-radius: var(--r-lg); }
+:root:is([data-density="slim"],[data-density="xslim"]) .panel h3 {font-size: 13px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .panel .chart-box {height: 220px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .panel .chart-box.short {height: 170px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .chart-box.donut {height: 160px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .two-col {gap: 10px; }
+:root:is([data-density="slim"],[data-density="xslim"]) :is(body,#view-brokers,#view-ledger) :is(.broker-card, .broker-setting-card, .settings-broker-card, .ledger-summary-card) {padding: 10px 12px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .broker-grid {gap: 8px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .broker-card:hover {transform: none; }
+:root:is([data-density="slim"],[data-density="xslim"]) .ledger-summary-cards {gap: 8px; }
+:root:is([data-density="slim"],[data-density="xslim"]) :is(body,#view-settings) .settings-card {padding: 12px 14px; border-radius: var(--r-lg); }
+:root:is([data-density="slim"],[data-density="xslim"]) .settings-card-icon {width: 28px; height: 28px; flex-basis: 28px; border-radius: 7px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .settings-card-title h2 {font-size: 13px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .settings-content {gap: 10px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .settings-card-tag {font-size: 9.5px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .appearance-row {padding: 10px 0; }
+:root:is([data-density="slim"],[data-density="xslim"]) .palette-grid {grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 8px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .palette-swatch {padding: 8px; font-size: 12px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .palette-preview {height: 26px; margin-bottom: 6px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .filters {gap: 6px; margin-bottom: 10px; }
+:root:is([data-density="slim"],[data-density="xslim"]) table {font-size: 12.5px; }
+:root:is([data-density="slim"],[data-density="xslim"]) tbody td {padding: 4px 10px; }
+:root:is([data-density="slim"],[data-density="xslim"]) :is(body,#view-trades,#view-ledger) tbody td {height: 28px; line-height: 1.15; }
+:root:is([data-density="slim"],[data-density="xslim"]) .pill-count {font-size: 12px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .pager {font-size: 12px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .trade-form .field input,
+:root:is([data-density="slim"],[data-density="xslim"]) .trade-form .field select,
+:root:is([data-density="slim"],[data-density="xslim"]) .ledger-form .field input,
+:root:is([data-density="slim"],[data-density="xslim"]) .ledger-form .field select {min-height: 32px; height: 32px; padding: 5px 9px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .trade-form .field textarea,
+:root:is([data-density="slim"],[data-density="xslim"]) .ledger-form .field textarea {min-height: 56px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .drawer-check {min-height: 30px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .toast {padding: 8px 14px; font-size: 12.5px; }
+:root:is([data-density="slim"],[data-density="xslim"]) :is(body,#view-charges) .field input {min-height: 32px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .calendar-title-wrap h1 {font-size: 22px; }
+:root:is([data-density="slim"],[data-density="xslim"]) .sidebar-toggle-btn {box-shadow: none; }
+
+/* ========================= EXTRA SLIM ========================= */
+:root[data-density="xslim"] {--r-lg: 8px; --r-md: 5px; --r-sm: 4px; --radius: 8px; --app-scrollbar-width: 8px; }
+:root[data-density="xslim"] #view-dashboard {--card-r: 8px; }
+:root[data-density="xslim"] body {font-size: 12px; line-height: 1.4; }
+:root[data-density="xslim"] .btn {padding: 4px 10px; font-size: 12px; gap: 5px; }
+:root[data-density="xslim"] .btn.small {padding: 3px 7px; font-size: 11.5px; }
+:root[data-density="xslim"] .field input,
+:root[data-density="xslim"] .field select,
+:root[data-density="xslim"] .field textarea,
+:root[data-density="xslim"] .filters input,
+:root[data-density="xslim"] .filters select {padding: 4px 8px; font-size: 12px; }
+:root[data-density="xslim"] ::-webkit-scrollbar {width: 8px; height: 8px; }
+:root[data-density="xslim"] ::-webkit-scrollbar-thumb {border-width: 2px; min-height: 28px; }
+:root[data-density="xslim"] .sidebar,
+:root[data-density="xslim"] .app.sidebar-collapsed .sidebar {width: 184px; }
+:root[data-density="xslim"] .sidebar {flex-basis: 184px; padding: 10px 6px; gap: 8px; }
+:root[data-density="xslim"] .brand .mark {font-size: 16px; }
+:root[data-density="xslim"] .nav button {padding-top: 4px; padding-bottom: 4px; font-size: 12.5px; gap: 8px; }
+:root[data-density="xslim"] .nav button svg {width: 15px; height: 15px; }
+:root[data-density="xslim"] .settings-nav-btn {font-size: 12.5px; }
+:root[data-density="xslim"] .main {padding: 8px 10px 28px; }
+:root[data-density="xslim"] .page-head {gap: 8px; margin-bottom: 8px; }
+:root[data-density="xslim"] .page-head h1 {font-size: 19px; margin: 0 0 1px; }
+:root[data-density="xslim"] .page-head p {font-size: 12px; }
+:root[data-density="xslim"] .dash-head {margin-bottom: 8px; gap: 8px; }
+:root[data-density="xslim"] .dash-head h1 {font-size: clamp(18px, 2vw, 21px); margin: 1px 0; }
+:root[data-density="xslim"] .dash-head p {font-size: 12px; }
+:root[data-density="xslim"] .hero {gap: 8px; margin-bottom: 8px; }
+:root[data-density="xslim"] .kpi-grid {gap: 6px; margin-bottom: 8px; }
+:root[data-density="xslim"] .stat-grid {gap: 6px; }
+:root[data-density="xslim"] :is(body,#view-dashboard) .kpi {padding: 7px 10px 6px; }
+:root[data-density="xslim"] :is(body,#view-dashboard) .kpi::before {top: 8px; bottom: 8px; }
+:root[data-density="xslim"] .kpi-label {font-size: 9.5px; }
+:root[data-density="xslim"] .kpi-val {font-size: 16px; margin: 3px 0 1px; }
+:root[data-density="xslim"] .kpi-note {font-size: 10.5px; }
+:root[data-density="xslim"] .kpi-bar {height: 3px; margin-top: 4px; }
+:root[data-density="xslim"] .stat-card {padding: 7px 10px; }
+:root[data-density="xslim"] .stat-card .val {font-size: 15px; }
+:root[data-density="xslim"] :is(body,#view-dashboard) :is(.equity-card, .hero-figure) {padding: 10px 12px 8px; gap: 6px; }
+:root[data-density="xslim"] .equity-card .big {font-size: clamp(26px, 3vw, 32px); margin-top: 2px; }
+:root[data-density="xslim"] :is(body,#view-dashboard) :is(.goal-card, .streak-card) {padding: 9px 11px; }
+:root[data-density="xslim"] :is(body,#view-dashboard) .panel {padding: 9px 11px; }
+:root[data-density="xslim"] .panel h3 {font-size: 12.5px; }
+:root[data-density="xslim"] .panel .chart-box {height: 190px; }
+:root[data-density="xslim"] .panel .chart-box.short {height: 145px; }
+:root[data-density="xslim"] .chart-box.donut {height: 135px; }
+:root[data-density="xslim"] .two-col {gap: 8px; }
+:root[data-density="xslim"] :is(body,#view-brokers,#view-ledger) :is(.broker-card, .broker-setting-card, .settings-broker-card, .ledger-summary-card) {padding: 7px 10px; }
+:root[data-density="xslim"] .broker-grid {gap: 6px; }
+:root[data-density="xslim"] .ledger-summary-cards {gap: 6px; }
+:root[data-density="xslim"] :is(body,#view-settings) .settings-card {padding: 9px 11px; }
+:root[data-density="xslim"] .settings-card-icon {width: 24px; height: 24px; flex-basis: 24px; }
+:root[data-density="xslim"] .settings-card-title h2 {font-size: 12.5px; }
+:root[data-density="xslim"] .settings-content {gap: 8px; }
+:root[data-density="xslim"] .appearance-row {padding: 7px 0; }
+:root[data-density="xslim"] .palette-grid {grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
+:root[data-density="xslim"] .palette-swatch {padding: 6px; font-size: 11.5px; }
+:root[data-density="xslim"] .palette-preview {height: 20px; margin-bottom: 4px; padding: 3px; }
+:root[data-density="xslim"] .filters {gap: 5px; margin-bottom: 8px; }
+:root[data-density="xslim"] table {font-size: 12px; }
+:root[data-density="xslim"] tbody td {padding: 2px 8px; }
+:root[data-density="xslim"] :is(body,#view-trades,#view-ledger) tbody td {height: 24px; }
+:root[data-density="xslim"] .trade-form .field input,
+:root[data-density="xslim"] .trade-form .field select,
+:root[data-density="xslim"] .ledger-form .field input,
+:root[data-density="xslim"] .ledger-form .field select {min-height: 28px; height: 28px; padding: 3px 8px; }
+:root[data-density="xslim"] .trade-form .field textarea,
+:root[data-density="xslim"] .ledger-form .field textarea {min-height: 48px; }
+:root[data-density="xslim"] .drawer-check {min-height: 26px; }
+:root[data-density="xslim"] :is(body,#view-charges) .field input {min-height: 28px; }
+:root[data-density="xslim"] .calendar-title-wrap h1 {font-size: 19px; }

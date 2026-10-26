@@ -1,0 +1,213 @@
+/* 29-inline-detail.css — compact details panel shown under the selected Trade Log / Ledger row */
+:is(#view-trades, #view-ledger) tbody tr.row-open { background: var(--bg-hover); }
+:is(#view-trades, #view-ledger) tbody tr.row-open td { border-bottom-color: transparent; }
+:is(#view-trades, #view-ledger) tbody tr.detail-row-tr,
+:is(#view-trades, #view-ledger) tbody tr.detail-row-tr:hover { background: transparent; cursor: default; }
+:is(#view-trades, #view-ledger) tbody td.inline-detail-cell {
+  padding: 0 !important;
+  height: auto !important;
+  white-space: normal !important;
+  text-align: left !important;
+  font-family: var(--sans) !important;
+  font-style: normal;
+  font-weight: 400;
+  border-bottom: 1px solid var(--border);
+}
+.inline-detail {
+  position: sticky;
+  left: 0;
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 10px 14px 12px;
+  border-left: 3px solid var(--gold);
+  background: color-mix(in srgb, var(--gold) 4%, var(--bg-card));
+  color: var(--ink);
+  font-family: var(--sans);
+  cursor: default;
+}
+.idt-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 9px; }
+.idt-heading { display: flex; flex-direction: column; min-width: 0; margin-right: auto; }
+.idt-heading b { font: 600 15px/1.15 var(--serif); letter-spacing: -.01em; overflow-wrap: anywhere; }
+.idt-heading span { margin-top: 2px; color: var(--ink-dim); font-size: 11px; }
+.idt-pnl { padding: 4px 10px; border: 1px solid var(--border); border-radius: 8px; text-align: right; background: var(--bg-card); }
+.idt-pnl small { display: block; color: var(--ink-faint); font-size: 8.5px; text-transform: uppercase; letter-spacing: .08em; }
+.idt-pnl b { font: 600 13px var(--mono); font-variant-numeric: tabular-nums; }
+.idt-pnl.pos { border-color: color-mix(in srgb, var(--green) 35%, var(--border)); background: var(--green-soft); }
+.idt-pnl.pos b { color: var(--green); }
+.idt-pnl.neg { border-color: color-mix(in srgb, var(--red) 35%, var(--border)); background: var(--red-soft); }
+.idt-pnl.neg b { color: var(--red); }
+.idt-actions { display: flex; align-items: center; gap: 6px; }
+.idt-actions .btn { height: 24px; min-height: 24px; padding: 0 10px; font-size: 11px; }
+.idt-close {
+  width: 24px; height: 24px; border: 1px solid var(--border); border-radius: 7px;
+  background: transparent; color: var(--ink-dim); font-size: 16px; line-height: 1; cursor: pointer;
+}
+.idt-close:hover { color: var(--ink); background: var(--bg-hover); }
+.idt-groups { display: flex; flex-wrap: wrap; gap: 10px 16px; }
+.idt-group { flex: 1 1 280px; min-width: 0; }
+.idt-title {
+  display: flex; align-items: center; gap: 7px; margin-bottom: 5px;
+  color: var(--ink-dim); font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em;
+}
+.idt-title::before { content: ""; width: 3px; height: 11px; border-radius: 99px; background: var(--gold); }
+.idt-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 1px;
+  border: 1px solid var(--border); border-radius: 7px; overflow: hidden; background: var(--border);
+}
+.idt-item { min-width: 0; padding: 5px 8px; background: var(--bg-card); }
+.idt-item.full { grid-column: 1 / -1; }
+.idt-item .k { display: block; color: var(--ink-faint); font-size: 9px; margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.idt-item .v { display: block; font: 500 11.5px var(--mono); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.idt-item .v.text { font-family: var(--sans); }
+.idt-item .v.pos { color: var(--green); }
+.idt-item .v.neg { color: var(--red); }
+.idt-notes { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 9px; }
+.idt-note { flex: 1 1 280px; padding: 6px 9px; border: 1px solid var(--border); border-radius: 7px; background: var(--bg-card); font-size: 11.5px; line-height: 1.4; white-space: pre-wrap; }
+.idt-note b { display: block; margin-bottom: 2px; color: var(--ink-faint); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+@media (max-width: 600px) {
+  .idt-actions { width: 100%; justify-content: flex-end; }
+  .idt-group { flex-basis: 100%; }
+}
+
+/* ---------- editing inside the panel (same forms as the side drawer, laid out for a wide row) ---------- */
+.inline-detail.inline-edit .trade-form {
+  display: block;
+  flex: none;
+  min-height: 0;
+  overflow: visible;
+}
+.inline-detail.inline-edit .trade-drawer-body {
+  overflow: visible !important;
+  padding: 0 !important;
+  width: auto;
+  scrollbar-gutter: auto;
+}
+.inline-detail.inline-edit .trade-drawer-head {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  padding: 0 !important;
+  margin: 0 0 8px;
+  border-bottom: 1px solid var(--border);
+}
+.inline-detail.inline-edit .trade-drawer-title {
+  padding: 0 !important;
+  margin: 0;
+  border: 0 !important;
+  flex: 0 0 auto;
+}
+.inline-detail.inline-edit .trade-drawer-title h2,
+.inline-detail.inline-edit .ledger-drawer-head h2 { margin: 0 0 6px; font-size: 16px; }
+.inline-detail.inline-edit .trade-drawer-title p,
+.inline-detail.inline-edit .ledger-drawer-head p { display: none; }
+.inline-detail.inline-edit .trade-drawer-head .segment-tabs {
+  flex: 1 1 auto;
+  width: auto;
+  margin: 0;
+  border-top: 0;
+}
+.inline-detail.inline-edit .drawer-section { padding: 8px 0 6px; border-bottom: 1px solid var(--border); }
+.inline-detail.inline-edit .drawer-section:last-of-type { border-bottom: 0; }
+.inline-detail.inline-edit .drawer-section-title { margin-bottom: 7px; }
+.inline-detail.inline-edit .field-grid {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0 10px;
+}
+.inline-detail.inline-edit .field-grid .field-full { grid-column: 1 / -1; }
+.inline-detail.inline-edit .field-grid .drawer-check { grid-column: auto; align-self: center; margin: 14px 0 8px; }
+.inline-detail.inline-edit .product-select-row { max-width: 340px; }
+.inline-detail.inline-edit .calc-preview { max-width: 420px; }
+.inline-detail.inline-edit .drawer-actions {
+  position: static;
+  justify-content: flex-end;
+  padding: 8px 0 0 !important;
+  background: transparent;
+  border-top: 1px solid var(--border);
+}
+.inline-detail.inline-edit .drawer-actions .btn.primary { flex: 0 0 auto; min-width: 130px; }
+@media (max-width: 600px) {
+  .inline-detail.inline-edit .field-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+}
+
+/* ---------- compact edit mode: same density as the details panel ---------- */
+.inline-detail.inline-edit { padding: 8px 14px 0; }
+.inline-detail.inline-edit .trade-drawer-head { margin-bottom: 4px; gap: 2px 14px; }
+.inline-detail.inline-edit .trade-drawer-title h2,
+.inline-detail.inline-edit .ledger-drawer-head h2 { margin: 0 0 4px; font-size: 14px; line-height: 1.15; }
+.inline-detail.inline-edit .trade-drawer-head .segment-tab { padding: 5px 11px 6px !important; min-height: 24px !important; font-size: 10.5px !important; }
+/* section titles: same small gold-bar caption as the details groups (no number badge / subtitle) */
+.inline-detail.inline-edit .drawer-section { padding: 6px 0 3px; }
+.inline-detail.inline-edit .drawer-section-title { margin-bottom: 4px; gap: 7px; }
+.inline-detail.inline-edit .drawer-section-title > span,
+.inline-detail.inline-edit .drawer-section-title small { display: none; }
+.inline-detail.inline-edit .drawer-section-title > div { display: flex; align-items: center; gap: 7px; }
+.inline-detail.inline-edit .drawer-section-title > div::before { content: ""; width: 3px; height: 11px; border-radius: 99px; background: var(--gold); }
+.inline-detail.inline-edit .drawer-section-title b {
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--ink-dim);
+}
+/* fields */
+.inline-detail.inline-edit .field-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0 6px; }
+/* top row (Broker / Exchange / Type + product pills) uses the same column grid as the fields below */
+.inline-detail.inline-edit .segment-top-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0 6px; align-items: end; }
+.inline-detail.inline-edit .segment-top-row .field-grid.segment-field { flex: none; width: auto; }
+.inline-detail.inline-edit #segmentPills { grid-column: span 3; min-width: 0; flex: none; }
+.inline-detail.inline-edit .trade-form .field { margin-bottom: 5px; }
+.inline-detail.inline-edit .trade-form .field label { margin-bottom: 2px; font-size: 9px; letter-spacing: .02em; color: var(--ink-faint); }
+.inline-detail.inline-edit .trade-form .field input,
+.inline-detail.inline-edit .trade-form .field select {
+  height: 26px !important;
+  min-height: 26px !important;
+  padding: 0 7px !important;
+  border-radius: 6px;
+  font: 500 11.5px var(--sans) !important;
+}
+.inline-detail.inline-edit .trade-form .field input[type="number"],
+.inline-detail.inline-edit .trade-form .field input[type="time"],
+.inline-detail.inline-edit .trade-form .field input[type="date"] { font-family: var(--mono) !important; }
+.inline-detail.inline-edit .trade-form .field textarea {
+  height: auto !important;
+  min-height: 38px !important;
+  padding: 5px 7px !important;
+  border-radius: 6px;
+  font: 400 11.5px/1.35 var(--sans) !important;
+}
+.inline-detail.inline-edit .field-grid .field-full { grid-column: span 2; }
+.inline-detail.inline-edit .field-grid .drawer-check { margin: 12px 0 5px; font-size: 11px; gap: 6px; }
+.inline-detail.inline-edit .drawer-check input { width: 13px; height: 13px; }
+.inline-detail.inline-edit .product-select-row { margin: 0 0 6px; padding: 2px; max-width: 260px; }
+.inline-detail.inline-edit .product-pill { padding: 3px 10px; font-size: 11px; }
+.inline-detail.inline-edit .drawer-section:has(+ .drawer-section > .calc-preview) { border-bottom: 0; }
+.inline-detail.inline-edit .drawer-section:has(> .calc-preview) { padding-bottom: 0; }
+.inline-detail.inline-edit .calc-preview { gap: 4px 8px; padding: 4px 9px; margin: 0 0 5px; font-size: 11px; max-width: none; grid-template-columns: repeat(6, auto); justify-content: start; white-space: nowrap; }
+.inline-detail.inline-edit .calc-preview span { font-size: 9.5px; }
+.inline-detail.inline-edit .calc-preview b { font-size: 11.5px; }
+.inline-detail.inline-edit .drawer-actions { padding: 6px 0 0 !important; gap: 6px; }
+.inline-detail.inline-edit .drawer-actions .btn { height: 24px; min-height: 24px !important; padding: 0 12px !important; font-size: 11px !important; }
+.inline-detail.inline-edit .drawer-actions .btn.ghost { min-width: 0; }
+.inline-detail.inline-edit .drawer-actions .btn.primary { min-width: 100px; }
+@media (max-width: 600px) {
+  .inline-detail.inline-edit .field-grid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); }
+  .inline-detail.inline-edit .field-grid .field-full { grid-column: 1 / -1; }
+}
+
+/* ---------- Save / Cancel live in the panel header, right side ---------- */
+.inline-detail.inline-edit .head-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 6px auto;
+  flex: 0 0 auto;
+}
+.inline-detail.inline-edit .head-actions .btn {
+  height: 24px;
+  min-height: 24px !important;
+  padding: 0 12px !important;
+  font-size: 11px !important;
+  justify-content: center;
+}
+.inline-detail.inline-edit .head-actions .btn.ghost { min-width: 0; }
+.inline-detail.inline-edit .head-actions .btn.primary { min-width: 100px; flex: 0 0 auto; }
+@media (max-width: 600px) {
+  .inline-detail.inline-edit .head-actions { width: 100%; justify-content: flex-end; margin-top: 2px; }
+}

@@ -1,0 +1,5 @@
+/* ---------------- reports: target cells heat ----------------
+   Target 1–5 cells on the period tables.
+   Dark purple when Net P/L reaches the target; dark green when only Gross P/L does. Net wins when both apply. */
+.rep-table tbody tr td.tgt-net   { background: #4b1d7a; color: #fff; }
+.rep-table tbody tr td.tgt-gross { background: #0c602d; color: #fff; }

@@ -1,0 +1,102 @@
+/* 09-responsive-misc.css — Clickable bars, import box, sidebar collapse, mobile */
+
+/* ---------- clickable bars ---------- */
+.bar-row.clickable { cursor: pointer; border-radius: 6px; transition: background .12s; padding: 4px 6px; margin: -4px -6px; }
+.bar-row.clickable:hover { background: var(--bg-hover); }
+
+/* ---------- file import ---------- */
+.dropzone {
+  border: 1px dashed var(--border-strong); border-radius: 8px; padding: 22px;
+  text-align: center; font-size: 13px; color: var(--ink-dim); cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.dropzone:hover, .dropzone.drag { border-color: var(--gold); background: var(--gold-soft); }
+.dropzone input { display: none; }
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--ink); color: var(--bg); padding: 12px 20px; border-radius: 8px;
+  font-size: 13.5px; opacity: 0; transition: opacity .2s, transform .2s; z-index: 100; pointer-events:none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* hidden on desktop; only shown (and made interactive) once mobile styles kick in */
+.sidebar-backdrop {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  z-index: 39; opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+
+/* desktop: let the sidebar collapse to free up space on big screens */
+@media (min-width: 881px) {
+  /* Invisible trigger at the extreme left edge. When the desktop sidebar is
+     collapsed, moving the pointer into this strip reveals the sidebar. */
+  .sidebar-edge-hover-zone {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 8px;
+    height: 100vh;
+    z-index: 43;
+    pointer-events: auto;
+  }
+  /* collapsed: the sidebar becomes a fixed overlay, fully off-screen to the left. It keeps its
+     normal 240px width and padding at all times and only ever slides via transform, so hovering
+     it back in (below) never resizes it, never wraps its text, and never reflows the main content. */
+  .app.sidebar-collapsed .sidebar {
+    position: fixed; left: 0; top: 0; height: 100vh; width: 240px;
+    flex: 0 0 0;
+    border-right: 1px solid var(--border);
+    background: var(--bg);
+    transform: translateX(-100%);
+    pointer-events: none;
+    box-shadow: 10px 0 30px rgba(0,0,0,0.28);
+    transition: transform .2s ease;
+    z-index: 44;
+  }
+  .app.sidebar-collapsed.sidebar-peek .sidebar {
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  /* while collapsed, the fixed toggle button floats over the top-left corner of the page.
+     Instead of pushing content down, nudge it right by the same amount the sidebar's own
+     brand row uses to clear the button (10px button offset + 32px width + a small gap),
+     so nothing sits under the button and every view still starts flush together. */
+  .app.sidebar-collapsed .main { padding-left: 50px; }
+}
+
+@media (max-width: 880px) {
+  .sidebar-edge-hover-zone { display: none; }
+  .sidebar {
+    position: fixed; z-index: 40; left: 0; top: 0; height: 100%;
+    transform: translateX(-100%); transition: transform .2s; width: 240px;
+    background: var(--bg);
+  }
+  .sidebar.open { transform: translateX(0); box-shadow: 10px 0 30px rgba(0,0,0,0.35); }
+
+  /* on small screens, only one handle shows at a time: the ☰ button is hidden while the
+     sidebar is closed (the edge tab takes over), then reappears once it's open so it can
+     be tapped again to close it. Both live right after the sidebar in the DOM so the
+     ".sidebar.open ~" sibling selector below can react to its state. */
+  .sidebar-toggle-btn { display: none; }
+  .sidebar.open ~ .sidebar-toggle-btn { display: flex; }
+  .sidebar-edge-tab {
+    display: flex; align-items: center; justify-content: center;
+    position: fixed; left: 0; top: 14px; width: 20px; height: 32px; z-index: 46;
+    border: 1px solid var(--border); border-left: none; border-radius: 0 8px 8px 0;
+    background: var(--bg); color: var(--ink-dim); cursor: pointer; font-size: 13px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.18);
+    transition: opacity .15s ease, transform .2s ease;
+  }
+  .sidebar-edge-tab:hover { color: var(--ink); }
+  /* hide the tab once the sidebar is open, since the ☰ button takes over closing it */
+  .sidebar.open ~ .sidebar-edge-tab { opacity: 0; pointer-events: none; transform: translateX(-100%); }
+  /* page content no longer needs top clearance for a fixed top-left button on mobile */
+  .main { padding: 13px 12px 40px 22px; padding-top: calc(13px + env(safe-area-inset-top, 0px)); }
+  .hero { grid-template-columns: 1fr; }
+  .chart-row, .two-col { grid-template-columns: 1fr; }
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  /* dim background + capture taps outside the open sidebar so it can be closed */
+  .sidebar-backdrop { display: block; }
+  .sidebar-backdrop.show { opacity: 1; pointer-events: auto; }
+}

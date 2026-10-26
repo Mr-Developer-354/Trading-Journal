@@ -1,0 +1,24 @@
+/* 40-calendar-title.css — Calendar period title styled to match the Trade Log title panel.
+   Loaded last so it wins over the earlier calendar label sizes (08, 16). */
+
+#view-calendar .cal-period-title.ledger-title-block {
+  width: auto;
+  max-width: 100%;
+  padding: 5px 12px;
+  gap: 2px;
+  border-left-width: 2px;
+  border-radius: 8px;
+  /* same 56px row height as the KPI cards and controls beside it */
+  height: 56px;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+#view-calendar .cal-period-label {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
