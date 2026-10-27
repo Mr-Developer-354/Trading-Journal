@@ -298,24 +298,6 @@ function dbRenderRisk(S) {
   ].join('');
 }
 
-function dbRenderExpectancy(S) {
-  const counts = DB_R_BINS.map(b => S.rows.filter(x => x.r !== null && b.test(x.r)).length);
-  document.getElementById('rSub').textContent = S.rCount ? `${ dbNum(S.rCount) } of ${ dbNum(S.n) } trades have a stop-loss` : 'needs a stop-loss on the trade';
-  VIZ.bars({
-    host: document.getElementById('rMultipleChart'), height: 220,
-    labels: DB_R_BINS.map(b => b.label), values: counts, name: 'Trades',
-    colors: DB_R_BINS.map((b, i) => i < 4 ? '#e5534b' : '#2fb170'),
-    fmt: v => dbNum(v) + ' trades', maxBar: 40
-  });
-  document.getElementById('expTiles').innerHTML = [
-    dbTile('Expectancy / trade', S.n ? fmtMoney(S.expectancy) : '—', dbCls(S.expectancy), 'net, after charges'),
-    dbTile('Average R', dbR(S.avgR), dbCls(S.avgR), 'mean R-multiple'),
-    dbTile('Avg winner (R)', dbR(S.avgWinR), 'pos', 'winners only'),
-    dbTile('Avg loser (R)', dbR(S.avgLossR), 'neg', 'losers only'),
-    dbTile('Trades with R', dbNum(S.rCount), '', 'stop-loss present'),
-    dbTile('Profit factor', S.n ? dbRatio(S.pf) : '—', S.pf !== null && S.pf >= 1 ? 'pos' : '', 'gross win ÷ gross loss')
-  ].join('');
-}
 
 function dbRenderDistribution(S) {
   VIZ.histogram({
@@ -627,7 +609,6 @@ function renderDashboard() {
   dbRenderHero(S);
   dbRenderKpis(S);
   dbRenderRisk(S);
-  dbRenderExpectancy(S);
   dbRenderDistribution(S);
   dbRenderCharts(S);
   dbRenderProfile(S);
@@ -666,7 +647,6 @@ const DASH_WIDGETS = [
   { id: 'hero',        label: 'Net P/L, equity, goal & runs' },
   { id: 'kpis',        label: 'Key metrics' },
   { id: 'risk',        label: 'Drawdown & risk' },
-  { id: 'expectancy',  label: 'Expectancy & R-multiples' },
   { id: 'distribution', label: 'Distribution, scatter & spread' },
   { id: 'charts',      label: 'Monthly results, win / loss & brokers' },
   { id: 'profile',     label: 'Broker profile, heatmap & gauges' },
