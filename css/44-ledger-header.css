@@ -82,3 +82,14 @@
 /* Ledger only: no space above the filter bar. The content area's top padding (.main) is removed while the Ledger is open. */
 .main:has(#view-ledger.active) { padding-top: 0; }
 #view-ledger .filter-bar { margin-top: 0; }
+
+/* The Ledger title is the Sync control: looks like a title, responds on hover */
+#view-ledger .filter-bar button.ledger-filter-title {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--sans);
+  text-align: left;
+}
+#view-ledger .filter-bar button.ledger-filter-title:hover { color: var(--gold); }
+#view-ledger .filter-bar button.ledger-filter-title:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
