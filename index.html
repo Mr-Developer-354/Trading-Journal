@@ -74,7 +74,7 @@
   <link rel="stylesheet" href="css/41-dashboard-layout.css">
   <link rel="stylesheet" href="css/42-phone.css">
   <link rel="stylesheet" href="css/43-screens.css">
-  <link rel="stylesheet" href="css/44-ledger-header.css?v=2">
+  <link rel="stylesheet" href="css/44-ledger-header.css?v=3">
 
 
 
@@ -457,24 +457,8 @@
 
     <!-- LEDGER -->
     <section class="view" id="view-ledger">
-      <div class="page-head ledger-page-head">
-        <div class="ledger-title-block">
-          <h1 title="Separate broker and platform ledger records. Every stored field is retained in the ledger database.">Ledger</h1>
-        </div>
-        <div class="ledger-head-right">
-          <div class="ledger-summary-cards" aria-label="Ledger summary">
-            <div class="ledger-summary-card" title="Trading day: number of distinct trading dates among the ledger rows shown. Shows 'x of y' while filters are active."><div class="label">Trading day</div><div class="val" id="ledgerStatTradingDay">0</div></div>
-            <div class="ledger-summary-card" title="Pay In / Out: per row, the broker's GrossPL from the Trade Log on that date, minus Brokerage for Kotak. Summed for the rows shown."><div class="label">Pay In / Out</div><div class="val" id="ledgerStatPayInOut">₹0.00</div></div>
-            <div class="ledger-summary-card" title="Charges: per row, −(Brokerage + Exchange + IPFT + Sebi + IGST + STT + Stamp + SqrOff + DP-Chr.). Summed for the rows shown."><div class="label">Charges</div><div class="val" id="ledgerStatRealChr">₹0.00</div></div>
-            <div class="ledger-summary-card" title="Net P/L: per row, Pay In / Out + Charges. For Kotak, Brokerage is added back once, because its Pay In / Out already has it deducted. Summed for the rows shown."><div class="label">Net P/L</div><div class="val" id="ledgerStatNet">₹0.00</div></div>
-            <div class="ledger-summary-card" title="Balance: the Balance of the latest-dated row shown. Balance is kept per broker in date order: previous Balance + Net P/L + Credit + Debit, starting from 0."><div class="label">Balance</div><div class="val" id="ledgerStatBalance">₹0.00</div></div>
-            <div class="ledger-summary-card" title="DailyTA: the stored DailyTA (daily balance) of the latest-dated row shown."><div class="label">DailyTA</div><div class="val" id="ledgerStatDailyTA">₹0.00</div></div>
-            <div class="ledger-summary-card" title="Credit/Debit Net: sum of Credit + Debit over the rows shown. Debit is stored negative, so this is the net cash in or out."><div class="label">Credit/Debit Net</div><div class="val" id="ledgerStatCreditDebitNet">₹0.00</div></div>
-          </div>
-        </div>
-      </div>
-
       <div class="filters filter-bar" role="search" aria-label="Ledger filters">
+        <span class="ledger-filter-title">Ledger</span>
         <button class="btn filter-add-btn sync-ledger-btn" id="syncLedgerBtn" type="button" title="Sync ledger rows from Trade Log" aria-label="Sync ledger rows from Trade Log"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.5L4 8.5M4 4v4.5h4.5M4 13a8 8 0 0 0 14.3 4.5L20 15.5M20 20v-4.5h-4.5"/></svg></button>
         <input type="text" id="ledgerSearch" placeholder="Search ledger…" aria-label="Search ledger">
         <select id="ledgerBrokerFilter" aria-label="Broker"><option value="all">All broker</option></select>

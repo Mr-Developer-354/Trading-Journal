@@ -60,3 +60,12 @@
   position: relative;
   top: auto;
 }
+
+/* Ledger title, in the filter bar just before the Sync button */
+#view-ledger .filter-bar .ledger-filter-title {
+  font: 700 15px/1 var(--sans);
+  color: var(--ink);
+  white-space: nowrap;
+  align-self: center;
+  padding: 0 4px;
+}
