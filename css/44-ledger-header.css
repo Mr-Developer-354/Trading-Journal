@@ -78,3 +78,7 @@
   align-self: center;
   padding: 0 4px;
 }
+
+/* Ledger only: no space above the filter bar. The content area's top padding (.main) is removed while the Ledger is open. */
+.main:has(#view-ledger.active) { padding-top: 0; }
+#view-ledger .filter-bar { margin-top: 0; }
