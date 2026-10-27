@@ -264,12 +264,19 @@ function ledgerTotalRowHtml(list) {
     Balance: latest ? (ledgerNum(latest['Balance']) || 0) : 0,
     DailyTA: latest ? (ledgerNum(canonicalLedgerRecord(latest).DailyTA) || 0) : 0
   };
+  const n = list.length;
+  // hover tooltip: the total's formula, then the row formula from the column header tips
+  const tipFor = k => {
+    if (k === 'Balance') return `Latest entry's Balance among the ${n} filtered rows, the same formula as the Balance card. Row rule: ${LEDGER_HEADER_TIPS.Balance}`;
+    if (k === 'DailyTA') return `Latest entry's DailyTA among the ${n} filtered rows, the same formula as the Daily TA card. Row rule: ${LEDGER_HEADER_TIPS.DailyTA}`;
+    return `Sum of ${LEDGER_EXCEL_HEADER_LABELS[k] || k} over the ${n} filtered rows (all pages). Row rule: ${LEDGER_HEADER_TIPS[k] || k}`;
+  };
   const cells = LEDGER_DISPLAY_FIELDS.map((k, i) => {
-    if (i === 0) return `<td class="rep-first">Total</td>`;
+    if (i === 0) return `<td class="rep-first" title="${escapeHtml(`Total row: each figure below is calculated over the ${n} filtered rows (all pages). Balance and DailyTA show the latest entry.`)}">Total</td>`;
     if (LEDGER_ALIGN_NUM.has(k)) {
       const value = LEDGER_TOTAL_SKIP.has(k) ? latestValue[k] : sums[k];
       const cls = [ledgerAlignClass(k), 'ledger-value', ['PayInOut', 'NetPL'].includes(k) ? ledgerValueClass(value) : ''].filter(Boolean).join(' ');
-      return `<td class="${cls}">${escapeHtml(formatLedgerCurrencyOrDash(value))}</td>`;
+      return `<td class="${cls}" title="${escapeHtml(tipFor(k))}">${escapeHtml(formatLedgerCurrencyOrDash(value))}</td>`;
     }
     return '<td></td>';
   }).join('');
