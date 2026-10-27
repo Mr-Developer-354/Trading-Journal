@@ -273,6 +273,11 @@ function ledgerTotalRowHtml(list) {
   };
   const cells = LEDGER_DISPLAY_FIELDS.map((k, i) => {
     if (i === 0) return `<td class="rep-first" title="${escapeHtml(`Total row: each figure below is calculated over the ${n} filtered rows (all pages). Balance and DailyTA show the latest entry.`)}">Total</td>`;
+    if (k === 'Day') {
+      // trading days: distinct dates among the filtered rows (one ledger row per broker per date, so a date can repeat)
+      const days = new Set(list.map(r => r.DATE).filter(Boolean)).size;
+      return `<td class="ctr" title="${escapeHtml(`Trading days: distinct dates among the ${n} filtered rows.`)}">${days}</td>`;
+    }
     if (LEDGER_ALIGN_NUM.has(k)) {
       const value = LEDGER_TOTAL_SKIP.has(k) ? latestValue[k] : sums[k];
       const cls = [ledgerAlignClass(k), 'ledger-value', ['PayInOut', 'NetPL'].includes(k) ? ledgerValueClass(value) : ''].filter(Boolean).join(' ');
