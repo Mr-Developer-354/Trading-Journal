@@ -942,7 +942,7 @@ function riskMapHtml(model) {
       + `<p class="rm-q-rule"><b>Rule</b> ${ t.rule }</p></article>`;
   }).join('');
 
-  const hero = `<section class="rm-hero"><span class="rm-badge">Most important view</span>`
+  const hero = `<section class="rm-hero">`
     + `<h2>Risk map</h2>`
     + `<p class="rm-lede">Big losses are ${ pct(bl.share) } of trades and net ${ money(bl.net) }. Big profits are ${ pct(bp.share) } and net ${ money(bp.net) }. `
     + `${ bl.share > LIMIT ? 'Big losses are above the limit, so size and stops come first.' : 'Big losses are inside the limit; keep the rules that hold them there.' }</p>`
