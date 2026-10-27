@@ -1,0 +1,13 @@
+/* Ledger table header: same look as the Risk management table header (css/34-reports.css).
+   Only the appearance changes. Sorting, the sort arrow, the sticky header and click behaviour are untouched.
+   Padding is set top and bottom only, so the right padding that makes room for the sort arrow still applies. */
+:root:not([data-density="xslim"]) #view-ledger .table-wrap thead th {
+  padding-top: 9px;
+  padding-bottom: 9px;
+  font-size: 11.5px;
+  line-height: 1.2;
+  font-weight: 600;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--gold) 12%, var(--bg-card));
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--gold) 45%, transparent);
+}
