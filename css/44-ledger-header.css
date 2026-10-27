@@ -55,11 +55,6 @@
   z-index: 6;
   background: var(--bg-raised);
 }
-/* Wide table (sideways scroll): the header becomes a fixed copy, so the total row stays in flow. */
-#view-ledger .table-wrap.is-wide tbody tr.ledger-total td {
-  position: relative;
-  top: auto;
-}
 
 /* Ledger title, in the filter bar just before the Sync button */
 #view-ledger .filter-bar .ledger-filter-title {
