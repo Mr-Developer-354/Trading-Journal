@@ -249,7 +249,7 @@ function ledgerDisplayCells(r) {
   return c;
 }
 // Total row, like the Risk management table: sums every filtered row, not only the page shown.
-// Balance and Daily TA are running balances, not amounts, so they are not summed.
+// Balance and Daily TA are running balances, so they show the latest entry's value, the same as the summary cards.
 const LEDGER_TOTAL_SKIP = new Set(['Balance', 'DailyTA']);
 function ledgerTotalRowHtml(list) {
   const sums = {};
@@ -259,11 +259,17 @@ function ledgerTotalRowHtml(list) {
       if (LEDGER_ALIGN_NUM.has(k) && !LEDGER_TOTAL_SKIP.has(k)) sums[k] = (sums[k] || 0) + (ledgerNum(c[k]) || 0);
     });
   });
+  const latest = list.filter(r => r.DATE).slice().sort((a, b) => String(a.DATE).localeCompare(String(b.DATE))).at(-1);
+  const latestValue = {
+    Balance: latest ? (ledgerNum(latest['Balance']) || 0) : 0,
+    DailyTA: latest ? (ledgerNum(canonicalLedgerRecord(latest).DailyTA) || 0) : 0
+  };
   const cells = LEDGER_DISPLAY_FIELDS.map((k, i) => {
     if (i === 0) return `<td class="rep-first">Total</td>`;
-    if (LEDGER_ALIGN_NUM.has(k) && !LEDGER_TOTAL_SKIP.has(k)) {
-      const cls = [ledgerAlignClass(k), 'ledger-value', ['PayInOut', 'NetPL'].includes(k) ? ledgerValueClass(sums[k]) : ''].filter(Boolean).join(' ');
-      return `<td class="${cls}">${escapeHtml(formatLedgerCurrencyOrDash(sums[k]))}</td>`;
+    if (LEDGER_ALIGN_NUM.has(k)) {
+      const value = LEDGER_TOTAL_SKIP.has(k) ? latestValue[k] : sums[k];
+      const cls = [ledgerAlignClass(k), 'ledger-value', ['PayInOut', 'NetPL'].includes(k) ? ledgerValueClass(value) : ''].filter(Boolean).join(' ');
+      return `<td class="${cls}">${escapeHtml(formatLedgerCurrencyOrDash(value))}</td>`;
     }
     return '<td></td>';
   }).join('');
