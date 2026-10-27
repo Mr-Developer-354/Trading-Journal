@@ -354,8 +354,6 @@ function renderLedger() {
   tbody.innerHTML = ledgerBodyHtml
     ? ledgerTotalRowHtml(list) + ledgerBodyHtml
     : `<tr><td colspan="${LEDGER_DISPLAY_FIELDS.length}" style="text-align:center;color:var(--ink-faint);padding:30px;">No ledger records match these filters.</td></tr>`;
-  // the total row pins under the header, so measure the header height for its sticky offset
-  if (ledgerTable.tHead) document.getElementById('view-ledger').style.setProperty('--ledger-head-h', ledgerTable.tHead.getBoundingClientRect().height + 'px');
   }
   tbody.querySelectorAll('[data-ledger-id]').forEach(row=>row.addEventListener('click',()=>openLedgerDetail(row.dataset.ledgerId)));
   const pagerTotal=document.getElementById('ledgerPagerTotal'); if(pagerTotal) pagerTotal.textContent=totalPages;

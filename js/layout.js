@@ -322,6 +322,7 @@ function syncStickyLayout() {
     const { view, bar, wrap, table } = sv;
     if (!bar.offsetHeight) return;                                   // view is hidden right now
     view.style.setProperty('--sticky-bar-h', pinnedBarHeight(bar) + 'px');
+    view.style.setProperty('--sticky-head-h', table.tHead.offsetHeight + 'px');   // the Ledger total row pins under the header
     wrap.classList.toggle('is-wide', table.offsetWidth > wrap.clientWidth + 1);
     // Trade Log: the Symbol column pins just right of the Date column (css/33-frozen-columns.css).
     // A hidden Date column measures 0, so Symbol then pins to the left edge.
