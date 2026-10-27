@@ -237,6 +237,39 @@ function applyLedgerHeaderTooltips() {
   });
 }
 
+// Values the Ledger table shows for one row, calculated columns included (used by the total row).
+function ledgerDisplayCells(r) {
+  const c = canonicalLedgerRecord(r);
+  c.Date = r.DATE || undefined;
+  c.Day = r.DATE ? blankDash(formatDayDisplay(r.DATE)) : undefined;
+  c.PayInOut = r['Pay in/out'];
+  c.RealChgs = ledgerRealChr(r);
+  c.NetPL = r['Net P/L/Ch'];
+  c.Balance = r['Balance'];
+  return c;
+}
+// Total row, like the Risk management table: sums every filtered row, not only the page shown.
+// Balance and Daily TA are running balances, not amounts, so they are not summed.
+const LEDGER_TOTAL_SKIP = new Set(['Balance', 'DailyTA']);
+function ledgerTotalRowHtml(list) {
+  const sums = {};
+  list.forEach(r => {
+    const c = ledgerDisplayCells(r);
+    LEDGER_DISPLAY_FIELDS.forEach(k => {
+      if (LEDGER_ALIGN_NUM.has(k) && !LEDGER_TOTAL_SKIP.has(k)) sums[k] = (sums[k] || 0) + (ledgerNum(c[k]) || 0);
+    });
+  });
+  const cells = LEDGER_DISPLAY_FIELDS.map((k, i) => {
+    if (i === 0) return `<td class="rep-first">Total</td>`;
+    if (LEDGER_ALIGN_NUM.has(k) && !LEDGER_TOTAL_SKIP.has(k)) {
+      const cls = [ledgerAlignClass(k), 'ledger-value', ['PayInOut', 'NetPL'].includes(k) ? ledgerValueClass(sums[k]) : ''].filter(Boolean).join(' ');
+      return `<td class="${cls}">${escapeHtml(formatLedgerCurrencyOrDash(sums[k]))}</td>`;
+    }
+    return '<td></td>';
+  }).join('');
+  return `<tr class="ledger-total">${cells}</tr>`;
+}
+
 function renderLedger() {
   syncFilterBars();
   populateLedgerFilters();
@@ -300,8 +333,8 @@ function renderLedger() {
   if (showRawLedger) {
     tbody.innerHTML = rawRows.map(r => `<tr class="clickable" data-ledger-id="${escapeHtml(r.Id)}">${rawKeys.map(k => `<td class="${ledgerAlignClass(k)}">${escapeHtml(rawCell(r[k]))}</td>`).join('')}</tr>`).join('')
       || `<tr><td colspan="${rawKeys.length || 1}" style="text-align:center;color:var(--ink-faint);padding:30px;">No ledger records match these filters.</td></tr>`;
-  } else
-  tbody.innerHTML=pageRows.map(r=>{
+  } else {
+  const ledgerBodyHtml=pageRows.map(r=>{
     const c=canonicalLedgerRecord(r);
     // Calculated columns (never stored): Day from Date, Pay In/Out + Net P/L from the Trade Log, Real Chr. from the charge columns
     c.Date = r.DATE || undefined;
@@ -317,7 +350,13 @@ function renderLedger() {
       const cls=[ledgerAlignClass(k), numeric ? `ledger-value${['PayInOut','NetPL'].includes(k) ? ledgerValueClass(v) : ''}` : ''].filter(Boolean).join(' ');
       return `<td class="${cls}">${escapeHtml(shown)}</td>`;
     }).join('')}</tr>`;
-  }).join('') || `<tr><td colspan="${LEDGER_DISPLAY_FIELDS.length}" style="text-align:center;color:var(--ink-faint);padding:30px;">No ledger records match these filters.</td></tr>`;
+  }).join('');
+  tbody.innerHTML = ledgerBodyHtml
+    ? ledgerTotalRowHtml(list) + ledgerBodyHtml
+    : `<tr><td colspan="${LEDGER_DISPLAY_FIELDS.length}" style="text-align:center;color:var(--ink-faint);padding:30px;">No ledger records match these filters.</td></tr>`;
+  // the total row pins under the header, so measure the header height for its sticky offset
+  if (ledgerTable.tHead) document.getElementById('view-ledger').style.setProperty('--ledger-head-h', ledgerTable.tHead.getBoundingClientRect().height + 'px');
+  }
   tbody.querySelectorAll('[data-ledger-id]').forEach(row=>row.addEventListener('click',()=>openLedgerDetail(row.dataset.ledgerId)));
   const pagerTotal=document.getElementById('ledgerPagerTotal'); if(pagerTotal) pagerTotal.textContent=totalPages;
   const pagerRange=document.getElementById('ledgerPagerRange'); if(pagerRange) pagerRange.textContent=list.length?`· ${start+1}–${Math.min(start+LEDGER_PAGE_SIZE,list.length)} of ${list.length}`:'· 0 entries';

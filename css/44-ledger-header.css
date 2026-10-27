@@ -39,3 +39,18 @@
 :root:not([data-density="xslim"]) #view-trades .table-wrap.sticky-ghost thead th.sort-active:nth-child(2) {
   box-shadow: 1px 0 0 var(--border-strong), 8px 0 10px -8px rgba(0, 0, 0, .3), inset 0 -2px 0 var(--gold);
 }
+
+/* Ledger total row: pinned under the header, like the Risk management total row (css/34-reports.css).
+   --sticky-bar-h is the filter bar; --ledger-head-h is the measured header height (ledger.js). */
+#view-ledger .table-wrap tbody tr.ledger-total td {
+  position: sticky;
+  top: calc(var(--sticky-bar-h, 0px) + var(--ledger-head-h, 30px));
+  z-index: 4;
+  background: var(--bg-raised);
+  font-weight: 700;
+  border-bottom: 1px solid var(--border-strong);
+}
+#view-ledger .table-wrap tbody tr.ledger-total td:nth-child(-n+2) {
+  z-index: 6;
+  background: var(--bg-raised);
+}
