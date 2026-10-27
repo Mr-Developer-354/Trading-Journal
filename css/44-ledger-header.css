@@ -16,3 +16,13 @@
   background: var(--bg-hover);
   box-shadow: inset 0 -2px 0 var(--gold);
 }
+/* The last pinned column (Day in normal mode, Date in Raw mode) carries the pinned divider (css/33-frozen-columns.css),
+   which replaced the header underline. Keep both: the divider plus the underline. */
+:root:not([data-density="xslim"]) #view-ledger .table-wrap table:not(.raw-mode) thead th:nth-child(2),
+:root:not([data-density="xslim"]) #view-ledger .table-wrap table.raw-mode thead th:nth-child(1) {
+  box-shadow: var(--pin-shadow), inset 0 -1px 0 color-mix(in srgb, var(--gold) 45%, transparent);
+}
+:root:not([data-density="xslim"]) #view-ledger .table-wrap table:not(.raw-mode) thead th.sort-active:nth-child(2),
+:root:not([data-density="xslim"]) #view-ledger .table-wrap table.raw-mode thead th.sort-active:nth-child(1) {
+  box-shadow: var(--pin-shadow), inset 0 -2px 0 var(--gold);
+}
