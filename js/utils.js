@@ -15,10 +15,13 @@ function escapeHtml(v) {
 }
 
 // ---- Money (Indian number grouping) ----
-// ₹1,235 style, no decimals
+// ₹1,234.56 style, always 2 decimals (same as fmtMoneyPrecise)
 function fmtMoney(n) {
   if (isBlank(n) || isNaN(n)) return '—';
-  return (n < 0 ? '-' : '') + '₹' + Math.abs(n).toLocaleString(numLocale(), { maximumFractionDigits: 0 });
+  return (n < 0 ? '-' : '') + '₹' + Math.abs(n).toLocaleString(numLocale(), {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
 }
 
 // ₹1,234.56 style, always 2 decimals
