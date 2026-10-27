@@ -62,11 +62,43 @@ function dbTable(headers, rows, attrs) {
 }
 function dbEmpty(host) { host.innerHTML = `<div class="db-faint db-empty">No data in this period.</div>`; }
 
+/* Real charges per trade. A broker's ledger row for a day gives its Net P/L after real charges (ledgerPLCharges).
+   The day's charges (that net minus the day's gross P/L from the Trade Log) are shared over the day's trades in
+   proportion to their estimated charges, or equally when none is estimated. A broker/day with no ledger row keeps
+   the estimate stored on each trade. */
+function dbChargeMap() {
+  const groups = new Map();
+  trades.forEach(t => {
+    const key = ledgerBrokerKey(t.broker) + '|' + reportDateOf(t.date ?? t.Date);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(t);
+  });
+  const ledgerNet = new Map();
+  ledgers.forEach(r => {
+    const d = reportDateOf(canonicalLedgerRecord(r).Date);
+    if (!d) return;
+    const key = ledgerBrokerKey(r.broker) + '|' + d;
+    ledgerNet.set(key, (ledgerNet.get(key) || 0) + (ledgerPLCharges(r) || 0));
+  });
+  const map = new Map();
+  groups.forEach((list, key) => {
+    const net = ledgerNet.get(key);
+    if (net === undefined) { list.forEach(t => map.set(t, reportTradeCharges(t))); return; }
+    const gross = list.reduce((s, t) => s + pnlOf(t), 0);
+    const real = net - gross;
+    const est = list.reduce((s, t) => s + reportTradeCharges(t), 0);
+    list.forEach(t => map.set(t, real * (est !== 0 ? reportTradeCharges(t) / est : 1 / list.length)));
+  });
+  return map;
+}
+function dbChargeOf(t, map) { return map.has(t) ? map.get(t) : reportTradeCharges(t); }
+
 /* ---------------- statistics for one period ----------------
-   Every figure is "after estimated charges": net = Gross P/L (pnlOf) + stored charges (expCha, negative). */
+   Every figure is "after charges": net = Gross P/L (pnlOf, Trade Log) + charges (ledger where a day has a ledger row, else estimated). */
 function dbStats(list) {
+  const chargeMap = dbChargeMap();
   const rows = dbSorted(list).map(t => {
-    const gross = pnlOf(t), chg = reportTradeCharges(t);
+    const gross = pnlOf(t), chg = dbChargeOf(t, chargeMap);
     return { t, gross, chg, net: gross + chg, r: reportRrrOf(t) };
   });
   const sum = (arr, f) => arr.reduce((s, x) => s + f(x), 0);
@@ -234,9 +266,9 @@ function dbRenderHero(S) {
 function dbRenderKpis(S) {
   const cls = v => (v === null ? '' : dbCls(v));
   document.getElementById('kpiGrid').innerHTML = [
-    dbTile('Net P/L', fmtMoney(S.net), cls(S.net), 'after estimated charges'),
+    dbTile('Net P/L', fmtMoney(S.net), cls(S.net), 'after ledger charges'),
     dbTile('Gross P/L', fmtMoney(S.gross), cls(S.gross), 'before charges'),
-    dbTile('Charges', fmtMoney(S.charges), 'neg', 'estimated, stored per trade'),
+    dbTile('Charges', fmtMoney(S.charges), 'neg', 'from ledger, estimate if none'),
     dbTile('Trades', dbNum(S.n), '', `${ S.wins } wins · ${ S.losses } losses`),
     dbTile('Win rate', S.n ? dbPct(S.winRate) : '—', S.winRate >= 50 ? 'pos' : S.n ? 'neg' : '', 'winners ÷ trades'),
     dbTile('Profit factor', S.n ? dbRatio(S.pf) : '—', S.pf !== null && S.pf >= 1 ? 'pos' : S.n ? 'neg' : '', 'gross win ÷ gross loss'),
@@ -426,8 +458,9 @@ function dbRenderTime(S) {
 
 function dbHeatmap() {
   const dm = {};
-  // net after estimated charges, the same basis as the rest of the dashboard
-  trades.filter(t => t.date).forEach(t => { dm[t.date] = (dm[t.date] || 0) + pnlOf(t) + reportTradeCharges(t); });
+  // net after charges (ledger where available), the same basis as the rest of the dashboard
+  const chargeMap = dbChargeMap();
+  trades.filter(t => t.date).forEach(t => { dm[t.date] = (dm[t.date] || 0) + pnlOf(t) + dbChargeOf(t, chargeMap); });
   const keys = Object.keys(dm).sort();
   const grid = document.getElementById('heatGrid');
   const monthsEl = document.getElementById('heatMonths');
