@@ -11,3 +11,8 @@
   background: color-mix(in srgb, var(--gold) 12%, var(--bg-card));
   box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--gold) 45%, transparent);
 }
+/* keep the highlight on the column the table is sorted by (same as css/24-table-look.css) */
+:root:not([data-density="xslim"]) #view-ledger .table-wrap thead th.sort-active {
+  background: var(--bg-hover);
+  box-shadow: inset 0 -2px 0 var(--gold);
+}
