@@ -55,6 +55,20 @@
   z-index: 6;
   background: var(--bg-raised);
 }
+/* Wide table: the header and total row are pinned by the fixed copy (ghost), so the real total row only
+   keeps its sideways pin here, not a vertical one (that would show it twice). */
+#view-ledger .table-wrap.is-wide tbody tr.ledger-total td {
+  top: auto;
+}
+/* The copy's total row: pinned sideways like the frozen body columns, and opaque */
+#view-ledger .table-wrap.sticky-ghost tbody tr.ledger-total td {
+  position: sticky;
+  top: auto;
+  background: var(--bg-raised);
+  z-index: 4;
+}
+#view-ledger .table-wrap.sticky-ghost tbody tr.ledger-total td:nth-child(1) { left: 0; z-index: 7; }
+#view-ledger .table-wrap.sticky-ghost tbody tr.ledger-total td:nth-child(2) { left: var(--frozen-date-w, 0px); z-index: 7; }
 
 /* Ledger title, in the filter bar just before the Sync button */
 #view-ledger .filter-bar .ledger-filter-title {

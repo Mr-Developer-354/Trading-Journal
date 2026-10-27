@@ -365,6 +365,13 @@ function rebuildGhostHeader(sv) {
     cols.appendChild(col);
   });
   copy.append(cols, table.tHead.cloneNode(true));
+  // Ledger: the total row is pinned by the same copy, under the header (css/44-ledger-header.css)
+  const totalRow = table.tBodies[0] && table.tBodies[0].querySelector('tr.ledger-total');
+  if (totalRow) {
+    const tb = document.createElement('tbody');
+    tb.appendChild(totalRow.cloneNode(true));
+    copy.appendChild(tb);
+  }
   sv.ghost.replaceChildren(copy);
   positionGhostHeaders();
 }
@@ -380,7 +387,8 @@ function positionGhostHeaders() {
     const gap = parseFloat(getComputedStyle(view).getPropertyValue('--sticky-gap')) || 0;
     const pinAt = pinnedBarHeight(bar) + gap - (gap ? 1 : 0);        // 1px under the gap hides sub-pixel seams
     const box = wrap.getBoundingClientRect();
-    const headH = table.tHead.offsetHeight;
+    const totalEl = table.tBodies[0] && table.tBodies[0].querySelector('tr.ledger-total');
+    const headH = table.tHead.offsetHeight + (totalEl ? totalEl.offsetHeight : 0);   // header + pinned total row
     const headTop = box.top + wrap.clientTop;                        // where the real header is right now
     const tableEnd = box.bottom - wrap.clientTop;                    // bottom edge of the table box
     if (headTop >= pinAt || tableEnd <= pinAt) {                     // real header visible, or table already gone
