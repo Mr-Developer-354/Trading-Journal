@@ -146,10 +146,3 @@
   font: 13px var(--sans); text-align: center;
 }
 .dp-type.dp-bad { border-color: #e5484d; }
-
-/* Phones: on the Trade log filter bar, the + button and the search box share the first line.
-   The other filters and buttons wrap onto the lines below. */
-@media (max-width: 600px) {
-  #view-trades .filter-bar > .filter-add-btn { flex: 0 0 auto; }
-  #view-trades .filter-bar #fSearch { flex: 1 1 calc(100% - 52px) !important; min-width: 0 !important; width: auto; }
-}
