@@ -208,3 +208,7 @@
 @media (min-width: 601px) {
   #view-dashboard .db-foot { grid-template-columns: repeat(5, minmax(0, auto)); justify-content: space-between; }
 }
+
+/* the win and loss counts keep their green and red on the dashboard (beats the footer's grey text rules) */
+#view-dashboard b .cal-kpi-sub .cal-count-positive { color: var(--green) !important; }
+#view-dashboard b .cal-kpi-sub .cal-count-negative { color: var(--red) !important; }
