@@ -101,3 +101,15 @@
     padding-bottom: calc(var(--tabbar-h, 64px) + var(--pager-h, 56px) + 1px + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
+
+/* Phones: date fields show only the calendar icon (the text part is hidden; the field keeps its label for screen readers) */
+@media (max-width: 600px) {
+  input[type="date"]::-webkit-datetime-edit,
+  input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+  input[type="date"]::-webkit-datetime-edit-text,
+  input[type="date"]::-webkit-datetime-edit-month-field,
+  input[type="date"]::-webkit-datetime-edit-day-field,
+  input[type="date"]::-webkit-datetime-edit-year-field { display: none; }
+  input[type="date"] { width: auto; min-width: 0; padding-left: 8px; padding-right: 8px; }
+  input[type="date"]::-webkit-calendar-picker-indicator { margin: 0; opacity: .85; cursor: pointer; }
+}
