@@ -194,3 +194,12 @@
 /* no browser focus ring on the tabs (it cut across the bottom edge); keyboard users get an inset gold line */
 .db-goal-tab:focus, .db-goal-tab:focus:not(:focus-visible) { outline: none; }
 .db-goal-tab:focus-visible { outline: none; box-shadow: inset 0 2px 0 var(--gold); }
+
+/* Dashboard counts such as 15 (6 / 9): the bracketed part stays on the same line as the number */
+#view-dashboard b .cal-kpi-sub,
+#view-dashboard b .cal-kpi-sub span {
+  display: inline !important; text-transform: none !important; letter-spacing: .02em !important;
+  font-size: .75em; font-weight: 500; color: var(--ink-dim);
+}
+#view-dashboard b .cal-kpi-sub .cal-count-positive,
+#view-dashboard b .cal-kpi-sub .cal-count-negative { font-weight: 600; }
