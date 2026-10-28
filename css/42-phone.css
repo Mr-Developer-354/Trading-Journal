@@ -230,3 +230,14 @@
   #view-dashboard .db-filter-row { grid-column: 2; grid-row: 1; justify-self: end; flex-wrap: nowrap; }
   #view-dashboard .db-filter-bar { grid-column: 1 / -1; grid-row: 3; justify-content: flex-end; }
 }
+
+/* Phones: the date range is a dropdown instead of the row of buttons (Dashboard, Reports, Risk) */
+.rng-select { display: none; }
+@media (max-width: 600px) {
+  .rsk-range [data-date-range] { display: none !important; }
+  .rsk-range .rng-select {
+    display: block; width: 100%; height: 34px; box-sizing: border-box; padding: 0 10px;
+    border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--ink);
+    font: 600 13px var(--sans);
+  }
+}

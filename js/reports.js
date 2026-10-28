@@ -1213,7 +1213,9 @@ function riskRangeFrom(range = riskRange) {
 function renderDateRange(prefix) {
   const seg = document.getElementById(`${ prefix }RangeSeg`);
   if (!seg) return;
-  seg.innerHTML = RISK_RANGES.map(([k, l]) => `<button type="button" class="${ k === riskRange ? 'active' : '' }" data-date-range="${ k }" aria-pressed="${ k === riskRange }">${ l }</button>`).join('');
+  // on phones the buttons are replaced by this dropdown (css/42-phone.css); both show the same range
+  seg.innerHTML = RISK_RANGES.map(([k, l]) => `<button type="button" class="${ k === riskRange ? 'active' : '' }" data-date-range="${ k }" aria-pressed="${ k === riskRange }">${ l }</button>`).join('')
+    + `<select class="rng-select" data-range-select aria-label="Date range">${ RISK_RANGES.map(([k, l]) => `<option value="${ k }" ${ k === riskRange ? 'selected' : '' }>${ l }</option>`).join('') }</select>`;
 }
 function riskDateParts(iso) {
   const [y, m, d] = iso.split('-').map(Number);
@@ -1472,15 +1474,20 @@ function initReports() {
   // the range buttons and the dropdowns, on the Dashboard, Reports and Risk pages; all of them re-render so they stay in step
   ['risk', 'report', 'dash'].forEach(prefix => {
     const rangeEl = document.getElementById(`${ prefix }RangeSeg`);
-    if (rangeEl) rangeEl.addEventListener('click', e => {
-      const b = e.target.closest('[data-date-range]');
-      if (!b) return;
+    const applyRange = key => {
       // a range replaces the calendar dropdowns: they go back to All so both show the same filter
-      riskRange = b.dataset.dateRange;
+      riskRange = key;
       Object.keys(riskDateFilter).forEach(k => { riskDateFilter[k] = 'all'; });
       renderRisk();
       renderReports();
       renderDashboard();
+    };
+    if (rangeEl) rangeEl.addEventListener('click', e => {
+      const b = e.target.closest('[data-date-range]');
+      if (b) applyRange(b.dataset.dateRange);
+    });
+    if (rangeEl) rangeEl.addEventListener('change', e => {
+      if (e.target.matches('[data-range-select]')) applyRange(e.target.value);
     });
     DATE_FILTER_KEYS.forEach(key => {
       const el = document.getElementById(dateFilterId(prefix, key));
