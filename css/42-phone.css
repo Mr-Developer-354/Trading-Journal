@@ -245,3 +245,6 @@
 /* Reports and Risk: the day, week, month and year dropdowns sit right under the broker selector (all screen sizes) */
 .rep-date-row { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; margin: 1px 0 0; }
 .rep-date-row .rep-broker-pick { margin: 0; }
+
+/* Reports and Risk: the header stacks, so the date dropdowns sit below the broker selector on every screen size */
+.rep-page-head { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
