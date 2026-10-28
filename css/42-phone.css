@@ -108,8 +108,9 @@
   input[type="date"]::-webkit-datetime-edit-text,
   input[type="date"]::-webkit-datetime-edit-month-field,
   input[type="date"]::-webkit-datetime-edit-year-field { display: none; }
-  input[type="date"]::-webkit-datetime-edit-day-field { display: inline; }
-  input[type="date"] { flex: 0 0 auto !important; width: 54px !important; min-width: 0 !important; max-width: 54px; padding-left: 6px; padding-right: 6px; box-sizing: border-box; }
+  input[type="date"]::-webkit-datetime-edit-day-field { display: inline; padding-right: 8px; }
+  input[type="date"]::-webkit-datetime-edit-fields-wrapper { padding: 0; }
+  input[type="date"] { flex: 0 0 auto !important; width: 60px !important; min-width: 0 !important; max-width: 60px; padding-left: 6px; padding-right: 6px; box-sizing: border-box; }
   input[type="date"]::-webkit-calendar-picker-indicator { margin: 0 0 0 6px; opacity: .85; cursor: pointer; }
 }
 
