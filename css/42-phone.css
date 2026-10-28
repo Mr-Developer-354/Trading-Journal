@@ -60,3 +60,9 @@
   #view-dashboard .db-filter-row { justify-content: space-between; }
   #view-dashboard .db-filter-bar { flex-wrap: wrap; justify-content: flex-start; }
 }
+
+/* Phones (up to 600px): 5 tabs (Home, Trades, +, Reports, More).
+   Tablets (601px to 1024px): 7 tabs, the extra Ledger and Calendar tabs are shown. */
+@media (max-width: 600px) {
+  .phone-tabbar .phone-tab-tablet { display: none; }
+}
