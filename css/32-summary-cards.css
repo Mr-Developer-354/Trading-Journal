@@ -215,12 +215,16 @@
   #view-trades .page-head.ledger-page-head {
     display: flex;
     flex-wrap: nowrap;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-between;
     gap: 12px;
   }
-  #view-trades .page-head .ledger-title-block { flex: 0 0 auto; }
-  #view-trades .page-head .ledger-title-block h1 { white-space: nowrap; }
-  #view-trades .page-head .ledger-head-right { flex: 1 1 auto; min-width: 0; display: flex; justify-content: flex-end; }
+  /* the title box is as tall as the summary cards and takes the rest of the row */
+  #view-trades .page-head .ledger-title-block { flex: 1 1 auto; min-width: 0; display: flex; }
+  #view-trades .page-head .ledger-title-block h1 {
+    flex: 1 1 auto; margin: 0; box-sizing: border-box; display: flex; align-items: center;
+    white-space: nowrap;
+  }
+  #view-trades .page-head .ledger-head-right { flex: 0 0 auto; min-width: 0; display: flex; align-items: stretch; justify-content: flex-end; }
   #view-trades .page-head .ledger-summary-cards { flex-wrap: wrap; justify-content: flex-end; }
 }
