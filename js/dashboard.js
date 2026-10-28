@@ -281,6 +281,7 @@ function dbRenderHero(S) {
   });
 
   document.getElementById('equityFoot').innerHTML = `
+    <div><span>Trades</span><b>${ dbCountSplit(S.n, S.wins, S.losses) }</b></div>
     <div><span>Trading days</span><b>${ dbCountSplit(S.days.length, Object.values(S.dayMap).filter(v => v > 0).length, Object.values(S.dayMap).filter(v => v < 0).length) }</b></div>
     <div><span>Best day</span><b class="pos">${ S.bestDay ? fmtMoney(S.dayMap[S.bestDay]) : '—' }</b></div>
     <div><span>Worst day</span><b class="neg">${ S.worstDay ? fmtMoney(S.dayMap[S.worstDay]) : '—' }</b></div>
