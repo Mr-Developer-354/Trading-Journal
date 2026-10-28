@@ -1,9 +1,7 @@
-/* 43-screens.css — the three screen views. js/phone.js sets <html data-screen> to one of:
-     mobile    up to 600px          phone tab bar, Trade log as cards (css/42-phone.css)
-     tablet    601px to 1024px      desktop layout, sidebar collapsed to icons (hover or click to open)
-     computer  1025px and up        the full desktop layout
+/* 43-screens.css — the two screen views. js/phone.js sets <html data-screen> to one of:
+     mobile    up to 1024px         phone layout, tab bar, Trade log as cards, sidebar as a drawer (css/42-phone.css)
+     computer  1025px and up        the full desktop layout, sidebar pinned
    Each view is defined in one place. */
 
 html[data-screen="mobile"] .main { max-width: none; }
-html[data-screen="tablet"] .main { max-width: none; }
 html[data-screen="computer"] .main { max-width: 1400px; }

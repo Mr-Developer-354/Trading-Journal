@@ -77,7 +77,7 @@
 
 /* Phones: the filter bar wraps onto ~4 rows (about 160px), too much to keep on screen.
    Only the table header pins there, right at the top. */
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
   :is(#view-trades, #view-ledger) { --sticky-gap: 0px; }
   :is(#view-trades, #view-ledger) .filter-bar { position: static; box-shadow: none; }
 }

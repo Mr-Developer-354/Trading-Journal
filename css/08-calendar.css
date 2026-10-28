@@ -162,11 +162,11 @@
 .cal-day-quick { display:flex; gap:7px; margin-bottom:14px; }
 .cal-day-quick .btn { flex:1; justify-content:center; }
 
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
   .cal-year { grid-template-columns:repeat(3,minmax(0,1fr)); }
   .cal-cell { min-height:100px; }
 }
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
   .calendar-hero { align-items:flex-start; flex-direction:column; padding:18px; }
   .calendar-actions { width:100%; justify-content:space-between; }
   .calendar-kpis { grid-template-columns:repeat(2,minmax(0,1fr)); }

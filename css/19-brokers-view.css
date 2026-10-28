@@ -61,8 +61,8 @@
 .broker-empty { grid-column:1/-1; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:170px; border:1px dashed var(--border-strong); border-radius:12px; color:var(--ink-dim); text-align:center; }
 .broker-empty strong { color:var(--ink); font-size:13px; }
 .broker-empty span { margin-top:5px; font-size:10.5px; }
-@media (max-width: 600px) { .broker-summary-grid { grid-template-columns:repeat(3,1fr); } .broker-summary-featured { grid-column:span 1; } }
-@media (max-width: 600px) { .brokers-page-head { align-items:flex-start; } .brokers-head-meta { align-items:flex-start; } .broker-summary-grid { grid-template-columns:repeat(2,1fr); } .broker-grid { grid-template-columns:1fr; } }
+@media (max-width: 1024px) { .broker-summary-grid { grid-template-columns:repeat(3,1fr); } .broker-summary-featured { grid-column:span 1; } }
+@media (max-width: 1024px) { .brokers-page-head { align-items:flex-start; } .brokers-head-meta { align-items:flex-start; } .broker-summary-grid { grid-template-columns:repeat(2,1fr); } .broker-grid { grid-template-columns:1fr; } }
 @media (max-width:520px) { .brokers-page-head { flex-direction:column; gap:12px; } .brokers-head-meta { width:100%; } .broker-summary-grid { grid-template-columns:1fr 1fr; } .broker-summary-featured { grid-column:span 2; } .broker-metrics { grid-template-columns:repeat(2,1fr); } .broker-metrics > div:nth-child(2) { border-right:0; } .broker-metrics > div:nth-child(3),.broker-metrics > div:nth-child(4) { border-top:1px solid var(--border); } .broker-metrics > div:nth-child(3) { border-right:1px solid var(--border); padding-left:0; } }
 
 /* Date range: compact. Chrome pads native date fields with a wide empty area after the
@@ -94,7 +94,7 @@
   cursor: pointer;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
   .cal-period-head { align-items:flex-start; flex-direction:column; }
   .cal-period-controls { width:100%; justify-content:flex-start; }
 }
@@ -115,7 +115,7 @@
 .cal-broker-select:hover { border-color:var(--border); background:var(--bg-hover); }
 .cal-broker-select:focus { border-color:var(--accent, var(--border-strong)); box-shadow:0 0 0 2px rgba(127,127,127,.12); }
 .cal-broker-select option { background:var(--bg-raised); color:var(--ink); font-weight:500; }
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
   .cal-data-filter { flex:1 1 auto; }
   .cal-broker-select { width:100%; }
 }

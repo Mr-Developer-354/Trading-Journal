@@ -1,10 +1,10 @@
-/* 42-phone.css — phone view (≤ 600px). Loaded last.
+/* 42-phone.css — mobile view (≤ 1024px, tablets included). Loaded last.
    Bottom tab bar (Home · Trades · + · Reports · More), the Trade log as cards, and a stacked dashboard header.
-   Desktop and tablet widths are not affected: the bar is hidden above 600px. */
+   Tablet and mobile widths (up to 1024px) share this view; the bar is hidden from 1025px up. */
 
 .phone-tabbar { display: none; }
 
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
   /* the sidebar is opened from "More" in the tab bar, so its edge handles are not needed */
   .sidebar-toggle-btn,
   .sidebar-edge-tab,

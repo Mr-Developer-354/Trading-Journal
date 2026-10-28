@@ -481,10 +481,10 @@
 .rate-editor-spacer { flex: 1; }
 
 /* ---------- smaller screens ---------- */
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
   #view-charges .calc-layout { grid-template-columns: minmax(0, 1fr); }
 }
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
   #view-charges .charges-broker-tabs { flex: 1 1 100%; overflow-x: auto; scrollbar-width: none; }
   #view-charges .rate-settings-btn { margin-left: auto; }
   .rate-editor-backdrop { padding: 8px; }

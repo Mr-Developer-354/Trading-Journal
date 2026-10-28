@@ -15,7 +15,7 @@
 .imp-foot { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 12px 18px; border-top: 1px solid var(--border); }
 .imp-bulk { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink-dim); }
 .imp-spacer { flex: 1; }
-@media (max-width: 600px) { .imp-spacer { flex-basis: 100%; height: 0; } }
+@media (max-width: 1024px) { .imp-spacer { flex-basis: 100%; height: 0; } }
 .imp-section + .imp-section { border-top: 1px solid var(--border-strong); }
 .imp-sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 18px 8px; }
 .imp-sec-head h4 { margin: 0 0 2px; font: 600 14px/1.2 var(--sans); color: var(--gold); }

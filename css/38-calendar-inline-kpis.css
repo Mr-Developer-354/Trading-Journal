@@ -5,15 +5,15 @@
 .cal-kpi.cal-kpi-inline::after { display:none; }
 .cal-kpi.cal-kpi-inline .value { font-size:14px; white-space:nowrap; }
 .cal-kpi.cal-kpi-inline .label { margin-top:1px; font-size:9px; }
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
   .cal-inline-kpis { width:100%; justify-content:flex-start; }
   .cal-kpi.cal-kpi-inline { flex:1 1 auto; }
 }
 
 /* Calendar month view: day cards a little taller (the other calendar views keep their heights) */
 #calMonthView .cal-cell { min-height:94px; }
-@media (max-width: 600px) { #calMonthView .cal-cell { min-height:88px; } }
-@media (max-width: 600px) { #calMonthView .cal-cell { min-height:80px; } }
+@media (max-width: 1024px) { #calMonthView .cal-cell { min-height:88px; } }
+@media (max-width: 1024px) { #calMonthView .cal-cell { min-height:80px; } }
 @media (max-width:560px) { #calMonthView .cal-cell { min-height:72px; } }
 
 /* Calendar month view: weekday labels (Sun, Mon, …) a bit larger */
@@ -34,7 +34,7 @@
 .cal-stack-top, .cal-stack-bottom { display:flex; align-items:center; gap:6px; }
 .cal-stack-top .cal-nav { display:flex; gap:4px; }
 .cal-stack-bottom .cal-view-switch { flex:0 0 auto; }
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
   .cal-stack { width:100%; align-items:stretch; }
   .cal-stack-top, .cal-stack-bottom { width:100%; }
   .cal-stack-top .cal-nav { flex:1 1 auto; }
@@ -60,7 +60,7 @@
 }
 #view-calendar .cal-stack .cal-stack-top .cal-nav { gap: 6px; }
 #view-calendar .cal-stack .cal-stack-bottom .cal-view-switch { gap: 4px; }
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
   #view-calendar .cal-stack .cal-nav .btn,
   #view-calendar .cal-stack .cal-view-btn { width: auto; min-width: 0; flex: 1 1 0; }
   #view-calendar .cal-stack #calJumpDay { width: var(--cal-ctl-w); }
@@ -105,7 +105,7 @@
 #view-calendar .cal-stack #calJumpDay { height: 26px; min-height: 26px; }
 
 /* The eight header buttons share one exact width (40px) on desktop. Locked with !important because older rules set min-widths on these buttons. */
-@media (min-width: 601px) {
+@media (min-width: 1025px) {
   #view-calendar .cal-stack .cal-nav .btn,
   #view-calendar .cal-stack #calJumpDay,
   #view-calendar .cal-stack .cal-view-btn {
@@ -122,7 +122,7 @@
 #view-calendar .cal-stack #calJumpDay { flex: 1 1 0; width: auto; min-width: 0; }
 #view-calendar .cal-stack .cal-stack-bottom .cal-view-switch { flex: 1 1 0; width: auto; min-width: 0; }
 #view-calendar .cal-stack .cal-view-btn { flex: 1 1 0; width: auto; min-width: 0; }
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
   #view-calendar .cal-stack { width: 100%; }
 }
 

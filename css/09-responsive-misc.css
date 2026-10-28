@@ -27,7 +27,7 @@
 }
 
 /* desktop: let the sidebar collapse to free up space on big screens */
-@media (min-width: 601px) {
+@media (min-width: 1025px) {
   /* Invisible trigger at the extreme left edge. When the desktop sidebar is
      collapsed, moving the pointer into this strip reveals the sidebar. */
   .sidebar-edge-hover-zone {
@@ -65,7 +65,7 @@
   .app.sidebar-collapsed .main { padding-left: 50px; }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
   .sidebar-edge-hover-zone { display: none; }
   .sidebar {
     position: fixed; z-index: 40; left: 0; top: 0; height: 100%;
