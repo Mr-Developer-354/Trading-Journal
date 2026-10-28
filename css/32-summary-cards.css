@@ -208,3 +208,19 @@
 :is(#view-trades, #view-ledger) .ledger-summary-card .val {
   white-space: nowrap;
 }
+
+/* Tablet and computer (601px and up): the Trade log title and its summary cards sit on one line.
+   Phones keep the title above the cards. */
+@media (min-width: 601px) {
+  #view-trades .page-head.ledger-page-head {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  #view-trades .page-head .ledger-title-block { flex: 0 0 auto; }
+  #view-trades .page-head .ledger-title-block h1 { white-space: nowrap; }
+  #view-trades .page-head .ledger-head-right { flex: 1 1 auto; min-width: 0; display: flex; justify-content: flex-end; }
+  #view-trades .page-head .ledger-summary-cards { flex-wrap: wrap; justify-content: flex-end; }
+}
