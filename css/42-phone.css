@@ -156,14 +156,15 @@
 
 /* Phones: the Trade log title and the summary cards are as wide as their content, and share one height */
 @media (max-width: 600px) {
-  #view-trades .page-head.ledger-page-head { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px; }
+  #view-trades .page-head.ledger-page-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
   #view-trades .page-head .ledger-title-block {
     flex: 0 0 auto; width: max-content; max-width: 100%; height: 48px; box-sizing: border-box;
     display: flex; align-items: center; padding: 0 14px;
   }
   #view-trades .page-head .ledger-title-block h1 { height: auto; margin: 0; white-space: nowrap; }
-  #view-trades .page-head .ledger-head-right { width: auto; max-width: 100%; display: flex; flex-wrap: wrap; }
-  #view-trades .page-head .ledger-summary-cards { display: flex; flex-wrap: wrap; width: auto; max-width: 100%; grid-template-columns: none; gap: 6px; }
+  /* the title and every card are items of one row, so the cards follow the title and wrap one card at a time */
+  #view-trades .page-head .ledger-head-right { display: contents; }
+  #view-trades .page-head .ledger-summary-cards { display: contents; }
   #view-trades .page-head .ledger-summary-card {
     flex: 0 0 auto; width: auto; height: 48px; min-height: 48px; box-sizing: border-box;
     padding: 5px 10px 5px 12px; justify-content: center;
