@@ -1,12 +1,12 @@
 // ======================================================================
-// date-popover.js — on phones (up to 600px) the date fields open a small calendar popover
+// date-popover.js — on phones (up to 1024px, phones and tablets) the date fields open a small calendar popover
 // instead of the browser's own picker. Its footer has Today, a box to type a date
 // (dd-mm-yyyy), and Clear. Desktop and tablet keep the browser's picker.
 // The chosen date is written to the date input as yyyy-mm-dd, with input and change events,
 // so the filters work as before.
 // ======================================================================
 (function () {
-  const phoneQ = window.matchMedia('(max-width: 600px)');
+  const phoneQ = window.matchMedia('(max-width: 1024px)');
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   let pop = null, cur = null, view = { y: 0, m: 0 };
 

@@ -102,8 +102,8 @@
   }
 }
 
-/* Phones: date fields show only the calendar icon (the text part is hidden; the field keeps its label for screen readers) */
-@media (max-width: 600px) {
+/* Phones and tablets: date fields show only the calendar icon (the text part is hidden; the field keeps its label for screen readers) */
+@media (max-width: 1024px) {
   /* only the day is shown: the month, year and separators are hidden */
   input[type="date"]::-webkit-datetime-edit-text,
   input[type="date"]::-webkit-datetime-edit-month-field,
@@ -114,7 +114,7 @@
   input[type="date"]::-webkit-calendar-picker-indicator { margin: 0 0 0 6px; opacity: .85; cursor: pointer; }
 }
 
-/* Phones: the date popover (js/date-popover.js) */
+/* Phones and tablets: the date popover (js/date-popover.js) */
 .dp-pop {
   position: fixed; z-index: 200; box-sizing: border-box; padding: 10px;
   background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
