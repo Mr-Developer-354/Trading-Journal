@@ -151,12 +151,12 @@
 @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { #view-dashboard * { animation: none !important; transition: none !important; } }
 
-@media (max-width: 1100px) {
+@media (max-width: 600px) {
   .dash-top { grid-template-columns: 1fr; }
   .side-stack { grid-template-rows: none; grid-template-columns: 1fr 1fr; }
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
 }
-@media (max-width: 760px) {
+@media (max-width: 600px) {
   .side-stack { grid-template-columns: 1fr; }
   .equity-foot { grid-template-columns: 1fr 1fr; }
   .equity-card { padding: 20px 18px 16px; }

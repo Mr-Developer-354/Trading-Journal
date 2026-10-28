@@ -181,7 +181,7 @@
    (smaller padding, label and value text) so all seven still fit beside the title.
    Wider screens keep the sizes above; the narrow (<700px) layout is unchanged.
    ====================================================================== */
-@media (min-width: 700px) and (max-width: 1099px) {
+@media (min-width: 601px) and (max-width: 1024px) {
   :is(#view-trades, #view-ledger) .ledger-summary-cards { gap: 5px; }
   :is(#view-trades, #view-ledger) .ledger-summary-card { padding: 5px 7px 5px 10px; }
   :is(#view-trades, #view-ledger) .ledger-summary-card::before { width: 2px; }

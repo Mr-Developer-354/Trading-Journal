@@ -79,7 +79,7 @@
 
 /* Trade Log + Ledger: keep the page title and summary cards on the same row.
    The title expands into the remaining space while cards stay content-sized. */
-@media (min-width: 700px) {
+@media (min-width: 601px) {
   .ledger-page-head {
     display: flex;
     flex-wrap: nowrap;
@@ -112,7 +112,7 @@
   }
 }
 
-@media (max-width: 699px) {
+@media (max-width: 600px) {
   .trade-page-head .ledger-title-block p {
     display: none;
   }
@@ -128,7 +128,7 @@
   overflow-wrap: anywhere;
 }
 
-@media (min-width: 700px) and (max-width: 1099px) {
+@media (min-width: 601px) and (max-width: 1024px) {
   .ledger-page-head {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -155,7 +155,7 @@
   }
 }
 
-@media (max-width: 699px) {
+@media (max-width: 600px) {
   .ledger-title-block {
     width: auto;
     max-width: 100%;

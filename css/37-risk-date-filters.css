@@ -25,7 +25,7 @@
 /* ---------------- collapsed sidebar: keep the page clear of the ☰ button in every density ----------------
    The Slim / X-slim density rules set .main padding later in the cascade, which cancelled the 50px
    clearance. The extra :root raises the specificity so the clearance wins in Normal, Compact and X-compact. */
-@media (min-width: 881px) {
+@media (min-width: 601px) {
   :root .app.sidebar-collapsed .main { padding-left: 50px; }
 }
 

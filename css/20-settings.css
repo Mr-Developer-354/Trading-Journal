@@ -75,7 +75,7 @@
 .settings-shortcut { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 10px; border:1px solid var(--border); border-radius:8px; background:var(--bg-raised); color:var(--ink-dim); font-size:11.5px; }
 .settings-shortcut kbd { min-width:28px; padding:4px 6px; border:1px solid var(--border-strong); border-bottom-color:var(--border); border-radius:6px; background:var(--bg-card); color:var(--ink); font-family:var(--mono); font-size:10px; text-align:center; box-shadow:0 1px 0 var(--border); }
 .settings-card:target { border-color:color-mix(in srgb,var(--gold) 38%,var(--border)); }
-@media (max-width:900px) {
+@media (max-width: 600px) {
   .settings-layout { grid-template-columns:1fr; }
   .settings-index { position:static; display:grid; grid-template-columns:repeat(4,1fr); gap:3px; }
   .settings-index-title { display:none; }
@@ -84,7 +84,7 @@
   .settings-actions { grid-template-columns:1fr 1fr; }
   .settings-action-danger { grid-column:1/-1; }
 }
-@media (max-width:650px) {
+@media (max-width: 600px) {
   .settings-page-head { align-items:flex-start; flex-direction:column; }
   .settings-safety-badge { width:100%; }
   .settings-index { grid-template-columns:1fr 1fr; }
@@ -124,7 +124,7 @@ button.st-reset:hover { color: var(--gold); border-color: var(--gold); }
 .st-preview .pos { color: var(--green); }
 .st-preview .neg { color: var(--red); }
 .settings-broker-card .broker-setting-count { margin-left: 2px; padding: 0 6px; border-radius: 999px; background: var(--bg-hover); color: var(--ink-faint); font: 600 10px var(--mono); font-style: normal; }
-@media (min-width: 651px) and (max-width: 900px) { .settings-index { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 601px) and (max-width: 1024px) { .settings-index { grid-template-columns: repeat(4, 1fr); } }
 
 /* ---------- global effects of the Workspace preferences ---------- */
 html[data-privacy] .main .view:not(#view-settings) :is(.kpi-val, .big, .stat-card .val, .hero-figure, .cal-kpi .value, .cal-mini-net, .pos, .neg, tbody td, canvas, .ledger-summary-card b, .broker-card b) { filter: blur(6px); transition: filter .15s; }
@@ -136,8 +136,8 @@ html[data-reduce-motion] *, html[data-reduce-motion] *::before, html[data-reduce
 .settings-broker-card .broker-setting-count { flex: none; }
 .settings-broker-card .broker-setting-type { flex: none; }
 .settings-shortcuts { grid-template-columns: repeat(4, 1fr); }
-@media (max-width: 900px) { .settings-shortcuts { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 650px) { .settings-shortcuts { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .settings-shortcuts { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .settings-shortcuts { grid-template-columns: 1fr; } }
 
 /* Data & backup: grouped sections (Back up / Restore / Danger zone) */
 .settings-group-label { margin-top:14px; padding-bottom:6px; font-size:9.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint); }

@@ -26,13 +26,19 @@
   syncTabs();
 })();
 
-// ---- the two screen views: mobile (up to 600px) and computer (601px and up) ----
+// ---- the three screen views: mobile (up to 600px), tablet (601–1024px), computer (1025px and up) ----
 // The view is written to <html data-screen>; css/43-screens.css and css/42-phone.css read it.
+// Tablet uses the desktop layout with the sidebar collapsed to icons (it can still be opened as an overlay).
 (function () {
-  const mobile = window.matchMedia('(max-width: 600px)');
+  const mobileQ = window.matchMedia('(max-width: 600px)');
+  const tabletQ = window.matchMedia('(min-width: 601px) and (max-width: 1024px)');
+  const screenNow = () => mobileQ.matches ? 'mobile' : tabletQ.matches ? 'tablet' : 'computer';
   const applyScreen = () => {
-    document.documentElement.dataset.screen = mobile.matches ? 'mobile' : 'computer';
+    const screen = screenNow();
+    document.documentElement.dataset.screen = screen;
+    if (screen === 'tablet' && typeof setSidebarCollapsed === 'function') setSidebarCollapsed(true);
   };
-  mobile.addEventListener('change', applyScreen);
+  mobileQ.addEventListener('change', applyScreen);
+  tabletQ.addEventListener('change', applyScreen);
   applyScreen();
 })();

@@ -81,7 +81,7 @@ function setSidebarCollapsed(isCollapsed) {
   if (!isCollapsed)
     app.classList.remove('sidebar-peek');
 }
-const isDesktop = () => window.matchMedia('(min-width: 881px)').matches;
+const isDesktop = () => window.matchMedia('(min-width: 601px)').matches;   // tablet and computer use the desktop sidebar
 // one fixed button on every screen size: pins/unpins the sidebar on desktop, opens/closes it on mobile
 const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
 sidebarToggleBtn.addEventListener('click', () => {

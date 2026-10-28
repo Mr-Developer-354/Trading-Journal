@@ -15,4 +15,4 @@
 .broker-balance b.is-positive{color:var(--green,#48a111)}
 .broker-balance b.is-negative{color:var(--red,#d64545)}
 .broker-balance small{font-size:10.5px;color:var(--ink-faint,var(--ink-dim))}
-@media (max-width:560px){.broker-opening{grid-template-columns:1fr}.broker-balance{grid-template-columns:1fr 1fr}}
+@media (max-width:560px) {.broker-opening{grid-template-columns:1fr}.broker-balance{grid-template-columns:1fr 1fr}}

@@ -218,7 +218,7 @@
 }
 
 /* Trade Log drawer header: title + description mirror the main Trade Log title tile. */
-@media (min-width: 480px) {
+@media (min-width: 480px) and (max-width: 600px) {
   .trade-drawer-title {
     flex-direction: row;
     align-items: center;
