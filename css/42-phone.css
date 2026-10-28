@@ -32,6 +32,9 @@
   }
   .phone-tab-add svg { width: 24px; height: 24px; }
 
+  /* the drawer opened from "More": scrolls, and its bottom (Settings) stays clear of the tab bar */
+  .sidebar { top: 0; height: auto; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); overflow-y: auto; }
+
   /* keep the last rows of every view clear of the tab bar */
   .main { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
   .page-head h1 { font-size: 24px; }
