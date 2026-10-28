@@ -24,6 +24,11 @@
   // a view can also change from the sidebar or from inside a page, so re-check after any click
   document.addEventListener('click', () => setTimeout(syncTabs, 0));
   syncTabs();
+  // measure the tab bar so the pinned footer sits just above it (css/42-phone.css uses --tabbar-h)
+  const bar = document.querySelector('.phone-tabbar');
+  const setBarH = () => document.documentElement.style.setProperty('--tabbar-h', bar.offsetHeight + 'px');
+  if (bar && 'ResizeObserver' in window) new ResizeObserver(setBarH).observe(bar);
+  setBarH();
 })();
 
 // ---- the two screen views: mobile (up to 1024px, including tablets) and computer (1025px and up) ----

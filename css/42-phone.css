@@ -87,3 +87,17 @@
   :is(#view-trades, #view-ledger) .pager .pages { flex-wrap: nowrap !important; flex: 0 0 auto; gap: 4px; }
   :is(#view-trades, #view-ledger) .pager .btn.small { padding: 2px 8px; min-width: 34px; }
 }
+
+/* Phones: the Trade log and Ledger footer is pinned just above the bottom tab bar, full width.
+   --tabbar-h is the measured height of the tab bar (js/phone.js); 64px is the fallback. */
+@media (max-width: 600px) {
+  :is(#view-trades, #view-ledger) .pager {
+    position: fixed; left: 0; right: 0; bottom: calc(var(--tabbar-h, 64px) - 1px);
+    z-index: 44; margin: 0; box-sizing: border-box; width: 100%;
+    padding: 8px 12px; background: var(--bg-card); border-top: 1px solid var(--border);
+  }
+  /* keep the last rows clear of the pinned footer */
+  .main:has(#view-trades.active) , .main:has(#view-ledger.active) {
+    padding-bottom: calc(var(--tabbar-h, 64px) + 84px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
