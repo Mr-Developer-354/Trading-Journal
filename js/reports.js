@@ -1215,7 +1215,7 @@ function renderDateRange(prefix) {
   if (!seg) return;
   // on phones the buttons are replaced by this dropdown (css/42-phone.css); both show the same range
   seg.innerHTML = RISK_RANGES.map(([k, l]) => `<button type="button" class="${ k === riskRange ? 'active' : '' }" data-date-range="${ k }" aria-pressed="${ k === riskRange }">${ l }</button>`).join('')
-    + `<select class="rng-select" data-range-select aria-label="Date range">${ RISK_RANGES.map(([k, l]) => `<option value="${ k }" ${ k === riskRange ? 'selected' : '' }>${ l }</option>`).join('') }</select>`;
+    + `<select class="rng-select" data-range-select aria-label="Date range">${ [...RISK_RANGES].reverse().map(([k, l]) => `<option value="${ k }" ${ k === riskRange ? 'selected' : '' }>${ l }</option>`).join('') }</select>`;
 }
 function riskDateParts(iso) {
   const [y, m, d] = iso.split('-').map(Number);
