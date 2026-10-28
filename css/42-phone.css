@@ -35,6 +35,12 @@
   /* the drawer opened from "More" runs behind the tab bar (no gap); its padding keeps Settings above the bar */
   :root .app .sidebar { top: 0; bottom: 0; height: auto; overflow-y: auto; padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
 
+  /* Reports and Risk: the tab bar wraps inside the screen width (no sideways scroll) */
+  .rep-bar, .rep-page-head .rep-bar .rep-tabs { max-width: 100%; min-width: 0; box-sizing: border-box; }
+  .rep-bar .rep-tabs { flex: 1 1 100%; flex-wrap: wrap; }
+  .rep-page-head { flex-wrap: nowrap; }
+  .rep-page-head > * { min-width: 0; max-width: 100%; }
+
   /* keep the last rows of every view clear of the tab bar */
   .main { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
   .page-head h1 { font-size: 24px; }
