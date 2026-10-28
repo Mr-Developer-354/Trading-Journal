@@ -29,6 +29,17 @@
   const setBarH = () => document.documentElement.style.setProperty('--tabbar-h', bar.offsetHeight + 'px');
   if (bar && 'ResizeObserver' in window) new ResizeObserver(setBarH).observe(bar);
   setBarH();
+  // measure the pinned footer of the Trade log and Ledger, so the table stops 4px above it
+  const pagers = document.querySelectorAll('#view-trades .pager, #view-ledger .pager');
+  const setPagerH = () => {
+    const h = Math.max(0, ...Array.from(pagers, p => p.offsetHeight));
+    if (h) document.documentElement.style.setProperty('--pager-h', h + 'px');
+  };
+  if (pagers.length && 'ResizeObserver' in window) {
+    const ro = new ResizeObserver(setPagerH);
+    pagers.forEach(p => ro.observe(p));
+  }
+  setPagerH();
 })();
 
 // ---- the two screen views: mobile (up to 1024px, including tablets) and computer (1025px and up) ----

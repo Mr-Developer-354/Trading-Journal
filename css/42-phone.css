@@ -98,6 +98,6 @@
   }
   /* keep the last rows clear of the pinned footer */
   .main:has(#view-trades.active) , .main:has(#view-ledger.active) {
-    padding-bottom: calc(var(--tabbar-h, 64px) + 84px + env(safe-area-inset-bottom, 0px)) !important;
+    padding-bottom: calc(var(--tabbar-h, 64px) + var(--pager-h, 56px) + 4px + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
