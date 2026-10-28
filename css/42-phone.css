@@ -217,3 +217,11 @@
 @media (min-width: 1025px) {
   #view-dashboard .db-kpis { grid-template-columns: repeat(7, minmax(0, 1fr)); }
 }
+
+/* Tablet only (601px to 1024px): the dashboard title and its range buttons and broker filter sit on one row.
+   Phones keep them stacked. */
+@media (min-width: 601px) and (max-width: 1024px) {
+  #view-dashboard .db-head { flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 12px; }
+  #view-dashboard .db-title { flex: 0 0 auto; min-width: 0; }
+  #view-dashboard .db-controls { flex: 0 1 auto; min-width: 0; width: auto; align-items: center; }
+}
