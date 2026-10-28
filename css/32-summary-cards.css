@@ -209,9 +209,9 @@
   white-space: nowrap;
 }
 
-/* Computer (1025px and up): the Trade log title and its summary cards sit on one line.
-   Phones and tablets keep the title above the cards. */
-@media (min-width: 1025px) {
+/* Tablet and computer (601px and up): the Trade log title and its summary cards sit on one line.
+   Phones keep the title above the cards. */
+@media (min-width: 601px) {
   #view-trades .page-head.ledger-page-head {
     display: flex;
     flex-wrap: nowrap;
