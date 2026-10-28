@@ -9,7 +9,7 @@
   .sidebar-toggle-btn,
   .sidebar-edge-tab,
   .sidebar-edge-hover-zone,
-  #rawTradesBtn { display: none !important; }
+  #rawTradesBtn, #rawLedgerBtn { display: none !important; }
 
   /* ---- bottom tab bar ---- */
   .phone-tabbar {

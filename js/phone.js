@@ -51,4 +51,15 @@
   };
   mobileQ.addEventListener('change', applyScreen);
   applyScreen();
+  // phones and tablets always show the table in normal view: the Nml (raw) toggles are hidden,
+  // so if raw is on (from the computer), switch it off here
+  const normalTables = () => {
+    if (!mobileQ.matches) return;
+    ['rawTradesBtn', 'rawLedgerBtn'].forEach(id => {
+      const b = document.getElementById(id);
+      if (b && b.getAttribute('aria-pressed') === 'true') b.click();
+    });
+  };
+  mobileQ.addEventListener('change', () => setTimeout(normalTables, 0));
+  setTimeout(normalTables, 0);
 })();
