@@ -228,3 +228,14 @@
   #view-trades .page-head .ledger-head-right { flex: 0 0 auto; min-width: 0; display: flex; align-items: stretch; justify-content: flex-end; }
   #view-trades .page-head .ledger-summary-cards { flex-wrap: wrap; justify-content: flex-end; }
 }
+
+/* Tablet and computer: the title takes the space left after the cards, and the cards shrink to fit,
+   so the row ends at the table's right edge and the title is never squeezed. */
+@media (min-width: 601px) {
+  #view-trades .page-head .ledger-title-block { flex: 1 1 0; min-width: 150px; }
+  #view-trades .page-head .ledger-head-right { flex: 0 1 auto; min-width: 0; max-width: 100%; }
+  #view-trades .page-head .ledger-summary-cards { flex-wrap: nowrap; min-width: 0; max-width: 100%; }
+  #view-trades .page-head .ledger-summary-card { flex: 0 1 auto; min-width: 0; padding: 8px 10px 8px 12px; min-height: 56px; }
+  #view-trades .page-head .ledger-summary-card .label { font-size: 9.5px; white-space: nowrap; }
+  #view-trades .page-head .ledger-summary-card .val { font-size: 15px; white-space: nowrap; }
+}
