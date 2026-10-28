@@ -146,3 +146,12 @@
   font: 13px var(--sans); text-align: center;
 }
 .dp-type.dp-bad { border-color: #e5484d; }
+
+/* Z order: the sidebar sits above every page element in all views.
+   Desktop: above tables, pinned columns and sticky headers.
+   Phone and tablet: the drawer covers the tab bar and the pinned footer; the ☰ button stays on top of the drawer. */
+.sidebar { z-index: 50; }
+@media (max-width: 1024px) {
+  :root .app .sidebar { z-index: 60; }
+  .sidebar-toggle-btn, .sidebar-edge-tab { z-index: 70 !important; }
+}
