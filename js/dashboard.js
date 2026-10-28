@@ -263,7 +263,7 @@ function dbRenderHero(S) {
   heroEl.textContent = fmtMoney(S.net);
   heroEl.className = 'db-big ' + (S.net >= 0 ? 'pos' : 'neg');
   document.getElementById('heroFoot').textContent = S.n
-    ? `Gross P/L ${ fmtMoney(S.gross) } · charges ${ fmtMoney(S.charges) } · ${ S.wins } wins / ${ S.losses } losses`
+    ? `Gross P/L ${ fmtMoney(S.gross) } · charges ${ fmtMoney(S.charges) }`
     : 'no trades in this period';
 
   const monthMap = dbMonthMap(S.rows);
