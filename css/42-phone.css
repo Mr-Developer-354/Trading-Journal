@@ -173,7 +173,8 @@
 
 /* Dashboard goal: Daily / Weekly / Monthly / Yearly switch, styled like browser tabs */
 .db-goal-tabs {
-  display: flex; align-items: flex-end; gap: 2px; margin: 0; padding: 0; width: 100%; box-sizing: border-box;
+  display: flex; align-items: flex-end; gap: 2px; margin: 0 var(--radius, 12px); padding: 0; box-sizing: border-box;
+  /* the tabs run from where the card's top-left corner curve ends to where the top-right one starts */
   border-bottom: 1px solid var(--border);
 }
 .db-goal-block { width: 100%; min-width: 0; }
