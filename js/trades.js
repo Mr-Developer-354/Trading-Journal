@@ -149,9 +149,6 @@ function renderTrades() {
     setStat('tradeStatWinRate', s.n ? s.winRate.toFixed(1) + '%' : '—', s.n ? s.winRate - 50 : 0);
     setStat('tradeStatPF', !s.n ? '—' : s.pf === Infinity ? '∞' : s.pf.toFixed(2), s.n ? (s.pf >= 1 ? 1 : -1) : 0);
     setStat('tradeStatCharges', fmtMoneyPrecise(charges), charges);
-    // Avg Win / Avg Loss: average gross P/L of the winning and losing trades (Loss shown negative, like the Losses column)
-    setStat('tradeStatAvgWin', s.wins ? fmtMoneyPrecise(s.avgWin) : '—', s.avgWin);
-    setStat('tradeStatAvgLoss', s.losses ? fmtMoneyPrecise(-s.avgLoss) : '—', s.losses ? -s.avgLoss : 0);
   }
   const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
   if (page > totalPages)
