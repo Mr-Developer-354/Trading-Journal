@@ -1,5 +1,5 @@
 /* 42-phone.css — mobile view (≤ 1024px, tablets included). Loaded last.
-   Bottom tab bar (Home · Trades · + · Reports · More), the Trade log as cards, and a stacked dashboard header.
+   Bottom tab bar (Home · Trades · + · Reports · More), the Trade log as a table like the Ledger, and a stacked dashboard header.
    Tablet and mobile widths (up to 1024px) share this view; the bar is hidden from 1025px up. */
 
 .phone-tabbar { display: none; }
@@ -36,28 +36,7 @@
   .main { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
   .page-head h1 { font-size: 24px; }
 
-  /* ---- Trade log as cards: each trade is one card, cells are labelled by their column ---- */
-  #view-trades table.trade-log-table thead { display: none; }
-  #view-trades table.trade-log-table,
-  #view-trades table.trade-log-table tbody { display: block; width: 100%; }
-  #view-trades table.trade-log-table tbody { display: flex; flex-direction: column; gap: 8px; }
-  #view-trades table.trade-log-table tr[data-id] {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; padding: 12px 14px;
-    background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
-  }
-  #view-trades table.trade-log-table td {
-    display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 0; border: 0;
-    text-align: left; position: static !important;
-  }
-  #view-trades table.trade-log-table td::before {
-    content: attr(data-label); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint);
-  }
-  /* the symbol is the card title: full width, no label */
-  #view-trades table.trade-log-table td[data-label="Symbol"] {
-    grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: center;
-    font-size: 15px; font-weight: 600;
-  }
-  #view-trades table.trade-log-table td[data-label="Symbol"]::before { display: none; }
+  /* Trade log: a table like the Ledger (sideways scroll, pinned columns), not cards */
 
   /* ---- dashboard header: title, then the controls stacked ---- */
   #view-dashboard .db-head { flex-direction: column; align-items: stretch; }
