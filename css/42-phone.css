@@ -218,12 +218,12 @@
   #view-dashboard .db-kpis { grid-template-columns: repeat(7, minmax(0, 1fr)); }
 }
 
-/* Tablet only (601px to 1024px): the dashboard title and its range buttons and broker filter sit on one row.
-   Phones keep them stacked. */
+/* Tablet only (601px to 1024px): the dashboard title and description use the full width,
+   and the range, broker and date filters sit below the description. Phones keep the same stacked layout. */
 @media (min-width: 601px) and (max-width: 1024px) {
-  #view-dashboard .db-head { flex-direction: row; flex-wrap: nowrap; align-items: flex-start; justify-content: space-between; gap: 16px; }
-  /* the title takes the left side (its text wraps); the range and broker sit at the top right */
-  #view-dashboard .db-title { flex: 1 1 0; min-width: 0; }
-  #view-dashboard .db-controls { flex: 0 0 auto; width: auto; max-width: 55%; align-items: flex-end; }
-  #view-dashboard .db-filter-row { flex-wrap: nowrap; justify-content: flex-end; }
+  #view-dashboard .db-head { flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 12px; }
+  #view-dashboard .db-title { width: 100%; max-width: none; flex: none; min-width: 0; }
+  #view-dashboard .db-title p { max-width: none; }
+  #view-dashboard .db-controls { width: 100%; max-width: none; align-items: stretch; }
+  #view-dashboard .db-filter-row { justify-content: space-between; flex-wrap: wrap; }
 }
