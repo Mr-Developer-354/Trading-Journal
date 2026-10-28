@@ -171,10 +171,20 @@
   }
 }
 
-/* Dashboard goal: Daily / Weekly / Monthly / Yearly switch */
-.db-goal-tabs { display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; }
-.db-goal-tab {
-  padding: 3px 9px; border-radius: 999px; border: 1px solid var(--border);
-  background: var(--bg); color: var(--ink-dim); font: 600 11px var(--sans); cursor: pointer;
+/* Dashboard goal: Daily / Weekly / Monthly / Yearly switch, styled like browser tabs */
+.db-goal-tabs {
+  display: flex; align-items: flex-end; gap: 2px; margin: 0 0 10px; padding: 0;
+  border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none;
 }
-.db-goal-tab.active { background: var(--gold); border-color: var(--gold); color: #1c130e; }
+.db-goal-tabs::-webkit-scrollbar { display: none; }
+.db-goal-tab {
+  position: relative; flex: 0 0 auto; margin-bottom: -1px; padding: 6px 12px 7px;
+  border: 1px solid transparent; border-bottom: 0; border-radius: 8px 8px 0 0;
+  background: transparent; color: var(--ink-faint); font: 500 12px var(--sans); cursor: pointer;
+}
+.db-goal-tab:hover { color: var(--ink); background: color-mix(in srgb, var(--bg-raised) 60%, transparent); }
+.db-goal-tab.active {
+  color: var(--ink); font-weight: 600; background: var(--bg-raised);
+  border-color: var(--border); border-bottom: 1px solid var(--bg-raised);
+}
+.db-goal-tab:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
