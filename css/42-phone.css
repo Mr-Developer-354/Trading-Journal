@@ -212,3 +212,8 @@
 /* the win and loss counts keep their green and red on the dashboard (beats the footer's grey text rules) */
 #view-dashboard b .cal-kpi-sub .cal-count-positive { color: var(--green) !important; }
 #view-dashboard b .cal-kpi-sub .cal-count-negative { color: var(--red) !important; }
+
+/* Computer (1025px and up): the seven dashboard cards sit in one row */
+@media (min-width: 1025px) {
+  #view-dashboard .db-kpis { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+}
