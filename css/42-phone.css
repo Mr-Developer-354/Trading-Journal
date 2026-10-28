@@ -199,7 +199,7 @@
 #view-dashboard b .cal-kpi-sub,
 #view-dashboard b .cal-kpi-sub span {
   display: inline !important; text-transform: none !important; letter-spacing: .02em !important;
-  font-size: .75em; font-weight: 500; color: var(--ink-dim);
+  font-size: .88em; font-weight: 500; color: var(--ink-dim);
 }
 #view-dashboard b .cal-kpi-sub .cal-count-positive,
 #view-dashboard b .cal-kpi-sub .cal-count-negative { font-weight: 600; }
