@@ -218,9 +218,9 @@
   #view-dashboard .db-kpis { grid-template-columns: repeat(7, minmax(0, 1fr)); }
 }
 
-/* Tablet only (601px to 1024px): the range and broker sit to the right of the title; the description
+/* Tablet and phone (up to 1024px): the range and broker sit to the right of the title; the description
    runs the full width under them; the date filters and Customize sit below. Phones keep the stacked layout. */
-@media (min-width: 601px) and (max-width: 1024px) {
+@media (max-width: 1024px) {
   #view-dashboard .db-head {
     display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; row-gap: 10px; align-items: start;
   }
