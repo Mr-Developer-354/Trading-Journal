@@ -66,3 +66,10 @@
 @media (max-width: 600px) {
   .phone-tabbar .phone-tab-tablet { display: none; }
 }
+
+/* Pager buttons (First, Prev, Next, Last): icons on phones only (up to 600px); text everywhere else */
+.pg-ico { display: none; }
+@media (max-width: 600px) {
+  .pager .btn.small .pg-txt { display: none; }
+  .pager .btn.small .pg-ico { display: block; width: 18px; height: 18px; margin: 0 auto; }
+}
