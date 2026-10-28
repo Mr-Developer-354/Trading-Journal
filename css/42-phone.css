@@ -170,3 +170,11 @@
     padding: 5px 10px 5px 12px; justify-content: center;
   }
 }
+
+/* Dashboard goal: Daily / Weekly / Monthly / Yearly switch */
+.db-goal-tabs { display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; }
+.db-goal-tab {
+  padding: 3px 9px; border-radius: 999px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--ink-dim); font: 600 11px var(--sans); cursor: pointer;
+}
+.db-goal-tab.active { background: var(--gold); border-color: var(--gold); color: #1c130e; }

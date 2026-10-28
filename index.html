@@ -72,7 +72,7 @@
   <link rel="stylesheet" href="css/40-calendar-title.css">
   <link rel="stylesheet" href="css/41-dashboard-v2.css">
   <link rel="stylesheet" href="css/41-dashboard-layout.css">
-  <link rel="stylesheet" href="css/42-phone.css?v=19">
+  <link rel="stylesheet" href="css/42-phone.css?v=20">
   <link rel="stylesheet" href="css/43-screens.css">
   <link rel="stylesheet" href="css/44-ledger-header.css?v=7">
 
@@ -185,11 +185,17 @@
                 <div class="db-ring-center"><b id="goalPct">—</b><span>of goal</span></div>
               </div>
               <div class="db-goal-info">
-                <div class="db-eyebrow">This month's goal</div>
+                <div class="db-goal-tabs" role="tablist" aria-label="Goal period">
+                  <button type="button" class="db-goal-tab" data-goal-period="daily" role="tab">Daily</button>
+                  <button type="button" class="db-goal-tab" data-goal-period="weekly" role="tab">Weekly</button>
+                  <button type="button" class="db-goal-tab active" data-goal-period="monthly" role="tab">Monthly</button>
+                  <button type="button" class="db-goal-tab" data-goal-period="yearly" role="tab">Yearly</button>
+                </div>
+                <div class="db-eyebrow" id="goalEyebrow">This month's goal</div>
                 <div class="db-goal-status" id="goalStatus">—</div>
                 <div class="db-goal-edit">
                   <span>₹</span>
-                  <input type="number" id="goalInput" step="any" placeholder="Target" aria-label="Monthly profit target">
+                  <input type="number" id="goalInput" step="any" placeholder="Target" aria-label="Profit target">
                   <button class="btn small" id="goalSave">Set</button>
                 </div>
               </div>
@@ -848,7 +854,7 @@
 <script defer src="js/stats.js"></script>
 <script defer src="js/charts.js"></script>
 <script defer src="js/viz.js"></script>
-<script defer src="js/dashboard.js?v=3"></script>
+<script defer src="js/dashboard.js?v=4"></script>
 <script defer src="js/trades.js"></script>
 <script defer src="js/calendar.js"></script>
 <script defer src="js/brokers.js"></script>

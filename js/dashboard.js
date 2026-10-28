@@ -179,27 +179,52 @@ function dbMonthMap(rows) {
   return m;
 }
 
-/* ---------------- goal tracker (monthly, after charges) ---------------- */
-// build the localStorage key for the current month's goal
-function goalKey() {
+/* ---------------- goal tracker (daily, weekly, monthly, yearly; after charges) ---------------- */
+// each period has its own target: the key names the period it belongs to
+// (monthly keeps the original key format, so an earlier monthly target still shows)
+let goalPeriod = 'monthly';
+const GOAL_LABELS = { daily: "Today's goal", weekly: "This week's goal", monthly: "This month's goal", yearly: "This year's goal" };
+function goalRange(period) {
   const now = new Date();
-  return 'tb_goal_' + now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  const today = dbIso(now);
+  if (period === 'daily') return { key: 'tb_goal_d_' + today, test: d => d === today, label: 'today' };
+  if (period === 'weekly') {
+    const dow = (now.getDay() + 6) % 7;                       // weeks start on Monday
+    const monday = dbIso(new Date(now.getFullYear(), now.getMonth(), now.getDate() - dow));
+    return { key: 'tb_goal_w_' + monday, test: d => d >= monday && d <= today, label: 'this week' };
+  }
+  if (period === 'yearly') {
+    const y = String(now.getFullYear());
+    return { key: 'tb_goal_y_' + y, test: d => d.slice(0, 4) === y, label: 'this year' };
+  }
+  const m = dbIso(now).slice(0, 7);
+  return { key: 'tb_goal_' + m, test: d => d.slice(0, 7) === m, label: 'this month' };
 }
-function loadGoal() { try { return parseFloat(localStorage.getItem(goalKey())) || 0; } catch (e) { return 0; } }
-function saveGoal(v) { try { localStorage.setItem(goalKey(), String(v)); } catch (e) {} }
-// progress toward this month's goal (net after estimated charges)
+function loadGoal(period) {
+  try { return parseFloat(localStorage.getItem(goalRange(period || goalPeriod).key)) || 0; } catch (e) { return 0; }
+}
+function saveGoal(v, period) {
+  try { localStorage.setItem(goalRange(period || goalPeriod).key, String(v)); } catch (e) {}
+}
+// progress toward the chosen period's goal (net after estimated charges)
 function renderGoal() {
-  const target = loadGoal();
+  const range = goalRange(goalPeriod);
+  const target = loadGoal(goalPeriod);
   document.getElementById('goalInput').value = target || '';
-  const thisMonth = dbIso(new Date()).slice(0, 7);
-  const net = dbStats(trades.filter(t => t.date && t.date.slice(0, 7) === thisMonth)).net;
+  document.getElementById('goalEyebrow').textContent = GOAL_LABELS[goalPeriod];
+  document.querySelectorAll('.db-goal-tab').forEach(b => {
+    const on = b.dataset.goalPeriod === goalPeriod;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  const net = dbStats(trades.filter(t => t.date && range.test(t.date.slice(0, 10)))).net;
   const ring = document.getElementById('goalRing');
   const pctEl = document.getElementById('goalPct');
   const status = document.getElementById('goalStatus');
   const C = 2 * Math.PI * 50;
   ring.setAttribute('stroke-dasharray', C.toFixed(2));
   if (!target) {
-    status.innerHTML = `${ fmtMoney(net) } this month<br><span class="db-faint">no target set</span>`;
+    status.innerHTML = `${ fmtMoney(net) } ${ range.label }<br><span class="db-faint">no target set</span>`;
     ring.style.strokeDashoffset = C;
     ring.setAttribute('class', 'db-ring-fg');
     pctEl.textContent = '—';
@@ -213,9 +238,13 @@ function renderGoal() {
   const left = target - net;
   status.innerHTML = `${ fmtMoney(net) } of ${ fmtMoney(target) }<br><span class="${ left > 0 ? 'db-faint' : 'pos' }">${ left > 0 ? fmtMoney(left) + ' to go' : 'goal reached' }</span>`;
 }
+document.querySelectorAll('.db-goal-tab').forEach(b => b.addEventListener('click', () => {
+  goalPeriod = b.dataset.goalPeriod;
+  renderGoal();
+}));
 document.getElementById('goalSave').addEventListener('click', () => {
   const v = parseFloat(document.getElementById('goalInput').value) || 0;
-  saveGoal(v);
+  saveGoal(v, goalPeriod);
   renderGoal();
   showToast('Goal saved');
 });
