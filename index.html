@@ -72,7 +72,7 @@
   <link rel="stylesheet" href="css/40-calendar-title.css">
   <link rel="stylesheet" href="css/41-dashboard-v2.css">
   <link rel="stylesheet" href="css/41-dashboard-layout.css">
-  <link rel="stylesheet" href="css/42-phone.css?v=37">
+  <link rel="stylesheet" href="css/42-phone.css?v=38">
   <link rel="stylesheet" href="css/43-screens.css">
   <link rel="stylesheet" href="css/44-ledger-header.css?v=7">
 
@@ -546,12 +546,14 @@
             <select id="reportBrokerFilter" aria-label="Broker for the report"></select>
           </label>
         </div>
+        <div class="rep-date-row">
+            <label class="rep-broker-pick rep-date-pick"><select id="reportDayFilter" aria-label="Date for the report"></select></label>
+            <label class="rep-broker-pick rep-date-pick"><select id="reportWeekFilter" aria-label="Week for the report"></select></label>
+            <label class="rep-broker-pick rep-date-pick"><select id="reportMonthFilter" aria-label="Month for the report"></select></label>
+            <label class="rep-broker-pick rep-date-pick"><select id="reportYearFilter" aria-label="Year for the report"></select></label>
+        </div>
         <div class="rep-bar">
           <nav class="rep-tabs" id="reportTabs" aria-label="Report"></nav>
-          <label class="rep-broker-pick rep-date-pick"><select id="reportDayFilter" aria-label="Date for the report"></select></label>
-          <label class="rep-broker-pick rep-date-pick"><select id="reportWeekFilter" aria-label="Week for the report"></select></label>
-          <label class="rep-broker-pick rep-date-pick"><select id="reportMonthFilter" aria-label="Month for the report"></select></label>
-          <label class="rep-broker-pick rep-date-pick"><select id="reportYearFilter" aria-label="Year for the report"></select></label>
         </div>
       </div>
       <div id="reportBody" class="rep-body"></div>
@@ -567,12 +569,14 @@
             <select id="riskBrokerFilter" aria-label="Broker for the risk management"></select>
           </label>
         </div>
+        <div class="rep-date-row">
+            <label class="rep-broker-pick rep-date-pick"><select id="riskDayFilter" aria-label="Date for the risk management"></select></label>
+            <label class="rep-broker-pick rep-date-pick"><select id="riskWeekFilter" aria-label="Week for the risk management"></select></label>
+            <label class="rep-broker-pick rep-date-pick"><select id="riskMonthFilter" aria-label="Month for the risk management"></select></label>
+            <label class="rep-broker-pick rep-date-pick"><select id="riskYearFilter" aria-label="Year for the risk management"></select></label>
+        </div>
         <div class="rep-bar">
           <nav class="rep-tabs" id="riskTabs" aria-label="Risk period"></nav>
-          <label class="rep-broker-pick rep-date-pick"><select id="riskDayFilter" aria-label="Date for the risk management"></select></label>
-          <label class="rep-broker-pick rep-date-pick"><select id="riskWeekFilter" aria-label="Week for the risk management"></select></label>
-          <label class="rep-broker-pick rep-date-pick"><select id="riskMonthFilter" aria-label="Month for the risk management"></select></label>
-          <label class="rep-broker-pick rep-date-pick"><select id="riskYearFilter" aria-label="Year for the risk management"></select></label>
         </div>
       </div>
       <div id="riskBody" class="rep-body"></div>
