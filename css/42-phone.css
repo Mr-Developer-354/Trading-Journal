@@ -146,3 +146,17 @@
   font: 13px var(--sans); text-align: center;
 }
 .dp-type.dp-bad { border-color: #e5484d; }
+
+/* Phones: the Trade log and Ledger filter bars sit on one line. Anything that does not fit
+   scrolls sideways inside the bar (no visible scrollbar). */
+@media (max-width: 600px) {
+  :is(#view-trades, #view-ledger) .filter-bar {
+    display: flex !important; flex-wrap: nowrap !important; align-items: center; gap: 6px;
+    overflow-x: auto; overflow-y: hidden;
+  }
+  :is(#view-trades, #view-ledger) .filter-bar > * { flex: 0 0 auto; }
+  :is(#view-trades, #view-ledger) .filter-bar #fSearch,
+  :is(#view-trades, #view-ledger) .filter-bar #ledgerSearch { flex: 1 1 120px !important; min-width: 120px !important; width: 120px; }
+  :is(#view-trades, #view-ledger) .filter-bar .filter-tools,
+  :is(#view-trades, #view-ledger) .filter-bar .filter-range { display: flex; flex-wrap: nowrap; align-items: center; gap: 6px; }
+}
