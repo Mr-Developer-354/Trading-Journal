@@ -173,7 +173,7 @@
 
 /* Dashboard goal: Daily / Weekly / Monthly / Yearly switch, styled like browser tabs */
 .db-goal-tabs {
-  display: flex; align-items: flex-end; gap: 2px; margin: 0 0 10px; padding: 0;
+  display: flex; align-items: flex-end; gap: 2px; margin: 0; padding: 0;
   border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none;
 }
 .db-goal-tabs::-webkit-scrollbar { display: none; }
@@ -184,7 +184,9 @@
 }
 .db-goal-tab:hover { color: var(--ink); background: color-mix(in srgb, var(--bg-raised) 60%, transparent); }
 .db-goal-tab.active {
-  color: var(--ink); font-weight: 600; background: var(--bg-raised);
-  border-color: var(--border); border-bottom: 1px solid var(--bg-raised);
+  color: var(--ink); font-weight: 600; background: var(--bg-card);
+  border-color: var(--border); border-bottom: 1px solid var(--bg-card);
 }
+/* the card sits under its tabs, so its top corners meet the tab strip */
+.db-goal-block .db-goal { border-top-left-radius: 0; border-top-right-radius: 0; margin-top: 0; }
 .db-goal-tab:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
