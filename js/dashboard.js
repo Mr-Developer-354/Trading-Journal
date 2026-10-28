@@ -250,9 +250,9 @@ document.getElementById('goalSave').addEventListener('click', () => {
 });
 
 /* ---------------- section renderers ---------------- */
-// a count followed by winners / losers in brackets, e.g. 15 (6 / 9): green winners, red losers
+// a count followed by winners / losers in brackets, e.g. 15 (6 / 9), in the same neutral colour (no red or green)
 function dbCountSplit(total, wins, losses) {
-  return `${ dbNum(total) } <span class="cal-kpi-sub">(<span class="cal-count-positive">${ dbNum(wins) }</span> / <span class="cal-count-negative">${ dbNum(losses) }</span>)</span>`;
+  return `${ dbNum(total) } <span class="cal-kpi-sub">(<span>${ dbNum(wins) }</span> / <span>${ dbNum(losses) }</span>)</span>`;
 }
 function dbTile(label, value, cls, note) {
   return `<div class="db-tile ${ cls || '' }"><span>${ label }</span><b>${ value }</b>${ note ? `<small>${ note }</small>` : '' }</div>`;
