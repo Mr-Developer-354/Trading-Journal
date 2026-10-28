@@ -303,13 +303,8 @@ function dbRenderHero(S) {
 function dbRenderKpis(S) {
   const cls = v => (v === null ? '' : dbCls(v));
   document.getElementById('kpiGrid').innerHTML = [
-    dbTile('Net P/L', fmtMoney(S.net), cls(S.net), 'after ledger charges'),
-    dbTile('Gross P/L', fmtMoney(S.gross), cls(S.gross), 'before charges'),
-    dbTile('Charges', fmtMoney(S.charges), 'neg', 'from ledger, estimate if none'),
-    dbTile('Trades', dbCountSplit(S.n, S.wins, S.losses), '', ''),
     dbTile('Win rate', S.n ? dbPct(S.winRate) : '—', S.winRate >= 50 ? 'pos' : S.n ? 'neg' : '', 'winners ÷ trades'),
     dbTile('Profit factor', S.n ? dbRatio(S.pf) : '—', S.pf !== null && S.pf >= 1 ? 'pos' : S.n ? 'neg' : '', 'gross win ÷ gross loss'),
-    dbTile('Expectancy', S.n ? fmtMoney(S.expectancy) : '—', cls(S.expectancy), 'net per trade'),
     dbTile('Payoff ratio', S.payoff !== null ? dbRatio(S.payoff) : '—', '', 'avg winner ÷ avg loser'),
     dbTile('Avg winner', S.avgWin !== null ? fmtMoney(S.avgWin) : '—', 'pos', 'net'),
     dbTile('Avg loser', S.avgLoss !== null ? fmtMoney(-S.avgLoss) : '—', 'neg', 'net'),
