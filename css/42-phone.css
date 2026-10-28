@@ -73,3 +73,12 @@
   .pager .btn.small .pg-txt { display: none; }
   .pager .btn.small .pg-ico { display: block; width: 18px; height: 18px; margin: 0 auto; }
 }
+
+/* Phones: the pager footer sits on one line (Page, page box, range, and the four buttons) */
+@media (max-width: 600px) {
+  :is(#view-trades, #view-ledger) .pager { flex-wrap: nowrap !important; gap: 6px; font-size: 12px; }
+  :is(#view-trades, #view-ledger) .pager .pager-info { min-width: 0; flex: 0 1 auto; overflow: hidden; white-space: nowrap; }
+  :is(#view-trades, #view-ledger) .pager .pager-info .page-jump { width: 44px; }
+  :is(#view-trades, #view-ledger) .pager .pages { flex-wrap: nowrap !important; flex: 0 0 auto; gap: 4px; }
+  :is(#view-trades, #view-ledger) .pager .btn.small { padding: 2px 8px; min-width: 34px; }
+}
