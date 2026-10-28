@@ -27,15 +27,15 @@
   .phone-tab.active { color: var(--gold); font-weight: 600; }
   /* the + keeps the same slot as the other tabs (equal spacing); its gold pill is drawn centred in that slot */
   .phone-tab-add {
-    flex: 1 1 0; min-width: 0; position: relative; margin-bottom: 4px; padding: 0;
+    flex: 1 1 0; min-width: 0; position: relative; align-self: stretch; margin-bottom: 0; padding: 0;
     justify-content: center; color: #1c130e; background: none; box-shadow: none;
   }
   .phone-tab-add::before {
-    content: ""; position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+    content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
     width: 48px; height: 48px; border-radius: 14px; background: var(--gold);
     box-shadow: 0 6px 16px -8px rgba(218,119,86,.6);
   }
-  .phone-tab-add svg { position: relative; width: 22px; height: 22px; margin-top: 13px; }
+  .phone-tab-add svg { position: relative; width: 22px; height: 22px; }
 
   /* the drawer opened from "More" runs behind the tab bar (no gap); its padding keeps Settings above the bar */
   :root .app .sidebar { top: 0; bottom: 0; height: auto; overflow-y: auto; padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
