@@ -306,8 +306,7 @@ function dbRenderKpis(S) {
     dbTile('Win rate', S.n ? dbPct(S.winRate) : '—', S.winRate >= 50 ? 'pos' : S.n ? 'neg' : '', 'winners ÷ trades'),
     dbTile('Profit factor', S.n ? dbRatio(S.pf) : '—', S.pf !== null && S.pf >= 1 ? 'pos' : S.n ? 'neg' : '', 'gross win ÷ gross loss'),
     dbTile('Payoff ratio', S.payoff !== null ? dbRatio(S.payoff) : '—', '', 'avg winner ÷ avg loser'),
-    dbTile('Avg winner', S.avgWin !== null ? fmtMoney(S.avgWin) : '—', 'pos', 'net'),
-    dbTile('Avg loser', S.avgLoss !== null ? fmtMoney(-S.avgLoss) : '—', 'neg', 'net'),
+    dbTile('Avg winner / loser', `<span class="pos">${ S.avgWin !== null ? fmtMoney(S.avgWin) : '—' }</span> / <span class="neg">${ S.avgLoss !== null ? fmtMoney(-S.avgLoss) : '—' }</span>`, '', 'net'),
     dbTile('Best trade', S.best ? fmtMoney(S.best.net) : '—', 'pos', S.best ? `${ S.best.t.symbol || '' } · ${ formatDateDisplay(S.best.t.date) }` : ''),
     dbTile('Worst trade', S.worst ? fmtMoney(S.worst.net) : '—', 'neg', S.worst ? `${ S.worst.t.symbol || '' } · ${ formatDateDisplay(S.worst.t.date) }` : '')
   ].join('');
