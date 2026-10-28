@@ -95,8 +95,11 @@ function dbChargeOf(t, map) { return map.has(t) ? map.get(t) : reportTradeCharge
 
 /* ---------------- statistics for one period ----------------
    Every figure is "after charges": net = Gross P/L (pnlOf, Trade Log) + charges (ledger where a day has a ledger row, else estimated). */
+// The charge map is the same for every figure in one dashboard draw, so renderDashboard builds it once
+// (dbChargeCache) instead of once per dbStats call.
+let dbChargeCache = null;
 function dbStats(list) {
-  const chargeMap = dbChargeMap();
+  const chargeMap = dbChargeCache || dbChargeMap();
   const rows = dbSorted(list).map(t => {
     const gross = pnlOf(t), chg = dbChargeOf(t, chargeMap);
     return { t, gross, chg, net: gross + chg, r: reportRrrOf(t) };
@@ -601,6 +604,10 @@ function renderDashControls() {
 }
 
 function renderDashboard() {
+  dbChargeCache = dbChargeMap();
+  try { renderDashboardBody(); } finally { dbChargeCache = null; }
+}
+function renderDashboardBody() {
   renderDashControls();
   const S = dbStats(dbRangeList());
 
