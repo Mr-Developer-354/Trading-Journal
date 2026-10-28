@@ -109,8 +109,8 @@
   input[type="date"]::-webkit-datetime-edit-month-field,
   input[type="date"]::-webkit-datetime-edit-year-field { display: none; }
   input[type="date"]::-webkit-datetime-edit-day-field { display: inline; }
-  input[type="date"] { flex: 0 0 auto !important; width: 40px !important; min-width: 0 !important; max-width: 40px; padding-left: 4px; padding-right: 4px; box-sizing: border-box; }
-  input[type="date"]::-webkit-calendar-picker-indicator { margin: 0; opacity: .85; cursor: pointer; }
+  input[type="date"] { flex: 0 0 auto !important; width: 54px !important; min-width: 0 !important; max-width: 54px; padding-left: 6px; padding-right: 6px; box-sizing: border-box; }
+  input[type="date"]::-webkit-calendar-picker-indicator { margin: 0 0 0 6px; opacity: .85; cursor: pointer; }
 }
 
 /* Phones: the date popover (js/date-popover.js) */
