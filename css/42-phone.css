@@ -32,8 +32,8 @@
   }
   .phone-tab-add svg { width: 24px; height: 24px; }
 
-  /* the drawer opened from "More": scrolls, and its bottom (Settings) stays clear of the tab bar */
-  .sidebar { top: 0; height: auto; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); overflow-y: auto; }
+  /* the drawer opened from "More" runs behind the tab bar (no gap); its padding keeps Settings above the bar */
+  :root .app .sidebar { top: 0; bottom: 0; height: auto; overflow-y: auto; padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
 
   /* keep the last rows of every view clear of the tab bar */
   .main { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
