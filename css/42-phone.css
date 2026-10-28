@@ -104,12 +104,11 @@
 
 /* Phones: date fields show only the calendar icon (the text part is hidden; the field keeps its label for screen readers) */
 @media (max-width: 600px) {
-  input[type="date"]::-webkit-datetime-edit,
-  input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+  /* only the day is shown: the month, year and separators are hidden */
   input[type="date"]::-webkit-datetime-edit-text,
   input[type="date"]::-webkit-datetime-edit-month-field,
-  input[type="date"]::-webkit-datetime-edit-day-field,
   input[type="date"]::-webkit-datetime-edit-year-field { display: none; }
+  input[type="date"]::-webkit-datetime-edit-day-field { display: inline; }
   input[type="date"] { flex: 0 0 auto !important; width: 40px !important; min-width: 0 !important; max-width: 40px; padding-left: 4px; padding-right: 4px; box-sizing: border-box; }
   input[type="date"]::-webkit-calendar-picker-indicator { margin: 0; opacity: .85; cursor: pointer; }
 }
