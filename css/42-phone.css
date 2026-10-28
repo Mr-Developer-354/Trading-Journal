@@ -203,3 +203,8 @@
 }
 #view-dashboard b .cal-kpi-sub .cal-count-positive,
 #view-dashboard b .cal-kpi-sub .cal-count-negative { font-weight: 600; }
+
+/* Tablet and computer (601px and up): the five chart footer figures sit in one row */
+@media (min-width: 601px) {
+  #view-dashboard .db-foot { grid-template-columns: repeat(5, minmax(0, auto)); justify-content: space-between; }
+}
