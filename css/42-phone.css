@@ -228,5 +228,5 @@
   #view-dashboard .db-title h1 { grid-column: 1; grid-row: 1; align-self: center; }
   #view-dashboard .db-title p { grid-column: 1 / -1; grid-row: 2; max-width: none; margin: 0; }
   #view-dashboard .db-filter-row { grid-column: 2; grid-row: 1; justify-self: end; flex-wrap: nowrap; }
-  #view-dashboard .db-filter-bar { grid-column: 1 / -1; grid-row: 3; }
+  #view-dashboard .db-filter-bar { grid-column: 1 / -1; grid-row: 3; justify-content: flex-end; }
 }
