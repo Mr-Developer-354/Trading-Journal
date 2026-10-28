@@ -41,6 +41,12 @@
   .rep-page-head { flex-wrap: nowrap; }
   .rep-page-head > * { min-width: 0; max-width: 100%; }
 
+  /* no visible scrollbars on mobile and tablet: pages and tables scroll by touch.
+     Covers the page, every table and scroll box, and the custom footer scrollbar (pager-scroll). */
+  *, *::before, *::after { scrollbar-width: none !important; }
+  *::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+  .pager-scroll, .pager .pager-scroll { display: none !important; }
+
   /* keep the last rows of every view clear of the tab bar */
   .main { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
   .page-head h1 { font-size: 24px; }
