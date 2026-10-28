@@ -250,6 +250,10 @@ document.getElementById('goalSave').addEventListener('click', () => {
 });
 
 /* ---------------- section renderers ---------------- */
+// a count followed by winners / losers in brackets, e.g. 15 (6 / 9): green winners, red losers
+function dbCountSplit(total, wins, losses) {
+  return `${ dbNum(total) } <span class="cal-kpi-sub">(<span class="cal-count-positive">${ dbNum(wins) }</span> / <span class="cal-count-negative">${ dbNum(losses) }</span>)</span>`;
+}
 function dbTile(label, value, cls, note) {
   return `<div class="db-tile ${ cls || '' }"><span>${ label }</span><b>${ value }</b>${ note ? `<small>${ note }</small>` : '' }</div>`;
 }
@@ -277,7 +281,7 @@ function dbRenderHero(S) {
   });
 
   document.getElementById('equityFoot').innerHTML = `
-    <div><span>Trading days</span><b>${ dbNum(S.days.length) }</b></div>
+    <div><span>Trading days</span><b>${ dbCountSplit(S.days.length, Object.values(S.dayMap).filter(v => v > 0).length, Object.values(S.dayMap).filter(v => v < 0).length) }</b></div>
     <div><span>Best day</span><b class="pos">${ S.bestDay ? fmtMoney(S.dayMap[S.bestDay]) : '—' }</b></div>
     <div><span>Worst day</span><b class="neg">${ S.worstDay ? fmtMoney(S.dayMap[S.worstDay]) : '—' }</b></div>
     <div><span>Max drawdown</span><b class="neg">${ S.n ? fmtMoney(-S.maxDD) : '—' }</b></div>`;
@@ -301,7 +305,7 @@ function dbRenderKpis(S) {
     dbTile('Net P/L', fmtMoney(S.net), cls(S.net), 'after ledger charges'),
     dbTile('Gross P/L', fmtMoney(S.gross), cls(S.gross), 'before charges'),
     dbTile('Charges', fmtMoney(S.charges), 'neg', 'from ledger, estimate if none'),
-    dbTile('Trades', dbNum(S.n), '', `${ S.wins } wins · ${ S.losses } losses`),
+    dbTile('Trades', dbCountSplit(S.n, S.wins, S.losses), '', ''),
     dbTile('Win rate', S.n ? dbPct(S.winRate) : '—', S.winRate >= 50 ? 'pos' : S.n ? 'neg' : '', 'winners ÷ trades'),
     dbTile('Profit factor', S.n ? dbRatio(S.pf) : '—', S.pf !== null && S.pf >= 1 ? 'pos' : S.n ? 'neg' : '', 'gross win ÷ gross loss'),
     dbTile('Expectancy', S.n ? fmtMoney(S.expectancy) : '—', cls(S.expectancy), 'net per trade'),
