@@ -72,7 +72,7 @@
   <link rel="stylesheet" href="css/40-calendar-title.css">
   <link rel="stylesheet" href="css/41-dashboard-v2.css">
   <link rel="stylesheet" href="css/41-dashboard-layout.css">
-  <link rel="stylesheet" href="css/42-phone.css?v=42">
+  <link rel="stylesheet" href="css/42-phone.css?v=43">
   <link rel="stylesheet" href="css/43-screens.css">
   <link rel="stylesheet" href="css/44-ledger-header.css?v=7">
 
@@ -395,6 +395,7 @@
 
       <div class="filters filter-bar" role="search" aria-label="Trade log filters">
         <button class="btn filter-add-btn" id="addTradeFilterBtn" type="button" aria-label="Log a trade" title="Log a trade">✚</button>
+        <button type="button" class="search-toggle" aria-label="Search trades" title="Search trades"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
         <input type="text" id="fSearch" placeholder="Search symbol…" aria-label="Search symbol">
         <select id="fBroker" aria-label="Broker"><option value="all">All broker</option></select>
         <div class="filter-range" role="group" aria-label="Date range">
@@ -451,6 +452,7 @@
     <section class="view" id="view-ledger">
       <div class="filters filter-bar" role="search" aria-label="Ledger filters">
         <button class="ledger-filter-title" id="syncLedgerBtn" type="button" title="Sync ledger rows from Trade Log" aria-label="Sync ledger rows from Trade Log">Ledger</button>
+        <button type="button" class="search-toggle" aria-label="Search ledger" title="Search ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
         <input type="text" id="ledgerSearch" placeholder="Search ledger…" aria-label="Search ledger">
         <select id="ledgerBrokerFilter" aria-label="Broker"><option value="all">All broker</option></select>
         <div class="filter-range" role="group" aria-label="Date range">
@@ -880,7 +882,7 @@
 <script defer src="js/firebase-config.js"></script>
 <script defer src="js/cloud.js?v=4"></script>
 <script defer src="js/main.js"></script>
-<script defer src="js/phone.js?v=6"></script>
+<script defer src="js/phone.js?v=7"></script>
 <script defer src="js/date-popover.js?v=2"></script>
 </body>
 </html>

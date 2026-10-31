@@ -63,3 +63,16 @@
   mobileQ.addEventListener('change', () => setTimeout(normalTables, 0));
   setTimeout(normalTables, 0);
 })();
+
+// Phones: the Trade log and Ledger search box opens from its search icon
+(function () {
+  document.querySelectorAll('.search-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const bar = btn.closest('.filter-bar');
+      if (!bar) return;
+      const open = bar.classList.toggle('search-open');
+      const input = bar.querySelector('input[type="text"]');
+      if (open && input) input.focus();
+    });
+  });
+})();
