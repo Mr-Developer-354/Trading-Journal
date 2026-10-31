@@ -132,7 +132,7 @@
   // open the popover instead of the browser picker (phones only)
   const takeOver = e => {
     const input = e.target.closest && e.target.closest('input[type="date"]');
-    if (!input || !phoneQ.matches) return;
+    if (!input || !phoneQ.matches || input.id === 'holAddDate') return;   // the holiday date keeps the browser's own picker
     e.preventDefault();
     if (e.type === 'click') open(input);
   };
@@ -143,6 +143,6 @@
   document.addEventListener('click', takeOver, true);
   document.addEventListener('touchend', e => {
     const input = e.target.closest && e.target.closest('input[type="date"]');
-    if (input && phoneQ.matches) { e.preventDefault(); open(input); }
+    if (input && phoneQ.matches && input.id !== 'holAddDate') { e.preventDefault(); open(input); }
   }, { passive: false, capture: true });
 })();

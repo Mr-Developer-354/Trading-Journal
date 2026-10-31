@@ -304,3 +304,12 @@
 .hol-remove { padding: 2px 8px; }
 @media (max-width: 600px) { .hol-add { grid-template-columns: 1fr; } }
 .hol-add[hidden] { display: none; }
+
+/* Holidays: the Add date box looks the same on phone and tablet as on the desktop (full dd-mm-yyyy text, full width) */
+input[type="date"]#holAddDate { width: 100% !important; max-width: none !important; min-width: 0 !important; padding: 0 8px !important; flex: 1 1 auto !important; }
+input[type="date"]#holAddDate::-webkit-datetime-edit,
+input[type="date"]#holAddDate::-webkit-datetime-edit-fields-wrapper,
+input[type="date"]#holAddDate::-webkit-datetime-edit-text,
+input[type="date"]#holAddDate::-webkit-datetime-edit-month-field,
+input[type="date"]#holAddDate::-webkit-datetime-edit-day-field,
+input[type="date"]#holAddDate::-webkit-datetime-edit-year-field { display: inline !important; }
