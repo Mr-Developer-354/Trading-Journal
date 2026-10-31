@@ -338,3 +338,20 @@ input[type="date"]#holAddDate::-webkit-datetime-edit-year-field { display: inlin
 .mkt-card.closed .mkt-value { color: var(--red); }
 .mkt-reason { font-size: 13px; color: var(--ink); }
 .mkt-next { font-size: 12px; color: var(--ink-faint); }
+
+/* Dashboard side cards (market status, goal, last 24 trades): tighter so they take less height */
+#view-dashboard .mkt-card,
+#view-dashboard .db-goal-block .db-goal,
+#view-dashboard .db-side .db-card:has(.db-pips) { padding: 12px 14px; }
+#view-dashboard .mkt-card { gap: 2px; }
+#view-dashboard .mkt-value { font-size: 18px; line-height: 1.2; }
+#view-dashboard .mkt-reason { font-size: 12px; line-height: 1.3; }
+#view-dashboard .mkt-next { font-size: 11px; line-height: 1.3; }
+#view-dashboard .db-goal-tabs { margin-bottom: 0; }
+#view-dashboard .db-goal { gap: 10px; }
+#view-dashboard .db-goal-ring { width: 72px; height: 72px; }
+#view-dashboard .db-ring-center b { font-size: 15px; }
+#view-dashboard .db-goal-info { gap: 4px; }
+#view-dashboard .db-goal-edit { margin-top: 2px; }
+#view-dashboard .db-pips { margin-top: 8px; gap: 3px; }
+#view-dashboard .db-pips i { height: 10px; }
