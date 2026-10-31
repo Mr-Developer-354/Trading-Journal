@@ -255,7 +255,10 @@
 
 /* the date dropdowns sit 1px under the broker (the page head's row gap is removed here, the spacing below moves to the date row) */
 #view-reports .rep-page-head, #view-risk .rep-page-head { row-gap: 0 !important; }
-.rep-date-row { margin: 4px 0 10px; }
+.rep-date-row { margin: 4px 0 0; }
+/* exactly 4px between the date dropdowns and the tabs, on every screen size */
+#view-reports .rep-date-row + .rep-bar, #view-risk .rep-date-row + .rep-bar { margin-top: 0 !important; }
+#view-reports .rep-date-row + .rep-bar .rep-tabs, #view-risk .rep-date-row + .rep-bar .rep-tabs { margin: 4px 0 0 !important; }
 
 /* Phones: the Trade log and Ledger search is an icon; tapping it opens the search box */
 .search-toggle { display: none; }
