@@ -282,3 +282,8 @@
   .dash-customize-btn .cz-txt { display: none; }
   .dash-customize-btn .cz-ico { display: block; width: 18px; height: 18px; }
 }
+
+/* Phones: 2px gap between the date range and broker dropdowns on Reports and Risk */
+@media (max-width: 600px) {
+  #view-reports .rsk-title-row, #view-risk .rsk-title-row { gap: 2px !important; }
+}
