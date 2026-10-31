@@ -633,6 +633,7 @@ function renderDashControls() {
 }
 
 function renderDashboard() {
+  if (typeof updateMarketStatus === 'function') updateMarketStatus();
   dbChargeCache = dbChargeMap();
   try { renderDashboardBody(); } finally { dbChargeCache = null; }
 }

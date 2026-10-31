@@ -313,3 +313,20 @@ input[type="date"]#holAddDate::-webkit-datetime-edit-text,
 input[type="date"]#holAddDate::-webkit-datetime-edit-month-field,
 input[type="date"]#holAddDate::-webkit-datetime-edit-day-field,
 input[type="date"]#holAddDate::-webkit-datetime-edit-year-field { display: inline !important; }
+
+/* Holidays page: today's market status */
+.hol-today { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); }
+.hol-today.open { color: var(--green); border-color: color-mix(in srgb, var(--green) 50%, transparent); background: color-mix(in srgb, var(--green) 12%, transparent); }
+.hol-today.closed { color: var(--red); border-color: color-mix(in srgb, var(--red) 50%, transparent); background: color-mix(in srgb, var(--red) 12%, transparent); }
+
+/* Dashboard: market open / closed status next to the title */
+.mkt-status {
+  display: inline-flex; align-items: center; gap: 6px; margin-left: 12px; padding: 3px 10px;
+  border-radius: 999px; border: 1px solid var(--border); font-size: 12px; font-weight: 600;
+  vertical-align: middle; white-space: nowrap;
+}
+.mkt-status i { width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
+.mkt-status.open i { background: var(--green); }
+.mkt-status.open { color: var(--green); }
+.mkt-status.closed { color: var(--red); }
+.mkt-status span { color: var(--ink-faint); font-weight: 500; }

@@ -72,7 +72,7 @@
   <link rel="stylesheet" href="css/40-calendar-title.css">
   <link rel="stylesheet" href="css/41-dashboard-v2.css">
   <link rel="stylesheet" href="css/41-dashboard-layout.css">
-  <link rel="stylesheet" href="css/42-phone.css?v=54">
+  <link rel="stylesheet" href="css/42-phone.css?v=55">
   <link rel="stylesheet" href="css/43-screens.css">
   <link rel="stylesheet" href="css/44-ledger-header.css?v=7">
 
@@ -140,6 +140,7 @@
       <div class="db-head">
         <div class="db-title">
           <h1>Dashboard</h1>
+          <span class="mkt-status" id="marketStatus" aria-live="polite"></span>
           <p>Net results after ledger charges (estimated where a day has no ledger row), with risk, expectancy and behaviour for the period you pick.</p>
         </div>
         <div class="db-controls">
@@ -593,6 +594,7 @@
           <p>NSE trading holidays. The list is fetched from NSE every week into data/nse-holidays.json; Sync copies it into your database.</p>
         </div>
         <div class="hol-actions">
+          <span class="hol-today" id="holToday"></span>
           <span class="hol-status" id="holStatus"></span>
           <button class="btn" id="holAddBtn" type="button">Add date</button>
           <button class="btn primary" id="holSyncBtn" type="button">Sync holidays</button>
@@ -893,7 +895,7 @@
 <script defer src="js/stats.js"></script>
 <script defer src="js/charts.js"></script>
 <script defer src="js/viz.js"></script>
-<script defer src="js/dashboard.js?v=11"></script>
+<script defer src="js/dashboard.js?v=12"></script>
 <script defer src="js/trades.js"></script>
 <script defer src="js/calendar.js"></script>
 <script defer src="js/brokers.js"></script>
@@ -915,6 +917,6 @@
 <script defer src="js/main.js"></script>
 <script defer src="js/phone.js?v=7"></script>
 <script defer src="js/date-popover.js?v=3"></script>
-<script defer src="js/holidays.js?v=2"></script>
+<script defer src="js/holidays.js?v=3"></script>
 </body>
 </html>

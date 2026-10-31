@@ -18,6 +18,29 @@ async function holLoadFile() {
   return res.json();
 }
 
+// Today's market status in India (NSE): closed on weekends and on a listed holiday, otherwise open
+// (the trading session runs 09:15 to 15:30 IST).
+async function holShowToday(dbDates) {
+  const el = document.getElementById('holToday');
+  if (!el) return;
+  const iso = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });   // YYYY-MM-DD in India
+  const dow = new Date(iso + 'T12:00:00').getDay();
+  let file = [];
+  try { file = (await holLoadFile()).holidays || []; } catch (e) { file = []; }
+  const hit = file.find(h => h.date === iso) || (dbDates || []).find(h => h.date === iso);
+  let text, cls;
+  if (dow === 0 || dow === 6) { text = 'Market closed today (weekend)'; cls = 'closed'; }
+  else if (hit) { text = `Market closed today: ${ hit.name || 'holiday' }`; cls = 'closed'; }
+  else {
+    const t = new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: false });
+    const open = t >= '09:15' && t < '15:30';
+    text = open ? 'Market open now (until 15:30 IST)' : 'Market open today (session 09:15 to 15:30 IST)';
+    cls = 'open';
+  }
+  el.textContent = text;
+  el.className = 'hol-today ' + cls;
+}
+
 function holFmtDate(iso) {
   const d = new Date(iso + 'T00:00:00');
   return isNaN(d) ? iso : d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -48,6 +71,7 @@ async function renderHolidays() {
     const snap = await ref.get();
     const list = snap.docs.map(d => d.data()).sort((a, b) => String(a.date).localeCompare(String(b.date)));
     rows.innerHTML = holRowsHtml(list);
+    holShowToday(list);
     empty.hidden = list.length > 0;
     const synced = list.map(h => h.syncedAt).filter(Boolean).sort().pop();
     status.textContent = list.length
@@ -87,6 +111,7 @@ async function syncHolidays() {
     }
     showToast(`Synced ${ list.length } holidays`);
     await renderHolidays();
+    loadHolidayCache();
   } catch (e) {
     console.error('holiday sync failed', e);
     showToast('Holiday sync failed: ' + (e.message || 'unknown error'));
@@ -96,6 +121,7 @@ async function syncHolidays() {
 }
 
 document.getElementById('holSyncBtn').addEventListener('click', syncHolidays);
+holShowToday([]);   // the status shows even before signing in, from the holiday file
 
 // Add date: a holiday that is not in the NSE list, saved as "added by you" (Sync never replaces or removes it)
 const holForm = document.getElementById('holAddForm');
@@ -118,6 +144,7 @@ holForm.addEventListener('submit', async e => {
     holForm.hidden = true;
     showToast('Date added');
     await renderHolidays();
+    loadHolidayCache();
   } catch (err) {
     console.error('add holiday failed', err);
     showToast('Could not add the date');
@@ -131,9 +158,54 @@ document.getElementById('holRows').addEventListener('click', async e => {
   try {
     await ref.doc(b.dataset.date).delete();
     await renderHolidays();
+    loadHolidayCache();
   } catch (err) {
     console.error('remove holiday failed', err);
     showToast('Could not remove the date');
   }
 });
 document.querySelector('.nav button[data-view="holidays"]').addEventListener('click', () => renderHolidays());
+
+// ---- market status on the Dashboard (open or closed, and why) ----
+// Holidays come from the bundled NSE file and from the signed-in user's database (manual dates too).
+const HOL_CACHE = { bundled: new Map(), db: new Map() };
+async function loadHolidayCache() {
+  try {
+    const file = await holLoadFile();
+    HOL_CACHE.bundled = new Map((file.holidays || []).map(h => [h.date, h.name || 'Holiday']));
+  } catch (e) { /* no file yet: the database alone is used */ }
+  const ref = holDbRef();
+  if (ref) {
+    try {
+      const snap = await ref.get();
+      HOL_CACHE.db = new Map(snap.docs.map(d => [d.data().date, d.data().name || 'Holiday']));
+    } catch (e) { console.error('holiday cache failed', e); }
+  }
+  updateMarketStatus();
+}
+// the current date, weekday and minute of the day in India (NSE time)
+function istNow() {
+  const parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date());
+  const get = t => parts.find(p => p.type === t).value;
+  return { wd: get('weekday'), date: `${ get('year') }-${ get('month') }-${ get('day') }`, mins: Number(get('hour')) * 60 + Number(get('minute')) };
+}
+// NSE cash market: Monday to Friday, 09:15 to 15:30 IST, except holidays
+function marketStatus() {
+  const n = istNow();
+  if (n.wd === 'Sat' || n.wd === 'Sun') return { open: false, reason: 'Weekend' };
+  const hol = HOL_CACHE.db.get(n.date) || HOL_CACHE.bundled.get(n.date);
+  if (hol) return { open: false, reason: 'Holiday: ' + hol };
+  if (n.mins < 9 * 60 + 15) return { open: false, reason: 'Opens 09:15 IST' };
+  if (n.mins >= 15 * 60 + 30) return { open: false, reason: 'Closed at 15:30 IST' };
+  return { open: true, reason: 'Open until 15:30 IST' };
+}
+function updateMarketStatus() {
+  const el = document.getElementById('marketStatus');
+  if (!el) return;
+  const s = marketStatus();
+  el.className = 'mkt-status ' + (s.open ? 'open' : 'closed');
+  el.innerHTML = `<i></i>Market ${ s.open ? 'open' : 'closed' }<span>${ escapeHtml(s.reason) }</span>`;
+  el.title = 'NSE trading hours: 09:15 to 15:30 IST, Monday to Friday, except holidays';
+}
+loadHolidayCache();
+setInterval(updateMarketStatus, 30000);
