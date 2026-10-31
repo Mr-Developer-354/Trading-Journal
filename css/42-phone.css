@@ -303,3 +303,4 @@
 .hol-add-btns { display: flex; gap: 8px; }
 .hol-remove { padding: 2px 8px; }
 @media (max-width: 600px) { .hol-add { grid-template-columns: 1fr; } }
+.hol-add[hidden] { display: none; }
