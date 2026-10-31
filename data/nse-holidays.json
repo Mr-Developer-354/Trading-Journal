@@ -1,6 +1,421 @@
 {
   "source": "https://www.nseindia.com/api/holiday-master?type=trading",
   "sourcePage": "https://www.nseindia.com/resources/exchange-communication-holidays",
-  "fetchedAt": null,
-  "holidays": []
+  "fetchedAt": "2026-10-31T05:21:19.170Z",
+  "holidays": [
+    {
+      "date": "2026-01-01",
+      "day": "Thursday",
+      "name": "New year",
+      "segments": [
+        "COM"
+      ]
+    },
+    {
+      "date": "2026-01-15",
+      "day": "Thursday",
+      "name": "Municipal Corporation Election - Maharashtra",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-01-26",
+      "day": "Monday",
+      "name": "Republic Day",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-02-15",
+      "day": "Sunday",
+      "name": "Mahashivratri",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-02-19",
+      "day": "Thursday",
+      "name": "Chatrapati Shivaji Maharaj Jayanti",
+      "segments": [
+        "CD",
+        "IRD"
+      ]
+    },
+    {
+      "date": "2026-03-03",
+      "day": "Tuesday",
+      "name": "Holi",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-03-19",
+      "day": "Thursday",
+      "name": "Gudi Padwa",
+      "segments": [
+        "CD",
+        "IRD"
+      ]
+    },
+    {
+      "date": "2026-03-21",
+      "day": "Saturday",
+      "name": "Id-Ul-Fitr (Ramadan Eid)",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-03-26",
+      "day": "Thursday",
+      "name": "Shri Ram Navami",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-03-31",
+      "day": "Tuesday",
+      "name": "Shri Mahavir Jayanti",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-04-01",
+      "day": "Wednesday",
+      "name": "Annual Bank Closing",
+      "segments": [
+        "CD",
+        "IRD"
+      ]
+    },
+    {
+      "date": "2026-04-03",
+      "day": "Friday",
+      "name": "Good Friday",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-04-14",
+      "day": "Tuesday",
+      "name": "Dr. Baba Saheb Ambedkar Jayanti",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-05-01",
+      "day": "Friday",
+      "name": "Maharashtra Day",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-05-28",
+      "day": "Thursday",
+      "name": "Bakri Id",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "EGR",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-06-26",
+      "day": "Friday",
+      "name": "Muharram",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "EGR",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-08-15",
+      "day": "Saturday",
+      "name": "Independence Day",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "EGR",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-08-26",
+      "day": "Wednesday",
+      "name": "Id-E-Milad",
+      "segments": [
+        "CD",
+        "IRD"
+      ]
+    },
+    {
+      "date": "2026-09-14",
+      "day": "Monday",
+      "name": "Ganesh Chaturthi",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "EGR",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-10-02",
+      "day": "Friday",
+      "name": "Mahatma Gandhi Jayanti",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "EGR",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "day": "Tuesday",
+      "name": "Dussehra",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "EGR",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-11-08",
+      "day": "Sunday",
+      "name": "Diwali Laxmi Pujan*",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "EGR",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-11-10",
+      "day": "Tuesday",
+      "name": "Diwali-Balipratipada",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "EGR",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-11-24",
+      "day": "Tuesday",
+      "name": "Prakash Gurpurb Sri Guru Nanak Dev",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "EGR",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    },
+    {
+      "date": "2026-12-25",
+      "day": "Friday",
+      "name": "Christmas",
+      "segments": [
+        "CBM",
+        "CD",
+        "CM",
+        "CMOT",
+        "COM",
+        "EGR",
+        "FO",
+        "IRD",
+        "MF",
+        "NDM",
+        "NTRP",
+        "SLBS"
+      ]
+    }
+  ]
 }
