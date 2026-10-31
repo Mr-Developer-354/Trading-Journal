@@ -251,4 +251,4 @@
 
 /* the date dropdowns sit 1px under the broker (the page head's row gap is removed here, the spacing below moves to the date row) */
 #view-reports .rep-page-head, #view-risk .rep-page-head { row-gap: 0 !important; }
-.rep-date-row { margin: 1px 0 10px; }
+.rep-date-row { margin: 4px 0 10px; }
