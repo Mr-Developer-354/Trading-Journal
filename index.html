@@ -72,7 +72,7 @@
   <link rel="stylesheet" href="css/40-calendar-title.css">
   <link rel="stylesheet" href="css/41-dashboard-v2.css">
   <link rel="stylesheet" href="css/41-dashboard-layout.css">
-  <link rel="stylesheet" href="css/42-phone.css?v=51">
+  <link rel="stylesheet" href="css/42-phone.css?v=52">
   <link rel="stylesheet" href="css/43-screens.css">
   <link rel="stylesheet" href="css/44-ledger-header.css?v=7">
 
@@ -594,12 +594,21 @@
         </div>
         <div class="hol-actions">
           <span class="hol-status" id="holStatus"></span>
+          <button class="btn" id="holAddBtn" type="button">Add date</button>
           <button class="btn primary" id="holSyncBtn" type="button">Sync holidays</button>
         </div>
       </div>
+      <form class="card hol-add" id="holAddForm" hidden>
+        <label>Date<input type="date" id="holAddDate" required></label>
+        <label>Holiday name<input type="text" id="holAddName" placeholder="e.g. Special closing" maxlength="80" required></label>
+        <div class="hol-add-btns">
+          <button class="btn" id="holAddCancel" type="button">Cancel</button>
+          <button class="btn primary" type="submit">Save</button>
+        </div>
+      </form>
       <div class="card hol-card">
         <table class="hol-table">
-          <thead><tr><th>Date</th><th>Day</th><th>Holiday</th><th>Segments</th></tr></thead>
+          <thead><tr><th>Date</th><th>Day</th><th>Holiday</th><th>Segments</th><th></th></tr></thead>
           <tbody id="holRows"></tbody>
         </table>
         <div class="hol-empty" id="holEmpty" hidden>No holidays in your database yet. Press Sync holidays.</div>
@@ -906,6 +915,6 @@
 <script defer src="js/main.js"></script>
 <script defer src="js/phone.js?v=7"></script>
 <script defer src="js/date-popover.js?v=2"></script>
-<script defer src="js/holidays.js?v=1"></script>
+<script defer src="js/holidays.js?v=2"></script>
 </body>
 </html>

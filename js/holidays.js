@@ -27,7 +27,9 @@ function holRowsHtml(list) {
   return list.map(h => {
     const d = new Date(h.date + 'T00:00:00');
     const day = h.day || (isNaN(d) ? '' : HOL_DAYS[d.getDay()]);
-    return `<tr><td>${ escapeHtml(holFmtDate(h.date)) }</td><td>${ escapeHtml(day) }</td><td>${ escapeHtml(h.name || '') }</td><td>${ escapeHtml((h.segments || []).join(', ')) }</td></tr>`;
+    const seg = h.source === 'manual' ? 'Added by you' : (h.segments || []).join(', ');
+    const remove = h.source === 'manual' ? `<button class="btn small hol-remove" data-date="${ escapeHtml(h.date) }" type="button">Remove</button>` : '';
+    return `<tr><td>${ escapeHtml(holFmtDate(h.date)) }</td><td>${ escapeHtml(day) }</td><td>${ escapeHtml(h.name || '') }</td><td>${ escapeHtml(seg) }</td><td>${ remove }</td></tr>`;
   }).join('');
 }
 
@@ -66,12 +68,24 @@ async function syncHolidays() {
     const file = await holLoadFile();
     const list = Array.isArray(file.holidays) ? file.holidays : [];
     if (!list.length) { showToast('The holiday file is empty; it has not been fetched from NSE yet'); return; }
-    const records = list.map(h => ({
-      id: h.date,
-      data: { date: h.date, day: h.day || '', name: h.name || '', segments: h.segments || [], syncedAt: file.fetchedAt || new Date().toISOString() }
-    }));
-    await cloudReplace(ref, records);
-    showToast(`Synced ${ records.length } holidays`);
+    const now = new Date().toISOString();
+    const existing = await ref.get();
+    const manual = new Set(existing.docs.filter(d => d.data().source === 'manual').map(d => d.id));
+    const ops = [];
+    list.forEach(h => {
+      if (manual.has(h.date)) return;   // a date you added yourself is kept as it is
+      ops.push({ set: true, ref: ref.doc(h.date), data: { date: h.date, day: h.day || '', name: h.name || '', segments: h.segments || [], source: 'nse', syncedAt: file.fetchedAt || now } });
+    });
+    const keep = new Set(list.map(h => h.date));
+    existing.docs.forEach(d => {
+      if (d.data().source !== 'manual' && !keep.has(d.id)) ops.push({ set: false, ref: d.ref });
+    });
+    for (let i = 0; i < ops.length; i += 450) {
+      const batch = cloudDb.batch();
+      ops.slice(i, i + 450).forEach(op => op.set ? batch.set(op.ref, op.data) : batch.delete(op.ref));
+      await batch.commit();
+    }
+    showToast(`Synced ${ list.length } holidays`);
     await renderHolidays();
   } catch (e) {
     console.error('holiday sync failed', e);
@@ -82,4 +96,44 @@ async function syncHolidays() {
 }
 
 document.getElementById('holSyncBtn').addEventListener('click', syncHolidays);
+
+// Add date: a holiday that is not in the NSE list, saved as "added by you" (Sync never replaces or removes it)
+const holForm = document.getElementById('holAddForm');
+document.getElementById('holAddBtn').addEventListener('click', () => {
+  if (!holDbRef()) { showToast('Sign in to add a date'); return; }
+  holForm.hidden = !holForm.hidden;
+  if (!holForm.hidden) document.getElementById('holAddDate').focus();
+});
+document.getElementById('holAddCancel').addEventListener('click', () => { holForm.hidden = true; holForm.reset(); });
+holForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  const ref = holDbRef();
+  const date = document.getElementById('holAddDate').value;
+  const name = document.getElementById('holAddName').value.trim();
+  if (!ref || !date || !name) return;
+  const d = new Date(date + 'T00:00:00');
+  try {
+    await ref.doc(date).set({ date, day: isNaN(d) ? '' : HOL_DAYS[d.getDay()], name, segments: [], source: 'manual', syncedAt: new Date().toISOString() });
+    holForm.reset();
+    holForm.hidden = true;
+    showToast('Date added');
+    await renderHolidays();
+  } catch (err) {
+    console.error('add holiday failed', err);
+    showToast('Could not add the date');
+  }
+});
+// Remove: only for dates added by you
+document.getElementById('holRows').addEventListener('click', async e => {
+  const b = e.target.closest('.hol-remove');
+  const ref = holDbRef();
+  if (!b || !ref) return;
+  try {
+    await ref.doc(b.dataset.date).delete();
+    await renderHolidays();
+  } catch (err) {
+    console.error('remove holiday failed', err);
+    showToast('Could not remove the date');
+  }
+});
 document.querySelector('.nav button[data-view="holidays"]').addEventListener('click', () => renderHolidays());
