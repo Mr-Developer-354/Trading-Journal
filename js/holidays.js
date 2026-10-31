@@ -199,13 +199,30 @@ function marketStatus() {
   if (n.mins >= 15 * 60 + 30) return { open: false, reason: 'Closed at 15:30 IST' };
   return { open: true, reason: 'Open until 15:30 IST' };
 }
+// the next holiday after today (in India), from the same two lists
+function nextHoliday() {
+  const today = istNow().date;
+  const all = new Map([...HOL_CACHE.bundled, ...HOL_CACHE.db]);
+  const next = [...all.keys()].filter(d => d > today).sort()[0];
+  return next ? { date: next, name: all.get(next) } : null;
+}
 function updateMarketStatus() {
-  const el = document.getElementById('marketStatus');
-  if (!el) return;
   const s = marketStatus();
-  el.className = 'mkt-status ' + (s.open ? 'open' : 'closed');
-  el.innerHTML = `<i></i>Market ${ s.open ? 'open' : 'closed' }<span>${ escapeHtml(s.reason) }</span>`;
-  el.title = 'NSE trading hours: 09:15 to 15:30 IST, Monday to Friday, except holidays';
+  const el = document.getElementById('marketStatus');
+  if (el) {
+    el.className = 'mkt-status ' + (s.open ? 'open' : 'closed');
+    el.innerHTML = `<i></i>Market ${ s.open ? 'open' : 'closed' }<span>${ escapeHtml(s.reason) }</span>`;
+    el.title = 'NSE trading hours: 09:15 to 15:30 IST, Monday to Friday, except holidays';
+  }
+  const card = document.getElementById('marketCard');
+  if (card) {
+    card.classList.toggle('open', s.open);
+    card.classList.toggle('closed', !s.open);
+    document.getElementById('mktValue').textContent = s.open ? 'Open' : 'Closed';
+    document.getElementById('mktReason').textContent = s.reason;
+    const nx = nextHoliday();
+    document.getElementById('mktNext').textContent = nx ? `Next holiday: ${ holFmtDate(nx.date) } · ${ nx.name }` : 'No holidays listed after today';
+  }
 }
 loadHolidayCache();
 setInterval(updateMarketStatus, 30000);

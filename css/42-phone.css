@@ -330,3 +330,11 @@ input[type="date"]#holAddDate::-webkit-datetime-edit-year-field { display: inlin
 .mkt-status.open { color: var(--green); }
 .mkt-status.closed { color: var(--red); }
 .mkt-status span { color: var(--ink-faint); font-weight: 500; }
+
+/* Dashboard: market status card, above the goal card */
+.mkt-card { gap: 4px; }
+.mkt-value { font-size: 22px; font-weight: 700; }
+.mkt-card.open .mkt-value { color: var(--green); }
+.mkt-card.closed .mkt-value { color: var(--red); }
+.mkt-reason { font-size: 13px; color: var(--ink); }
+.mkt-next { font-size: 12px; color: var(--ink-faint); }
