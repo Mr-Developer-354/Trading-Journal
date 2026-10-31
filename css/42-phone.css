@@ -282,24 +282,3 @@
   .dash-customize-btn .cz-txt { display: none; }
   .dash-customize-btn .cz-ico { display: block; width: 18px; height: 18px; }
 }
-
-/* Phones: on Reports and Risk the title sits on its own line, and the date range, broker and year dropdowns
-   share one row beneath it. The tabs follow on the next line. */
-@media (max-width: 600px) {
-  #view-reports .rep-page-head, #view-risk .rep-page-head {
-    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; gap: 4px 6px;
-  }
-  #view-reports .rep-page-head > .rsk-title-row, #view-risk .rep-page-head > .rsk-title-row,
-  #view-reports .rep-date-row, #view-risk .rep-date-row { display: contents; }
-  #view-reports .rep-page-head h1, #view-risk .rep-page-head h1 { grid-column: 1 / -1; grid-row: 1; }
-  #view-reports .rsk-range, #view-risk .rsk-range,
-  #view-reports .rep-page-head .rep-broker-pick, #view-risk .rep-page-head .rep-broker-pick {
-    grid-row: 2; min-width: 0; width: 100%; margin: 0;
-  }
-  #view-reports .rep-page-head .rep-date-row > label, #view-risk .rep-page-head .rep-date-row > label {
-    grid-row: 2; min-width: 0; width: 100%; margin: 0;
-  }
-  #view-reports .rep-page-head .rep-bar, #view-risk .rep-page-head .rep-bar { grid-column: 1 / -1; grid-row: 3; margin-top: 4px !important; }
-  #view-reports .rep-page-head .rep-broker-pick select, #view-risk .rep-page-head .rep-broker-pick select,
-  #view-reports .rep-page-head .rep-date-row select, #view-risk .rep-page-head .rep-date-row select { width: 100%; min-width: 0; }
-}
