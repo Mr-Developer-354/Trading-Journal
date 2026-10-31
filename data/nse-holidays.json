@@ -1,0 +1,6 @@
+{
+  "source": "https://www.nseindia.com/api/holiday-master?type=trading",
+  "sourcePage": "https://www.nseindia.com/resources/exchange-communication-holidays",
+  "fetchedAt": null,
+  "holidays": []
+}

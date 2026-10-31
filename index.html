@@ -72,7 +72,7 @@
   <link rel="stylesheet" href="css/40-calendar-title.css">
   <link rel="stylesheet" href="css/41-dashboard-v2.css">
   <link rel="stylesheet" href="css/41-dashboard-layout.css">
-  <link rel="stylesheet" href="css/42-phone.css?v=50">
+  <link rel="stylesheet" href="css/42-phone.css?v=51">
   <link rel="stylesheet" href="css/43-screens.css">
   <link rel="stylesheet" href="css/44-ledger-header.css?v=7">
 
@@ -110,6 +110,7 @@
       <button data-view="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h5M10 17h5M10 9h1"/></svg>Reports</button>
       <button data-view="risk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z"/><path d="M9.5 12l2 2 3.5-4"/></svg>Risk management</button>
       <button data-view="charges"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="17" rx="1.5"/><path d="M7 9h10M7 13h10M7 17h6"/></svg>Charges &amp; Calculators</button>
+      <button data-view="holidays"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18M9 15l2 2 4-4"/></svg>Holidays</button>
     </nav>
     <div class="sidebar-foot">
       <div class="datastat" id="sidebarStat">— trades on record</div>
@@ -584,6 +585,27 @@
       <div id="riskBody" class="rep-body"></div>
     </section>
 
+    <!-- HOLIDAYS (NSE trading holidays, synced to the signed-in user's database) -->
+    <section class="view" id="view-holidays">
+      <div class="page-head">
+        <div>
+          <h1>Market holidays</h1>
+          <p>NSE trading holidays. The list is fetched from NSE every week into data/nse-holidays.json; Sync copies it into your database.</p>
+        </div>
+        <div class="hol-actions">
+          <span class="hol-status" id="holStatus"></span>
+          <button class="btn primary" id="holSyncBtn" type="button">Sync holidays</button>
+        </div>
+      </div>
+      <div class="card hol-card">
+        <table class="hol-table">
+          <thead><tr><th>Date</th><th>Day</th><th>Holiday</th><th>Segments</th></tr></thead>
+          <tbody id="holRows"></tbody>
+        </table>
+        <div class="hol-empty" id="holEmpty" hidden>No holidays in your database yet. Press Sync holidays.</div>
+      </div>
+    </section>
+
     <!-- CHARGES & CALCULATORS -->
     <section class="view" id="view-charges">
       <div class="page-head">
@@ -884,5 +906,6 @@
 <script defer src="js/main.js"></script>
 <script defer src="js/phone.js?v=7"></script>
 <script defer src="js/date-popover.js?v=2"></script>
+<script defer src="js/holidays.js?v=1"></script>
 </body>
 </html>
