@@ -271,3 +271,11 @@
   #view-trades .filter-bar.search-open #fSearch,
   #view-ledger .filter-bar.search-open #ledgerSearch { display: block; flex: 1 1 100%; width: 100%; order: -1; }
 }
+
+/* Phones: the Customize button on the dashboard shows an icon instead of the word */
+.dash-customize-btn .cz-ico { display: none; }
+@media (max-width: 600px) {
+  .dash-customize-btn { padding: 0; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; }
+  .dash-customize-btn .cz-txt { display: none; }
+  .dash-customize-btn .cz-ico { display: block; width: 18px; height: 18px; }
+}
