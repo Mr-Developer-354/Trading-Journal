@@ -154,21 +154,25 @@
   .sidebar-toggle-btn, .sidebar-edge-tab { z-index: 70 !important; }
 }
 
-/* Phones: the Trade log title and the summary cards are as wide as their content, and share one height */
+/* Phones: the Trade log title and the five summary cards sit in two rows of three:
+   row 1 = title, Trades, Gross P/L; row 2 = Win rate, Profit factor, Charges. */
 @media (max-width: 600px) {
-  #view-trades .page-head.ledger-page-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-  #view-trades .page-head .ledger-title-block {
-    flex: 0 0 auto; width: max-content; max-width: 100%; height: 48px; box-sizing: border-box;
-    display: flex; align-items: center; padding: 0 14px;
+  #view-trades .page-head.ledger-page-head {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; gap: 6px;
   }
-  #view-trades .page-head .ledger-title-block h1 { height: auto; margin: 0; white-space: nowrap; }
-  /* the title and every card are items of one row, so the cards follow the title and wrap one card at a time */
+  #view-trades .page-head .ledger-title-block {
+    width: auto; max-width: none; min-width: 0; height: 48px; box-sizing: border-box;
+    display: flex; align-items: center; padding: 0 10px;
+  }
+  #view-trades .page-head .ledger-title-block h1 { font-size: 18px; height: auto; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   #view-trades .page-head .ledger-head-right { display: contents; }
   #view-trades .page-head .ledger-summary-cards { display: contents; }
   #view-trades .page-head .ledger-summary-card {
-    flex: 0 0 auto; width: auto; height: 48px; min-height: 48px; box-sizing: border-box;
-    padding: 5px 10px 5px 12px; justify-content: center;
+    width: auto; min-width: 0; height: 48px; min-height: 48px; box-sizing: border-box;
+    padding: 5px 8px 5px 10px; justify-content: center; overflow: hidden;
   }
+  #view-trades .page-head .ledger-summary-card .val { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #view-trades .page-head .ledger-summary-card .label { font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
 
 /* Dashboard goal: Daily / Weekly / Monthly / Yearly switch, styled like browser tabs */
