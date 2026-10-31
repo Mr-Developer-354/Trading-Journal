@@ -355,3 +355,10 @@ input[type="date"]#holAddDate::-webkit-datetime-edit-year-field { display: inlin
 #view-dashboard .db-goal-edit { margin-top: 2px; }
 #view-dashboard .db-pips { margin-top: 8px; gap: 3px; }
 #view-dashboard .db-pips i { height: 10px; }
+
+/* Desktop: the side column stretches to the height of the Net P/L card; the goal card takes the spare room */
+@media (min-width: 1025px) {
+  #view-dashboard .db-hero > .db-side { height: 100%; }
+  #view-dashboard .db-side > .db-goal-block { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+  #view-dashboard .db-side > .db-goal-block > .db-goal { flex: 1 1 auto; }
+}
