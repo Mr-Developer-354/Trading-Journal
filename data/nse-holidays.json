@@ -1,7 +1,7 @@
 {
   "source": "https://www.nseindia.com/api/holiday-master?type=trading",
   "sourcePage": "https://www.nseindia.com/resources/exchange-communication-holidays",
-  "fetchedAt": "2026-10-31T05:21:19.170Z",
+  "fetchedAt": "2026-11-09T10:31:25.987Z",
   "holidays": [
     {
       "date": "2026-01-01",
@@ -70,8 +70,11 @@
       "day": "Thursday",
       "name": "Chatrapati Shivaji Maharaj Jayanti",
       "segments": [
+        "CBM",
         "CD",
-        "IRD"
+        "IRD",
+        "NDM",
+        "NTRP"
       ]
     },
     {
@@ -97,8 +100,11 @@
       "day": "Thursday",
       "name": "Gudi Padwa",
       "segments": [
+        "CBM",
         "CD",
-        "IRD"
+        "IRD",
+        "NDM",
+        "NTRP"
       ]
     },
     {
@@ -160,8 +166,11 @@
       "day": "Wednesday",
       "name": "Annual Bank Closing",
       "segments": [
+        "CBM",
         "CD",
-        "IRD"
+        "IRD",
+        "NDM",
+        "NTRP"
       ]
     },
     {
@@ -228,7 +237,6 @@
         "CM",
         "CMOT",
         "COM",
-        "EGR",
         "FO",
         "IRD",
         "MF",
@@ -247,7 +255,6 @@
         "CM",
         "CMOT",
         "COM",
-        "EGR",
         "FO",
         "IRD",
         "MF",
@@ -266,7 +273,6 @@
         "CM",
         "CMOT",
         "COM",
-        "EGR",
         "FO",
         "IRD",
         "MF",
@@ -280,8 +286,11 @@
       "day": "Wednesday",
       "name": "Id-E-Milad",
       "segments": [
+        "CBM",
         "CD",
-        "IRD"
+        "IRD",
+        "NDM",
+        "NTRP"
       ]
     },
     {
@@ -294,7 +303,6 @@
         "CM",
         "CMOT",
         "COM",
-        "EGR",
         "FO",
         "IRD",
         "MF",
@@ -313,7 +321,6 @@
         "CM",
         "CMOT",
         "COM",
-        "EGR",
         "FO",
         "IRD",
         "MF",
@@ -332,7 +339,6 @@
         "CM",
         "CMOT",
         "COM",
-        "EGR",
         "FO",
         "IRD",
         "MF",
@@ -370,7 +376,6 @@
         "CM",
         "CMOT",
         "COM",
-        "EGR",
         "FO",
         "IRD",
         "MF",
@@ -389,7 +394,6 @@
         "CM",
         "CMOT",
         "COM",
-        "EGR",
         "FO",
         "IRD",
         "MF",
@@ -408,7 +412,6 @@
         "CM",
         "CMOT",
         "COM",
-        "EGR",
         "FO",
         "IRD",
         "MF",
