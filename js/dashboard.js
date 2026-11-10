@@ -573,11 +573,8 @@ function dbRenderBreakdown(S) {
   const bySym = [...dbGroup(S.rows, x => x.t.symbol).entries()]
     .map(([name, rows]) => ({ name, s: stat(rows) }))
     .sort((a, b) => b.s.n - a.s.n).slice(0, 10);
-  VIZ.bars({
-    host: document.getElementById('symbolBars'), height: Math.max(180, bySym.length * 26 + 20), horizontal: true, fmt: dbCompact,
-    labels: bySym.map(b => b.name), values: bySym.map(b => b.s.net), name: 'Net P/L',
-    colors: bySym.map(b => b.s.net >= 0 ? '#2fb170' : '#e5534b')
-  });
+  dbSymBars = bySym;
+  drawSymbolBars();
   const symRows = bySym.map(b => [
     { html: dbEsc(b.name) },
     { html: dbNum(b.s.n), cls: 'num' },
@@ -660,6 +657,38 @@ document.getElementById('dashBrokerFilter').addEventListener('change', e => {
   dashBroker = e.target.value;
   renderDashboard();
 });
+// "Net P/L by symbol" chart: switch between Net P/L, Trades and Win rate (the 10 symbols stay the same)
+let dbSymBars = [];
+let dbSymMetric = 'net';
+function drawSymbolBars() {
+  const metrics = {
+    net:     { val: b => b.s.net, fmt: dbCompact, name: 'Net P/L',
+               color: v => v >= 0 ? '#2fb170' : '#e5534b' },
+    trades:  { val: b => b.s.n, fmt: v => dbNum(v), name: 'Trades',
+               color: () => '#da7756' },
+    winrate: { val: b => b.s.winRate ?? 0, fmt: v => dbPct(v), name: 'Win rate',
+               color: v => v >= 50 ? '#2fb170' : '#e5534b' }
+  };
+  const m = metrics[dbSymMetric] || metrics.net;
+  const values = dbSymBars.map(m.val);
+  VIZ.bars({
+    host: document.getElementById('symbolBars'), height: Math.max(180, dbSymBars.length * 26 + 20), horizontal: true, fmt: m.fmt,
+    labels: dbSymBars.map(b => b.name), values, name: m.name,
+    colors: values.map(m.color)
+  });
+}
+document.getElementById('symbolMetric').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-metric]');
+  if (!btn) return;
+  dbSymMetric = btn.dataset.metric;
+  document.querySelectorAll('#symbolMetric button').forEach(b => {
+    const on = b === btn;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  drawSymbolBars();
+});
+
 // click a broker or symbol row to open that filter in the Trade log
 document.getElementById('brokerTable').addEventListener('click', e => {
   const tr = e.target.closest('tr[data-broker]');

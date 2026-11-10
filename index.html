@@ -348,7 +348,13 @@
             <div class="db-chart" id="brokerWaterfall"></div>
           </div>
           <div class="db-card">
-            <div class="db-card-head"><h3>Net P/L by symbol</h3><span class="db-sub">top 10 by trade count</span></div>
+            <div class="db-card-head"><h3>Net P/L by symbol</h3><span class="db-sub">top 10 by trade count</span>
+              <div class="db-seg" id="symbolMetric" role="group" aria-label="Show symbols by">
+                <button type="button" data-metric="net" class="active" aria-pressed="true">Net P/L</button>
+                <button type="button" data-metric="trades" aria-pressed="false">Trades</button>
+                <button type="button" data-metric="winrate" aria-pressed="false">Win rate</button>
+              </div>
+            </div>
             <div class="db-chart" id="symbolBars"></div>
           </div>
         </div>
@@ -900,7 +906,7 @@
 <script defer src="js/stats.js"></script>
 <script defer src="js/charts.js"></script>
 <script defer src="js/viz.js"></script>
-<script defer src="js/dashboard.js?v=12"></script>
+<script defer src="js/dashboard.js?v=13"></script>
 <script defer src="js/trades.js"></script>
 <script defer src="js/calendar.js"></script>
 <script defer src="js/brokers.js"></script>

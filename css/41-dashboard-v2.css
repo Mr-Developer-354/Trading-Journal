@@ -187,3 +187,16 @@
 
 /* total row under the broker table */
 #view-dashboard .db-table tr.db-total td { font-weight: 600; border-top: 2px solid var(--border-strong); border-bottom: 0; }
+
+/* ---- small segmented selector in a card head (e.g. Net P/L / Trades / Win rate) ---- */
+#view-dashboard .db-seg {
+  display: inline-flex; gap: 2px; padding: 2px; margin-left: auto;
+  background: var(--bg-raised); border: 1px solid var(--border); border-radius: 8px;
+}
+#view-dashboard .db-seg button {
+  padding: 3px 9px; border: 0; border-radius: 6px; background: transparent;
+  color: var(--ink-faint); font: 500 12px var(--sans); cursor: pointer; white-space: nowrap;
+}
+#view-dashboard .db-seg button:hover { color: var(--ink); }
+#view-dashboard .db-seg button.active { background: var(--bg-card); color: var(--ink); font-weight: 600; box-shadow: 0 0 0 1px var(--border); }
+#view-dashboard .db-seg button:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
