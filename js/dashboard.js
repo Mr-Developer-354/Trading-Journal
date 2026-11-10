@@ -347,6 +347,15 @@ function dbRenderDistribution(S) {
     host: document.getElementById('optionBox'), height: 220, fmt: dbCompact,
     groups: byOpt.map(([name, rows], i) => ({ label: name, values: rows.map(x => x.net), color: DB_PALETTE[i % DB_PALETTE.length] }))
   });
+  // win rate and net P/L under the boxes, one column per option type
+  const optStats = document.getElementById('optionStats');
+  optStats.style.gridTemplateColumns = `repeat(${ Math.max(1, byOpt.length) }, minmax(0, 1fr))`;
+  optStats.innerHTML = byOpt.map(([name, rows]) => {
+    const s = dbStats(rows.map(x => x.t));
+    return `<div class="db-opt-stat"><span>${ dbEsc(name) }</span>` +
+      `<b>${ dbPct(s.winRate) }</b><small>win rate</small>` +
+      `<b class="${ dbCls(s.net) }">${ fmtMoney(s.net) }</b><small>net P/L</small></div>`;
+  }).join('');
 }
 
 function dbRenderCharts(S) {
