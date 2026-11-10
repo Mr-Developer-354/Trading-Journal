@@ -580,14 +580,6 @@ function dbRenderBreakdown(S) {
   dbSymBars = bySym;
   drawSymbolBars();
 
-  // option type (EQ / CE / PE)
-  const byOpt = [...dbGroup(S.rows, x => x.t.optType).entries()]
-    .map(([name, rows]) => ({ name, s: stat(rows) }))
-    .sort((a, b) => b.s.n - a.s.n);
-  document.getElementById('optionTable').innerHTML = byOpt.length
-    ? dbTable([{ label: 'Type' }, { label: 'Trades', num: 1 }, { label: 'Win rate', num: 1 }, { label: 'Net P/L', num: 1 }],
-        byOpt.map(o => [{ html: dbEsc(o.name) }, { html: dbNum(o.s.n), cls: 'num' }, { html: dbPct(o.s.winRate), cls: 'num' }, { html: fmtMoney(o.s.net), cls: 'num ' + dbCls(o.s.net) }]))
-    : `<div class="db-faint db-empty">No data in this period.</div>`;
 }
 
 function dbRenderReview(S) {
