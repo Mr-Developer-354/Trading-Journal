@@ -569,22 +569,12 @@ function dbRenderBreakdown(S) {
     ? dbTable([{ label: 'Broker' }, { label: 'Trades', num: 1 }, { label: 'Days', num: 1 }, { label: 'Win rate', num: 1 }, { label: 'Gross P/L', num: 1 }, { label: 'Net P/L', num: 1 }, { label: 'Charges', num: 1 }, { label: 'PF', num: 1 }, { label: 'Avg R', num: 1 }], brokerRows, brokerAttrs)
     : `<div class="db-faint db-empty">No data in this period.</div>`;
 
-  // most traded symbols: top 10 by count
+  // symbols for the Net P/L by symbol chart: top 10 by trade count
   const bySym = [...dbGroup(S.rows, x => x.t.symbol).entries()]
     .map(([name, rows]) => ({ name, s: stat(rows) }))
     .sort((a, b) => b.s.n - a.s.n).slice(0, 10);
   dbSymBars = bySym;
   drawSymbolBars();
-  const symRows = bySym.map(b => [
-    { html: dbEsc(b.name) },
-    { html: dbNum(b.s.n), cls: 'num' },
-    { html: dbPct(b.s.winRate), cls: 'num' },
-    { html: fmtMoney(b.s.net), cls: 'num ' + dbCls(b.s.net) }
-  ]);
-  const symAttrs = bySym.map(b => `class="clickable" data-symbol="${ dbEsc(b.name) }" title="Show these trades in the Trade log"`);
-  document.getElementById('symbolTable').innerHTML = bySym.length
-    ? dbTable([{ label: 'Symbol' }, { label: 'Trades', num: 1 }, { label: 'Win rate', num: 1 }, { label: 'Net P/L', num: 1 }], symRows, symAttrs)
-    : `<div class="db-faint db-empty">No data in this period.</div>`;
 
   // option type (EQ / CE / PE)
   const byOpt = [...dbGroup(S.rows, x => x.t.optType).entries()]
@@ -695,13 +685,6 @@ document.getElementById('brokerTable').addEventListener('click', e => {
   if (!tr) return;
   populateBrokerFilter();
   document.getElementById('fBroker').value = 'broker:' + tr.dataset.broker;
-  page = 1;
-  switchView('trades');
-});
-document.getElementById('symbolTable').addEventListener('click', e => {
-  const tr = e.target.closest('tr[data-symbol]');
-  if (!tr) return;
-  document.getElementById('fSearch').value = tr.dataset.symbol;
   page = 1;
   switchView('trades');
 });
