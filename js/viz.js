@@ -448,7 +448,7 @@ const VIZ = (() => {
         const q1 = quantile(s, 0.25), q2 = quantile(s, 0.5), q3 = quantile(s, 0.75), iqr = q3 - q1;
         const lo = s.find(v => v >= q1 - 1.5 * iqr) ?? s[0];
         const hi = s.slice().reverse().find(v => v <= q3 + 1.5 * iqr) ?? s[s.length - 1];
-        return { q1, q2, q3, lo, hi, color: g.color, label: g.label, n: s.length };
+        return { q1, q2, q3, lo, hi, color: g.color, label: g.label, n: s.length, extra: g.extra };
       });
       const all = stats.flatMap(s => [s.lo, s.hi]).concat(0);
       const t = niceTicks(Math.min(...all), Math.max(...all), 4);
@@ -457,7 +457,7 @@ const VIZ = (() => {
       const band = (fr.x1 - fr.x0) / stats.length, bw = Math.max(16, Math.min(60, band * 0.45));
       stats.forEach((s, i) => {
         const xc = fr.x0 + band * i + band / 2;
-        const tip = `${ s.label } (${ s.n } trades)\nmedian ${ (o.fmt || defaultFmt)(s.q2) }\nIQR ${ (o.fmt || defaultFmt)(s.q1) } to ${ (o.fmt || defaultFmt)(s.q3) }`;
+        const tip = `${ s.label } (${ s.n } trades)\nmedian ${ (o.fmt || defaultFmt)(s.q2) }\nIQR ${ (o.fmt || defaultFmt)(s.q1) } to ${ (o.fmt || defaultFmt)(s.q3) }${ s.extra ? '\n' + s.extra : '' }`;
         node('line', { x1: xc, x2: xc, y1: y(s.hi), y2: y(s.lo), stroke: T.faint, 'stroke-width': 1.5 }, svg);
         node('line', { x1: xc - bw / 4, x2: xc + bw / 4, y1: y(s.hi), y2: y(s.hi), stroke: T.faint, 'stroke-width': 1.5 }, svg);
         node('line', { x1: xc - bw / 4, x2: xc + bw / 4, y1: y(s.lo), y2: y(s.lo), stroke: T.faint, 'stroke-width': 1.5 }, svg);

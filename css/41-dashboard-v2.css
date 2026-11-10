@@ -201,12 +201,3 @@
 #view-dashboard .db-seg button.active { background: var(--bg-card); color: var(--ink); font-weight: 600; box-shadow: 0 0 0 1px var(--border); }
 #view-dashboard .db-seg button:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
 
-/* ---- By option type: win rate and net P/L under the box chart, one boxed panel per option type ---- */
-#view-dashboard .db-opt-stats { display: grid; gap: 8px; margin-top: 10px; }
-#view-dashboard .db-opt-box {
-  min-width: 0; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-raised);
-  font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--ink-faint); font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-#view-dashboard .db-opt-box .db-opt-title { color: var(--ink); font-weight: 600; }
-#view-dashboard .db-opt-box .pos { color: var(--green); }
-#view-dashboard .db-opt-box .neg { color: var(--red); }

@@ -345,17 +345,12 @@ function dbRenderDistribution(S) {
   const byOpt = [...dbGroup(S.rows, x => x.t.optType).entries()].sort((a, b) => b[1].length - a[1].length);
   VIZ.boxplot({
     host: document.getElementById('optionBox'), height: 220, fmt: dbCompact,
-    groups: byOpt.map(([name, rows], i) => ({ label: name, values: rows.map(x => x.net), color: DB_PALETTE[i % DB_PALETTE.length] }))
+    groups: byOpt.map(([name, rows], i) => {
+      const st = dbStats(rows.map(x => x.t));
+      return { label: name, values: rows.map(x => x.net), color: DB_PALETTE[i % DB_PALETTE.length],
+        extra: `win rate ${ dbPct(st.winRate) }\nnet P/L ${ fmtMoney(st.net) }` };
+    })
   });
-  // win rate and net P/L under the boxes, one column per option type
-  const optStats = document.getElementById('optionStats');
-  optStats.style.gridTemplateColumns = `repeat(${ Math.max(1, byOpt.length) }, minmax(0, 1fr))`;
-  optStats.innerHTML = byOpt.map(([name, rows]) => {
-    const s = dbStats(rows.map(x => x.t));
-    return `<div class="db-opt-box"><div class="db-opt-title">${ dbEsc(name) } (${ dbNum(s.n) } trades)</div>` +
-      `<div>win rate ${ dbPct(s.winRate) }</div>` +
-      `<div>net P/L <span class="${ dbCls(s.net) }">${ fmtMoney(s.net) }</span></div></div>`;
-  }).join('');
 }
 
 function dbRenderCharts(S) {
