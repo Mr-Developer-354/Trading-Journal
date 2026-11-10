@@ -352,9 +352,9 @@ function dbRenderDistribution(S) {
   optStats.style.gridTemplateColumns = `repeat(${ Math.max(1, byOpt.length) }, minmax(0, 1fr))`;
   optStats.innerHTML = byOpt.map(([name, rows]) => {
     const s = dbStats(rows.map(x => x.t));
-    return `<div class="db-opt-stat"><span>${ dbEsc(name) }</span>` +
-      `<b>${ dbPct(s.winRate) }</b><small>win rate</small>` +
-      `<b class="${ dbCls(s.net) }">${ fmtMoney(s.net) }</b><small>net P/L</small></div>`;
+    return `<div class="db-opt-box"><div class="db-opt-title">${ dbEsc(name) } (${ dbNum(s.n) } trades)</div>` +
+      `<div>win rate ${ dbPct(s.winRate) }</div>` +
+      `<div>net P/L <span class="${ dbCls(s.net) }">${ fmtMoney(s.net) }</span></div></div>`;
   }).join('');
 }
 
