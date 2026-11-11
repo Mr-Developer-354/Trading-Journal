@@ -317,7 +317,8 @@ const VIZ = (() => {
         const mono = { 'font-family': 'var(--mono)' };
         const L = mids.map(m => {
           const cs = Math.cos(m.mid), sn = Math.sin(m.mid);
-          const anchor = cs >= 0 ? 'start' : 'end';
+          // labels near the top or bottom start to the right of their leader, so the line never runs through the text
+          const anchor = cs >= -0.25 ? 'start' : 'end';
           const bw = textLen(`${ m.it.label } ${ pct(m) }`) + 4;
           return { ...m, anchor, bw, p0: pt(R + 2, m.mid), p1: pt(R + 12, m.mid), x: cx + Rl * cs, y: cy + Rl * sn };
         });
