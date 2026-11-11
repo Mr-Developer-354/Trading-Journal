@@ -342,6 +342,12 @@ const VIZ = (() => {
             w - (c.anchor === 'start' ? c.bw + 4 : c.anchor === 'middle' ? c.bw / 2 + 4 : 4));
           c.y = Math.min(Math.max(c.y, 10), H - 10);
         });
+        // labels bunched at the top: the slice further left gets the higher label, so the leaders keep their order
+        const topBunch = L.filter(c => Math.sin(c.mid) < 0 && Math.abs(Math.cos(c.mid)) < 0.35);
+        if (topBunch.length > 1) {
+          const slots = topBunch.map(c => c.y).sort((p, q) => p - q);
+          topBunch.sort((p, q) => p.p0[0] - q.p0[0]).forEach((c, i) => { c.y = slots[i]; });
+        }
         L.forEach(c => {
           const tx = c.anchor === 'start' ? c.x + 2 : c.anchor === 'end' ? c.x - 2 : c.x;
           node('path', { d: `M${c.p0[0]},${c.p0[1]} L${c.p1[0]},${c.p1[1]} L${tx},${c.y}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
