@@ -287,7 +287,7 @@ const VIZ = (() => {
       const total = items.reduce((s, i) => s + i.value, 0);
       if (!total) return text(w / 2, H / 2, 'No data in this period', { 'text-anchor': 'middle', fill: T.faint, 'font-size': 12 }, svg);
       const R = labelled
-        ? Math.min(w * 0.16, H / 2 - 42, 80)
+        ? Math.min(w * 0.14, H / 2 - 44, 70)
         : Math.min(w * 0.42, H / 2 - 6, 110);
       const cx = w / 2, cy = H / 2;
       const r0 = R * (o.hole ?? 0.64);
@@ -308,9 +308,11 @@ const VIZ = (() => {
         a = b;
       });
       if (labelled) {
-        // labels on all four sides; each slice's label sits on the side its middle points to.
-        // Leaders run from the slice edge outward, then bend to the label.
-        const SP = 26, GAP = 72, EDGE = 14;
+        // Labels on all four sides. Each slice goes to the side its middle points to; top and bottom labels sit
+        // in a single row centred over their leader, and a slice that would overlap a neighbour in that row
+        // moves to the nearest left or right column instead. Leaders are then vertical (top/bottom) or
+        // sorted by height (left/right), so they do not cross.
+        const SP = 26, ROW = 70, EDGE = 14;
         const pct = c => `${ (c.frac * 100).toFixed(1) }%`;
         const mono = { 'font-family': 'var(--mono)' };
         const groups = { top: [], right: [], bottom: [], left: [] };
@@ -319,20 +321,21 @@ const VIZ = (() => {
           const side = Math.abs(sn) > Math.abs(cs) ? (sn < 0 ? 'top' : 'bottom') : (cs >= 0 ? 'right' : 'left');
           groups[side].push({ ...m, p0: pt(R + 2, m.mid), p1: pt(R + 12, m.mid), side });
         });
-        // top and bottom: labels spread along the x axis, kept inside the card
         ['top', 'bottom'].forEach(side => {
-          const list = groups[side].sort((p, q) => p.p1[0] - q.p1[0]);
-          list.forEach((c, i) => { c.lx = c.p1[0]; if (i > 0 && c.lx - list[i - 1].lx < GAP) c.lx = list[i - 1].lx + GAP; });
-          if (list.length && list[list.length - 1].lx > w - EDGE) list.forEach(c => { c.lx -= list[list.length - 1].lx - (w - EDGE); });
-          if (list.length && list[0].lx < EDGE) list.forEach(c => { c.lx += EDGE - list[0].lx; });
+          const row = [];
+          groups[side].sort((p, q) => p.p1[0] - q.p1[0]).forEach(c => {
+            if (row.every(o => Math.abs(o.p1[0] - c.p1[0]) >= ROW)) row.push(c);
+            else groups[c.p1[0] >= cx ? 'right' : 'left'].push(c);
+          });
+          groups[side] = row;
           const top = side === 'top';
-          list.forEach(c => {
-            const endY = top ? cy - R - 15 : cy + R + 12;
-            node('path', { d: `M${c.p0[0]},${c.p0[1]} L${c.p1[0]},${c.p1[1]} L${c.lx},${endY}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
+          row.forEach(c => {
+            const endY = top ? cy - R - 20 : cy + R + 20;
+            node('path', { d: `M${c.p0[0]},${c.p0[1]} L${c.p1[0]},${c.p1[1]} L${c.p1[0]},${endY}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
             node('circle', { cx: c.p0[0], cy: c.p0[1], r: 2, fill: c.it.color }, svg);
-            const nameY = top ? cy - R - 30 : cy + R + 18;
-            text(c.lx, nameY, c.it.label, { 'text-anchor': 'middle', fill: T.ink, 'font-size': 11 }, svg);
-            text(c.lx, nameY + 11, pct(c), Object.assign({ 'text-anchor': 'middle', fill: T.faint, 'font-size': 11 }, mono), svg);
+            const nameY = top ? cy - R - 34 : cy + R + 30;
+            text(c.p1[0], nameY, c.it.label, { 'text-anchor': 'middle', fill: T.ink, 'font-size': 11 }, svg);
+            text(c.p1[0], nameY + 11, pct(c), Object.assign({ 'text-anchor': 'middle', fill: T.faint, 'font-size': 11 }, mono), svg);
           });
         });
         // left and right: a column per side, spaced apart vertically
