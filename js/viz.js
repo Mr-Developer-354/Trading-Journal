@@ -287,7 +287,7 @@ const VIZ = (() => {
       const total = items.reduce((s, i) => s + i.value, 0);
       if (!total) return text(w / 2, H / 2, 'No data in this period', { 'text-anchor': 'middle', fill: T.faint, 'font-size': 12 }, svg);
       const R = labelled
-        ? Math.min(w * 0.16, H / 2 - 20, 80)
+        ? Math.min(w * 0.16, H / 2 - 42, 80)
         : Math.min(w * 0.42, H / 2 - 6, 110);
       const cx = w / 2, cy = H / 2;
       const r0 = R * (o.hole ?? 0.64);
@@ -308,22 +308,46 @@ const VIZ = (() => {
         a = b;
       });
       if (labelled) {
-        // bent leaders: from the slice edge straight out, then across to a label column on the slice's side
-        const SP = 26, EDGE = 14;
-        [1, -1].forEach(sg => {
-          const list = mids.filter(m => (Math.cos(m.mid) >= 0 ? 1 : -1) === sg)
-            .map(m => ({ ...m, p0: pt(R + 2, m.mid), p1: pt(R + 12, m.mid) }))
-            .sort((p, q) => p.p1[1] - q.p1[1]);
-          list.forEach((c, i) => { c.ly = c.p1[1]; if (i > 0 && c.ly - list[i - 1].ly < SP) c.ly = list[i - 1].ly + SP; });
+        // labels on all four sides; each slice's label sits on the side its middle points to.
+        // Leaders run from the slice edge outward, then bend to the label.
+        const SP = 26, GAP = 72, EDGE = 14;
+        const pct = c => `${ (c.frac * 100).toFixed(1) }%`;
+        const mono = { 'font-family': 'var(--mono)' };
+        const groups = { top: [], right: [], bottom: [], left: [] };
+        mids.forEach(m => {
+          const sn = Math.sin(m.mid), cs = Math.cos(m.mid);
+          const side = Math.abs(sn) > Math.abs(cs) ? (sn < 0 ? 'top' : 'bottom') : (cs >= 0 ? 'right' : 'left');
+          groups[side].push({ ...m, p0: pt(R + 2, m.mid), p1: pt(R + 12, m.mid), side });
+        });
+        // top and bottom: labels spread along the x axis, kept inside the card
+        ['top', 'bottom'].forEach(side => {
+          const list = groups[side].sort((p, q) => p.p1[0] - q.p1[0]);
+          list.forEach((c, i) => { c.lx = c.p1[0]; if (i > 0 && c.lx - list[i - 1].lx < GAP) c.lx = list[i - 1].lx + GAP; });
+          if (list.length && list[list.length - 1].lx > w - EDGE) list.forEach(c => { c.lx -= list[list.length - 1].lx - (w - EDGE); });
+          if (list.length && list[0].lx < EDGE) list.forEach(c => { c.lx += EDGE - list[0].lx; });
+          const top = side === 'top';
+          list.forEach(c => {
+            const endY = top ? cy - R - 15 : cy + R + 12;
+            node('path', { d: `M${c.p0[0]},${c.p0[1]} L${c.p1[0]},${c.p1[1]} L${c.lx},${endY}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
+            node('circle', { cx: c.p0[0], cy: c.p0[1], r: 2, fill: c.it.color }, svg);
+            const nameY = top ? cy - R - 30 : cy + R + 18;
+            text(c.lx, nameY, c.it.label, { 'text-anchor': 'middle', fill: T.ink, 'font-size': 11 }, svg);
+            text(c.lx, nameY + 11, pct(c), Object.assign({ 'text-anchor': 'middle', fill: T.faint, 'font-size': 11 }, mono), svg);
+          });
+        });
+        // left and right: a column per side, spaced apart vertically
+        [[groups.right, 1], [groups.left, -1]].forEach(([list0, sg]) => {
+          const list = list0.map(c => ({ ...c, ly: c.p1[1] })).sort((p, q) => p.ly - q.ly);
+          list.forEach((c, i) => { if (i > 0 && c.ly - list[i - 1].ly < SP) c.ly = list[i - 1].ly + SP; });
+          if (list.length && list[list.length - 1].ly > H - EDGE) list.forEach(c => { c.ly -= list[list.length - 1].ly - (H - EDGE); });
           if (list.length && list[0].ly < EDGE) list.forEach(c => { c.ly += EDGE - list[0].ly; });
-          for (let i = list.length - 2; i >= 0; i--) { if (list[i + 1].ly - list[i].ly < SP) list[i].ly = list[i + 1].ly - SP; }
           list.forEach(c => {
             const lx = cx + sg * (R + 26);
             node('path', { d: `M${c.p0[0]},${c.p0[1]} L${c.p1[0]},${c.p1[1]} L${lx - sg * 3},${c.ly}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
             node('circle', { cx: c.p0[0], cy: c.p0[1], r: 2, fill: c.it.color }, svg);
             const anchor = sg > 0 ? 'start' : 'end';
             text(lx + sg * 2, c.ly - 1, c.it.label, { 'text-anchor': anchor, fill: T.ink, 'font-size': 11 }, svg);
-            text(lx + sg * 2, c.ly + 11, `${ (c.frac * 100).toFixed(1) }%`, { 'text-anchor': anchor, fill: T.faint, 'font-size': 11, 'font-family': 'var(--mono)' }, svg);
+            text(lx + sg * 2, c.ly + 11, pct(c), Object.assign({ 'text-anchor': anchor, fill: T.faint, 'font-size': 11 }, mono), svg);
           });
         });
       }

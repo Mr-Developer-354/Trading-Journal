@@ -382,7 +382,7 @@ function dbRenderCharts(S) {
   });
 
   VIZ.donut({
-    host: document.getElementById('winLossChart'), height: 200, hole: 0.66,
+    host: document.getElementById('winLossChart'), height: 240, hole: 0.66,
     items: [
       { label: 'Winners', value: S.wins, color: '#2fb170' },
       { label: 'Losers', value: S.losses, color: '#e5534b' },
@@ -396,7 +396,7 @@ function dbRenderCharts(S) {
   const top = byBroker.slice(0, 6), rest = byBroker.slice(6).reduce((s, b) => s + b.n, 0);
   const pieItems = top.map((b, i) => ({ label: b.name, value: b.n, color: DB_PALETTE[i] }));
   if (rest) pieItems.push({ label: 'Other', value: rest, color: '#8d99ae' });
-  VIZ.donut({ host: document.getElementById('brokerPie'), height: 200, hole: 0, items: pieItems, fmt: v => dbNum(v) + ' trades' });
+  VIZ.donut({ host: document.getElementById('brokerPie'), height: 240, hole: 0, items: pieItems, fmt: v => dbNum(v) + ' trades' });
 }
 
 function dbRenderProfile(S) {
