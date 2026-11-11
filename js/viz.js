@@ -296,22 +296,20 @@ const VIZ = (() => {
         mids.push({ it, frac, mid: (a + b) / 2 });
         a = b;
       });
-      if (o.legend !== true) {
-        // arrow callouts: a leader line from each slice to its name and share, left or right of the pie
-        const sides = { 1: [], '-1': [] };
-        mids.forEach(m => {
-          const [ax, ay] = pt(R, m.mid), sg = Math.cos(m.mid) >= 0 ? 1 : -1;
-          sides[sg].push({ ...m, ax, ay, ly: ay, sg });
-        });
-        [1, -1].forEach(sg => {
-          const list = sides[sg].sort((p, q) => p.ly - q.ly);
+      if (o.legend !== true && mids.length) {
+        // labels beside the pie: half on the right, half on the left (the slices most to the side go there),
+        // each with a straight leader line from its slice
+        const byX = mids.map(m => ({ ...m, ax: pt(R, m.mid)[0], ay: pt(R, m.mid)[1] }))
+          .sort((p, q) => Math.cos(q.mid) - Math.cos(p.mid));
+        const rightCount = Math.ceil(byX.length / 2);
+        [[byX.slice(0, rightCount), 1], [byX.slice(rightCount), -1]].forEach(([group, sg]) => {
+          const list = group.map(c => ({ ...c, ly: c.ay })).sort((p, q) => p.ly - q.ly);
           list.forEach((c, i) => { if (i > 0 && c.ly - list[i - 1].ly < 28) c.ly = list[i - 1].ly + 28; });
           const over = list.length ? list[list.length - 1].ly - (H - 16) : 0;
           if (over > 0) list.forEach(c => { c.ly -= over; });
           list.forEach(c => {
-            const ex = cx + sg * (R + 10), lx = cx + sg * (R + 16);
-            node('path', { d: `M${c.ax},${c.ay} L${ex},${c.ly} L${lx - sg * 2},${c.ly}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
-            node('circle', { cx: c.ax, cy: c.ay, r: 2, fill: c.it.color }, svg);
+            const lx = cx + sg * (R + 14);
+            node('path', { d: `M${c.ax},${c.ay} L${lx - sg * 3},${c.ly}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
             const anchor = sg > 0 ? 'start' : 'end';
             text(lx, c.ly - 1, c.it.label, { 'text-anchor': anchor, fill: T.ink, 'font-size': 11 }, svg);
             text(lx, c.ly + 11, `${ (c.frac * 100).toFixed(1) }%`, { 'text-anchor': anchor, fill: T.faint, 'font-size': 11, 'font-family': 'var(--mono)' }, svg);
