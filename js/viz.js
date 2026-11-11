@@ -270,7 +270,9 @@ const VIZ = (() => {
 
   /* ---------- donut / pie ---------- */
   // o.items: [{ label, value, color }]; o.hole in 0..0.9 (0 = pie)
-  // o.legend: 'side' puts a name and share list beside the pie; otherwise no list is drawn (hover shows the detail)
+  // o.legend: 'side' puts a name and share list beside the pie.
+  // Default: each slice gets a label with a bent leader line (slice edge, then out, then across to the label).
+  // o.labels === false draws neither (hover shows the detail).
   function donut(o) {
     const items = (o.items || []).filter(i => i.value > 0);
     const h = o.height || 220;
@@ -280,13 +282,18 @@ const VIZ = (() => {
       o.host.parentNode.insertBefore(row, o.host);
       row.appendChild(o.host);
     }
+    const labelled = !o.legend && o.labels !== false;
     render(o.host, h, (svg, w, H, T) => {
       const total = items.reduce((s, i) => s + i.value, 0);
       if (!total) return text(w / 2, H / 2, 'No data in this period', { 'text-anchor': 'middle', fill: T.faint, 'font-size': 12 }, svg);
-      const R = Math.min(w * 0.42, H / 2 - 6, 110), cx = w / 2, cy = H / 2;
+      const R = labelled
+        ? Math.min(w * 0.16, H / 2 - 20, 80)
+        : Math.min(w * 0.42, H / 2 - 6, 110);
+      const cx = w / 2, cy = H / 2;
       const r0 = R * (o.hole ?? 0.64);
       let a = -Math.PI / 2;
       const pt = (r, ang) => [cx + r * Math.cos(ang), cy + r * Math.sin(ang)];
+      const mids = [];
       items.forEach(it => {
         const frac = it.value / total;
         const b = a + frac * Math.PI * 2;
@@ -297,8 +304,29 @@ const VIZ = (() => {
           ? `M${x1},${y1} A${R},${R} 0 ${large} 1 ${x2},${y2} L${x3},${y3} A${r0},${r0} 0 ${large} 0 ${x4},${y4} Z`
           : `M${cx},${cy} L${x1},${y1} A${R},${R} 0 ${large} 1 ${x2},${y2} Z`;
         node('path', { d, fill: it.color, stroke: T.card, 'stroke-width': 2, 'data-tip': `${ it.label }\n${ (o.fmt || defaultFmt)(it.value) } · ${ (frac * 100).toFixed(1) }%` }, svg);
+        mids.push({ it, frac, mid: (a + b) / 2 });
         a = b;
       });
+      if (labelled) {
+        // bent leaders: from the slice edge straight out, then across to a label column on the slice's side
+        const SP = 26, EDGE = 14;
+        [1, -1].forEach(sg => {
+          const list = mids.filter(m => (Math.cos(m.mid) >= 0 ? 1 : -1) === sg)
+            .map(m => ({ ...m, p0: pt(R + 2, m.mid), p1: pt(R + 12, m.mid) }))
+            .sort((p, q) => p.p1[1] - q.p1[1]);
+          list.forEach((c, i) => { c.ly = c.p1[1]; if (i > 0 && c.ly - list[i - 1].ly < SP) c.ly = list[i - 1].ly + SP; });
+          if (list.length && list[0].ly < EDGE) list.forEach(c => { c.ly += EDGE - list[0].ly; });
+          for (let i = list.length - 2; i >= 0; i--) { if (list[i + 1].ly - list[i].ly < SP) list[i].ly = list[i + 1].ly - SP; }
+          list.forEach(c => {
+            const lx = cx + sg * (R + 26);
+            node('path', { d: `M${c.p0[0]},${c.p0[1]} L${c.p1[0]},${c.p1[1]} L${lx - sg * 3},${c.ly}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
+            node('circle', { cx: c.p0[0], cy: c.p0[1], r: 2, fill: c.it.color }, svg);
+            const anchor = sg > 0 ? 'start' : 'end';
+            text(lx + sg * 2, c.ly - 1, c.it.label, { 'text-anchor': anchor, fill: T.ink, 'font-size': 11 }, svg);
+            text(lx + sg * 2, c.ly + 11, `${ (c.frac * 100).toFixed(1) }%`, { 'text-anchor': anchor, fill: T.faint, 'font-size': 11, 'font-family': 'var(--mono)' }, svg);
+          });
+        });
+      }
       if (o.centerText && r0 > 0) {
         text(cx, cy + 2, o.centerText, { 'text-anchor': 'middle', fill: T.ink, 'font-size': 20, 'font-weight': 600 }, svg);
         if (o.centerSub) text(cx, cy + 17, o.centerSub, { 'text-anchor': 'middle', fill: T.faint, 'font-size': 10 }, svg);
