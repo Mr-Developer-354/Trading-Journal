@@ -276,8 +276,11 @@ const VIZ = (() => {
     render(o.host, h, (svg, w, H, T) => {
       const total = items.reduce((s, i) => s + i.value, 0);
       if (!total) return text(w / 2, H / 2, 'No data in this period', { 'text-anchor': 'middle', fill: T.faint, 'font-size': 12 }, svg);
-      const R = Math.min(w * 0.42, H / 2 - 6, 110), cx = w / 2, cy = H / 2;
+      // with arrow callouts the labels sit beside the pie, so it is drawn a little smaller
+      const R = o.legend === true ? Math.min(w * 0.42, H / 2 - 6, 110) : Math.min(w * 0.18, H / 2 - 18, 90);
+      const cx = w / 2, cy = H / 2;
       const r0 = R * (o.hole ?? 0.64);
+      const mids = [];
       let a = -Math.PI / 2;
       const pt = (r, ang) => [cx + r * Math.cos(ang), cy + r * Math.sin(ang)];
       items.forEach(it => {
@@ -290,14 +293,37 @@ const VIZ = (() => {
           ? `M${x1},${y1} A${R},${R} 0 ${large} 1 ${x2},${y2} L${x3},${y3} A${r0},${r0} 0 ${large} 0 ${x4},${y4} Z`
           : `M${cx},${cy} L${x1},${y1} A${R},${R} 0 ${large} 1 ${x2},${y2} Z`;
         node('path', { d, fill: it.color, stroke: T.card, 'stroke-width': 2, 'data-tip': `${ it.label }\n${ (o.fmt || defaultFmt)(it.value) } · ${ (frac * 100).toFixed(1) }%` }, svg);
+        mids.push({ it, frac, mid: (a + b) / 2 });
         a = b;
       });
+      if (o.legend !== true) {
+        // arrow callouts: a leader line from each slice to its name and share, left or right of the pie
+        const sides = { 1: [], '-1': [] };
+        mids.forEach(m => {
+          const [ax, ay] = pt(R, m.mid), sg = Math.cos(m.mid) >= 0 ? 1 : -1;
+          sides[sg].push({ ...m, ax, ay, ly: ay, sg });
+        });
+        [1, -1].forEach(sg => {
+          const list = sides[sg].sort((p, q) => p.ly - q.ly);
+          list.forEach((c, i) => { if (i > 0 && c.ly - list[i - 1].ly < 28) c.ly = list[i - 1].ly + 28; });
+          const over = list.length ? list[list.length - 1].ly - (H - 16) : 0;
+          if (over > 0) list.forEach(c => { c.ly -= over; });
+          list.forEach(c => {
+            const ex = cx + sg * (R + 10), lx = cx + sg * (R + 16);
+            node('path', { d: `M${c.ax},${c.ay} L${ex},${c.ly} L${lx - sg * 2},${c.ly}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
+            node('circle', { cx: c.ax, cy: c.ay, r: 2, fill: c.it.color }, svg);
+            const anchor = sg > 0 ? 'start' : 'end';
+            text(lx, c.ly - 1, c.it.label, { 'text-anchor': anchor, fill: T.ink, 'font-size': 11 }, svg);
+            text(lx, c.ly + 11, `${ (c.frac * 100).toFixed(1) }%`, { 'text-anchor': anchor, fill: T.faint, 'font-size': 11, 'font-family': 'var(--mono)' }, svg);
+          });
+        });
+      }
       if (o.centerText && r0 > 0) {
         text(cx, cy + 2, o.centerText, { 'text-anchor': 'middle', fill: T.ink, 'font-size': 20, 'font-weight': 600 }, svg);
         if (o.centerSub) text(cx, cy + 17, o.centerSub, { 'text-anchor': 'middle', fill: T.faint, 'font-size': 10 }, svg);
       }
     });
-    if (o.legend !== false && o.host) {
+    if (o.legend === true && o.host) {
       const legend = document.createElement('div');
       legend.className = 'viz-legend';
       const total = items.reduce((s, i) => s + i.value, 0) || 1;
