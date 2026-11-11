@@ -270,6 +270,9 @@ const VIZ = (() => {
 
   /* ---------- donut / pie ---------- */
   // o.items: [{ label, value, color }]; o.hole in 0..0.9 (0 = pie)
+  // rough width in px of an 11px label line
+  function textLen(str) { return String(str).length * 6.4; }
+
   // o.legend: 'side' puts a name and share list beside the pie.
   // Default: each slice gets a label with a bent leader line (slice edge, then out, then across to the label).
   // o.labels === false draws neither (hover shows the detail).
@@ -286,9 +289,8 @@ const VIZ = (() => {
     render(o.host, h, (svg, w, H, T) => {
       const total = items.reduce((s, i) => s + i.value, 0);
       if (!total) return text(w / 2, H / 2, 'No data in this period', { 'text-anchor': 'middle', fill: T.faint, 'font-size': 12 }, svg);
-      const R = labelled
-        ? Math.min(w * 0.14, H / 2 - 44, 70)
-        : Math.min(w * 0.42, H / 2 - 6, 110);
+      const Rl = labelled ? Math.max(40, Math.min(w / 2 - 64, H / 2 - 26, 96)) : 0;
+      const R = labelled ? Math.max(30, Rl - 36) : Math.min(w * 0.42, H / 2 - 6, 110);
       const cx = w / 2, cy = H / 2;
       const r0 = R * (o.hole ?? 0.64);
       let a = -Math.PI / 2;
@@ -308,50 +310,44 @@ const VIZ = (() => {
         a = b;
       });
       if (labelled) {
-        // Labels on all four sides. Each slice goes to the side its middle points to; top and bottom labels sit
-        // in a single row centred over their leader, and a slice that would overlap a neighbour in that row
-        // moves to the nearest left or right column instead. Leaders are then vertical (top/bottom) or
-        // sorted by height (left/right), so they do not cross.
-        const SP = 26, ROW = 70, EDGE = 14;
+        // labels in a ring around the pie. Each label starts at its slice's angle, then the labels are pushed
+        // apart on screen so none overlap. Each leader runs out from its slice and bends to its label.
+        // Labels keep their angular order, so leaders do not cross.
         const pct = c => `${ (c.frac * 100).toFixed(1) }%`;
         const mono = { 'font-family': 'var(--mono)' };
-        const groups = { top: [], right: [], bottom: [], left: [] };
-        mids.forEach(m => {
-          const sn = Math.sin(m.mid), cs = Math.cos(m.mid);
-          const side = Math.abs(sn) > Math.abs(cs) ? (sn < 0 ? 'top' : 'bottom') : (cs >= 0 ? 'right' : 'left');
-          groups[side].push({ ...m, p0: pt(R + 2, m.mid), p1: pt(R + 12, m.mid), side });
+        const L = mids.map(m => {
+          const cs = Math.cos(m.mid), sn = Math.sin(m.mid);
+          const anchor = cs >= 0 ? 'start' : 'end';
+          const bw = textLen(`${ m.it.label } ${ pct(m) }`) + 4;
+          return { ...m, anchor, bw, p0: pt(R + 2, m.mid), p1: pt(R + 12, m.mid), x: cx + Rl * cs, y: cy + Rl * sn };
         });
-        ['top', 'bottom'].forEach(side => {
-          const row = [];
-          groups[side].sort((p, q) => p.p1[0] - q.p1[0]).forEach(c => {
-            if (row.every(o => Math.abs(o.p1[0] - c.p1[0]) >= ROW)) row.push(c);
-            else groups[c.p1[0] >= cx ? 'right' : 'left'].push(c);
-          });
-          groups[side] = row;
-          const top = side === 'top';
-          row.forEach(c => {
-            const endY = top ? cy - R - 20 : cy + R + 20;
-            node('path', { d: `M${c.p0[0]},${c.p0[1]} L${c.p1[0]},${c.p1[1]} L${c.p1[0]},${endY}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
-            node('circle', { cx: c.p0[0], cy: c.p0[1], r: 2, fill: c.it.color }, svg);
-            const nameY = top ? cy - R - 34 : cy + R + 30;
-            text(c.p1[0], nameY, c.it.label, { 'text-anchor': 'middle', fill: T.ink, 'font-size': 11 }, svg);
-            text(c.p1[0], nameY + 11, pct(c), Object.assign({ 'text-anchor': 'middle', fill: T.faint, 'font-size': 11 }, mono), svg);
-          });
+        const boxX = c => c.anchor === 'start' ? c.x : c.anchor === 'end' ? c.x - c.bw : c.x - c.bw / 2;
+        for (let it = 0; it < 200; it++) {
+          let moved = false;
+          for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) {
+            const A = L[i], B = L[j];
+            const ox = Math.min(boxX(A) + A.bw, boxX(B) + B.bw) - Math.max(boxX(A), boxX(B));
+            const oy = Math.min(A.y + 8, B.y + 8) - Math.max(A.y - 8, B.y - 8);
+            if (ox > 0 && oy > 0) {
+              moved = true;
+              if (ox < oy) { const d = ox / 2 + 1, sg = A.x <= B.x ? 1 : -1; A.x -= sg * d; B.x += sg * d; }
+              else { const d = oy / 2 + 1, sg = A.y <= B.y ? 1 : -1; A.y -= sg * d; B.y += sg * d; }
+            }
+          }
+          if (!moved) break;
+        }
+        L.forEach(c => {
+          c.x = Math.min(Math.max(c.x, c.anchor === 'end' ? c.bw + 4 : c.anchor === 'middle' ? c.bw / 2 + 4 : 4),
+            w - (c.anchor === 'start' ? c.bw + 4 : c.anchor === 'middle' ? c.bw / 2 + 4 : 4));
+          c.y = Math.min(Math.max(c.y, 10), H - 10);
         });
-        // left and right: a column per side, spaced apart vertically
-        [[groups.right, 1], [groups.left, -1]].forEach(([list0, sg]) => {
-          const list = list0.map(c => ({ ...c, ly: c.p1[1] })).sort((p, q) => p.ly - q.ly);
-          list.forEach((c, i) => { if (i > 0 && c.ly - list[i - 1].ly < SP) c.ly = list[i - 1].ly + SP; });
-          if (list.length && list[list.length - 1].ly > H - EDGE) list.forEach(c => { c.ly -= list[list.length - 1].ly - (H - EDGE); });
-          if (list.length && list[0].ly < EDGE) list.forEach(c => { c.ly += EDGE - list[0].ly; });
-          list.forEach(c => {
-            const lx = cx + sg * (R + 26);
-            node('path', { d: `M${c.p0[0]},${c.p0[1]} L${c.p1[0]},${c.p1[1]} L${lx - sg * 3},${c.ly}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
-            node('circle', { cx: c.p0[0], cy: c.p0[1], r: 2, fill: c.it.color }, svg);
-            const anchor = sg > 0 ? 'start' : 'end';
-            text(lx + sg * 2, c.ly - 1, c.it.label, { 'text-anchor': anchor, fill: T.ink, 'font-size': 11 }, svg);
-            text(lx + sg * 2, c.ly + 11, pct(c), Object.assign({ 'text-anchor': anchor, fill: T.faint, 'font-size': 11 }, mono), svg);
-          });
+        L.forEach(c => {
+          const tx = c.anchor === 'start' ? c.x + 2 : c.anchor === 'end' ? c.x - 2 : c.x;
+          node('path', { d: `M${c.p0[0]},${c.p0[1]} L${c.p1[0]},${c.p1[1]} L${tx},${c.y}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
+          node('circle', { cx: c.p0[0], cy: c.p0[1], r: 2, fill: c.it.color }, svg);
+          const lbl = text(tx, c.y + 4, c.it.label, { 'text-anchor': c.anchor, fill: T.ink, 'font-size': 11 }, svg);
+          const sh = node('tspan', Object.assign({ fill: T.faint }, mono), lbl);
+          sh.textContent = ` ${ pct(c) }`;
         });
       }
       if (o.centerText && r0 > 0) {
