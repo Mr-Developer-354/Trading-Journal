@@ -270,17 +270,21 @@ const VIZ = (() => {
 
   /* ---------- donut / pie ---------- */
   // o.items: [{ label, value, color }]; o.hole in 0..0.9 (0 = pie)
+  // o.legend: 'side' puts a name and share list beside the pie; otherwise no list is drawn (hover shows the detail)
   function donut(o) {
     const items = (o.items || []).filter(i => i.value > 0);
     const h = o.height || 220;
+    if (o.legend === 'side' && o.host && !o.host.parentNode.classList.contains('viz-donut-row')) {
+      const row = document.createElement('div');
+      row.className = 'viz-donut-row';
+      o.host.parentNode.insertBefore(row, o.host);
+      row.appendChild(o.host);
+    }
     render(o.host, h, (svg, w, H, T) => {
       const total = items.reduce((s, i) => s + i.value, 0);
       if (!total) return text(w / 2, H / 2, 'No data in this period', { 'text-anchor': 'middle', fill: T.faint, 'font-size': 12 }, svg);
-      // with arrow callouts the labels sit beside the pie, so it is drawn a little smaller
-      const R = o.legend === true ? Math.min(w * 0.42, H / 2 - 6, 110) : Math.min(w * 0.18, H / 2 - 32, 90);
-      const cx = w / 2, cy = H / 2;
+      const R = Math.min(w * 0.42, H / 2 - 6, 110), cx = w / 2, cy = H / 2;
       const r0 = R * (o.hole ?? 0.64);
-      const mids = [];
       let a = -Math.PI / 2;
       const pt = (r, ang) => [cx + r * Math.cos(ang), cy + r * Math.sin(ang)];
       items.forEach(it => {
@@ -293,62 +297,14 @@ const VIZ = (() => {
           ? `M${x1},${y1} A${R},${R} 0 ${large} 1 ${x2},${y2} L${x3},${y3} A${r0},${r0} 0 ${large} 0 ${x4},${y4} Z`
           : `M${cx},${cy} L${x1},${y1} A${R},${R} 0 ${large} 1 ${x2},${y2} Z`;
         node('path', { d, fill: it.color, stroke: T.card, 'stroke-width': 2, 'data-tip': `${ it.label }\n${ (o.fmt || defaultFmt)(it.value) } · ${ (frac * 100).toFixed(1) }%` }, svg);
-        mids.push({ it, frac, mid: (a + b) / 2 });
         a = b;
       });
-      if (o.legend !== true && mids.length) {
-        // labels around the pie: as evenly as possible across top, right, bottom and left.
-        // Each slice goes to the side nearest its middle angle, then the sides are filled to equal size.
-        const sideAngle = { top: -Math.PI / 2, right: 0, bottom: Math.PI / 2, left: Math.PI };
-        const names = ['top', 'right', 'bottom', 'left'];
-        const N = mids.length, base = Math.floor(N / 4), extra = N % 4;
-        const cap = {}; names.forEach((k, i) => { cap[k] = base + (i < extra ? 1 : 0); });
-        const angDiff = (p, q) => { let d = Math.abs(p - q) % (2 * Math.PI); return d > Math.PI ? 2 * Math.PI - d : d; };
-        const pairs = [];
-        mids.forEach((m, i) => names.forEach(k => pairs.push({ i, k, d: angDiff(m.mid, sideAngle[k]) })));
-        pairs.sort((p, q) => p.d - q.d);
-        const side = {}, used = {}; const filled = new Set();
-        pairs.forEach(pr => {
-          if (filled.has(pr.i) || (used[pr.k] || 0) >= cap[pr.k]) return;
-          filled.add(pr.i); side[pr.i] = pr.k; used[pr.k] = (used[pr.k] || 0) + 1;
-        });
-        const groups = { top: [], right: [], bottom: [], left: [] };
-        mids.forEach((m, i) => groups[side[i]].push({ ...m, ax: pt(R, m.mid)[0], ay: pt(R, m.mid)[1] }));
-        const pct = c => `${ (c.frac * 100).toFixed(1) }%`;
-        const mono = { 'font-family': 'var(--mono)' };
-        // top and bottom: a row of labels centred over / under the pie
-        const row = (list, y, nameY, pctY) => {
-          const gap = Math.min(92, (w - 24) / Math.max(list.length, 1));
-          list.sort((p, q) => p.ax - q.ax).forEach((c, i) => {
-            const x = cx + (i - (list.length - 1) / 2) * gap;
-            node('path', { d: `M${c.ax},${c.ay} L${x},${y}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
-            text(x, nameY, c.it.label, { 'text-anchor': 'middle', fill: T.ink, 'font-size': 11 }, svg);
-            text(x, pctY, pct(c), Object.assign({ 'text-anchor': 'middle', fill: T.faint, 'font-size': 11 }, mono), svg);
-          });
-        };
-        row(groups.top, cy - R - 6, cy - R - 21, cy - R - 10);
-        row(groups.bottom, cy + R + 6, cy + R + 18, cy + R + 29);
-        // left and right: a column of labels with straight leaders
-        [[groups.right, 1], [groups.left, -1]].forEach(([list, sg]) => {
-          const col = list.map(c => ({ ...c, ly: c.ay })).sort((p, q) => p.ly - q.ly);
-          col.forEach((c, i) => { if (i > 0 && c.ly - col[i - 1].ly < 28) c.ly = col[i - 1].ly + 28; });
-          const over = col.length ? col[col.length - 1].ly - (H - 16) : 0;
-          if (over > 0) col.forEach(c => { c.ly -= over; });
-          col.forEach(c => {
-            const lx = cx + sg * (R + 14);
-            node('path', { d: `M${c.ax},${c.ay} L${lx - sg * 3},${c.ly}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
-            const anchor = sg > 0 ? 'start' : 'end';
-            text(lx, c.ly - 1, c.it.label, { 'text-anchor': anchor, fill: T.ink, 'font-size': 11 }, svg);
-            text(lx, c.ly + 11, pct(c), Object.assign({ 'text-anchor': anchor, fill: T.faint, 'font-size': 11 }, mono), svg);
-          });
-        });
-      }
       if (o.centerText && r0 > 0) {
         text(cx, cy + 2, o.centerText, { 'text-anchor': 'middle', fill: T.ink, 'font-size': 20, 'font-weight': 600 }, svg);
         if (o.centerSub) text(cx, cy + 17, o.centerSub, { 'text-anchor': 'middle', fill: T.faint, 'font-size': 10 }, svg);
       }
     });
-    if (o.legend === true && o.host) {
+    if (o.legend && o.host) {
       const legend = document.createElement('div');
       legend.className = 'viz-legend';
       const total = items.reduce((s, i) => s + i.value, 0) || 1;

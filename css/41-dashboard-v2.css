@@ -201,3 +201,8 @@
 #view-dashboard .db-seg button.active { background: var(--bg-card); color: var(--ink); font-weight: 600; box-shadow: 0 0 0 1px var(--border); }
 #view-dashboard .db-seg button:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
 
+
+/* pie or donut with its name and share list beside it */
+#view-dashboard .viz-donut-row { display: flex; align-items: center; gap: 14px; }
+#view-dashboard .viz-donut-row > :first-child { flex: 1 1 0; min-width: 0; }
+#view-dashboard .viz-donut-row > .viz-legend { flex: 0 0 auto; min-width: 130px; }
