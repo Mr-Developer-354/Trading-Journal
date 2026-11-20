@@ -965,7 +965,7 @@ function riskMapHtml(model) {
     + cards + `</div></section>`;
 
   const charts = `<div class="rm-charts">`
-    + `<section class="rep-panel rm-card rm-wide">${ donut }`
+    + `<section class="rep-panel rm-card">${ donut }`
     + `</section>`
     + `<section class="rep-panel rm-card"><h3>Big-loss gauge</h3><div class="rm-gauge">${ gauge }</div><p class="rm-foot">The gauge fills to 30% of trades. The line for the limit is ${ pct(LIMIT) }.</p></section>`
 
