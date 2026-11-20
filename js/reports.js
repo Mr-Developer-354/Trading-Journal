@@ -522,7 +522,13 @@ function repBarsSvg(items, h = 200, overlay = null) {
     const x = i * slot + (slot - bw) / 2, yv = Y(it.value);
     const y = Math.min(yv, y0), hh = Math.max(1, Math.abs(yv - y0));
     const cls = it.cls || (it.value >= 0 ? 'ana-pos' : 'ana-neg');
-    return `<rect x="${ x.toFixed(1) }" y="${ y.toFixed(1) }" width="${ bw.toFixed(1) }" height="${ hh.toFixed(1) }" rx="2" class="${ cls }"><title>${ escapeHtml(it.title || '') }</title></rect>`;
+    const cx = (x + bw / 2).toFixed(1);
+    const valTxt = it.valueText
+      ? (it.value >= 0
+        ? `<text x="${ cx }" y="${ (y - 4).toFixed(1) }" text-anchor="middle" class="rep-bar-val">${ escapeHtml(it.valueText) }</text>`
+        : `<text x="${ cx }" y="${ Math.min(y + hh + 11, h - bottom - 2).toFixed(1) }" text-anchor="middle" class="rep-bar-val">${ escapeHtml(it.valueText) }</text>`)
+      : '';
+    return `<rect x="${ x.toFixed(1) }" y="${ y.toFixed(1) }" width="${ bw.toFixed(1) }" height="${ hh.toFixed(1) }" rx="2" class="${ cls }"><title>${ escapeHtml(it.title || '') }</title></rect>${ valTxt }`;
   }).join('');
   const line = overlay && overlay.length
     ? `<path d="M${ overlay.map((v, i) => `${ (i * slot + slot / 2).toFixed(1) },${ Y(v).toFixed(1) }`).join(' L') }" fill="none" stroke="var(--gold)" stroke-width="2" vector-effect="non-scaling-stroke"/>`
@@ -912,7 +918,7 @@ function riskMapHtml(model) {
     + `<span class="rsk-tag-n">${ money(G[k].net) }</span></div>`).join('');
 
   const avgItems = ['bigProfit', 'smallProfit', 'smallLoss', 'bigLoss'].filter(k => G[k].avgP !== null)
-    .map(k => ({ label: G[k].name, value: G[k].avgP, title: `${ G[k].name }: average ${ pct(G[k].avgP) }`, cls: G[k].avgP >= 0 ? 'ana-pos' : 'ana-neg' }));
+    .map(k => ({ label: G[k].name, value: G[k].avgP, valueText: pct(G[k].avgP), title: `${ G[k].name }: average ${ pct(G[k].avgP) }`, cls: G[k].avgP >= 0 ? 'ana-pos' : 'ana-neg' }));
   const avgChart = avgItems.length ? repBarsSvg(avgItems, 170) : repEmpty('No trades in any quadrant');
 
   // monthly stack: how many trades fell in each quadrant, per month
