@@ -978,10 +978,7 @@ function riskMapHtml(model) {
     + important.map(t => `<li>${ escapeHtml(t) }</li>`).join('')
     + `</ul></section>`;
 
-  // the description, shown at the top of the Risk map
-  const lede = `<p class="rm-lede">Big losses are ${ pct(bl.share) } of trades and net ${ money(bl.net) }. Big profits are ${ pct(bp.share) } and net ${ money(bp.net) }. `
-    + `${ bl.share > LIMIT ? 'Big losses are above the limit, so size and stops come first.' : 'Big losses are inside the limit; keep the rules that hold them there.' }</p>`;
-  return `<div class="rm-page">${ lede }`
+  return `<div class="rm-page">`
     + `<div class="rm-two">${ explanation }${ importantList }</div>`
     + descriptions
     + charts
