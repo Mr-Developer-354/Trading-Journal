@@ -358,3 +358,8 @@ html[data-privacy] :is(#view-reports, #view-risk) :is(.rep-kv-row dd, .rep-kpi >
 
 /* value shown on each bar of the average-by-quadrant chart */
 .rm-card .rep-bar-val { font-family: var(--mono); font-size: 11px; fill: var(--ink); }
+
+/* risk map charts outside the chart row (e.g. average gross P/L by quadrant): same size and label colour */
+.rm-page .rep-panel svg { display: block; width: 100%; height: auto; overflow: visible; }
+.rm-page .rep-panel svg text { font-family: var(--mono); font-size: 10px; fill: var(--ink-faint); }
+.rm-page .rep-panel svg text.rep-bar-val { fill: var(--ink); font-size: 11px; }
