@@ -342,3 +342,7 @@ html[data-privacy] :is(#view-reports, #view-risk) :is(.rep-kv-row dd, .rep-kpi >
 
 /* Risk management table: every column from the first to Total is centred (overrides the .num right alignment) */
 .rep-table.rep-risk th, .rep-table.rep-risk td, .rep-table.rep-risk th.num, .rep-table.rep-risk td.num { text-align: center; }
+
+/* risk map share-of-trades donut: drawn by the shared chart code, so keep its own size and label text */
+.rm-charts #rmDonut svg { display: block; width: 100%; height: auto; overflow: visible; }
+.rm-charts #rmDonut svg text { font-size: 11px; }
