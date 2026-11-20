@@ -896,7 +896,7 @@ function riskMapHtml(model) {
   const plItems = by => keys.map(k => ({ label: `${ G[k].name }\n${ money(by[k]) }`, value: Math.abs(by[k]), color: RM_DONUT_HEX[k] }));
   riskDonutSets = {
     trades: { center: String(total), sub: 'trades', fmt: v => v + ' trades',
-      items: keys.map(k => ({ label: G[k].name, value: G[k].n, color: RM_DONUT_HEX[k] })) },
+      items: keys.map(k => ({ label: `${ G[k].name }\n${ G[k].n } trades`, value: G[k].n, color: RM_DONUT_HEX[k] })) },
     net: { center: money(keys.reduce((acc, k) => acc + netBy[k], 0)), sub: 'net P/L', fmt: v => money(v), items: plItems(netBy) },
     gross: { center: money(keys.reduce((acc, k) => acc + grossBy[k], 0)), sub: 'gross P/L', fmt: v => money(v), items: plItems(grossBy) }
   };
