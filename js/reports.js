@@ -765,6 +765,240 @@ function repRiskSums(counts) {
   const total = loss + profit;
   return { loss, profit, total, pct: total ? profit / total : null };
 }
+// Risk map: four quadrants from the risk bands. Losses / profits across; big / small down.
+// Big loss = Big Loss (≤ −0.8%) · Small loss = Small Loss · Small profit = Safe + Small Profit · Big profit = Big Profit +1/+2/+3
+const RISK_MAP_GROUPS = [
+  { key: 'bigLoss', name: 'Big loss', bands: [0], cls: 'loss-big', col: 0, row: 0 },
+  { key: 'bigProfit', name: 'Big profit', bands: [4, 5, 6], cls: 'profit-big', col: 1, row: 0 },
+  { key: 'smallLoss', name: 'Small loss', bands: [1], cls: 'loss-small', col: 0, row: 1 },
+  { key: 'smallProfit', name: 'Small profit', bands: [2, 3], cls: 'profit-small', col: 1, row: 1 }
+];
+// colour of each quadrant in charts: [colour, opacity]
+const RISK_MAP_COL = { bigLoss: ['var(--red)', 1], smallLoss: ['var(--red)', 0.45], smallProfit: ['var(--green)', 0.45], bigProfit: ['var(--green)', 1] };
+// what each quadrant means, the rule it sets and the suggestion for it
+const RISK_MAP_TEXT = {
+  bigLoss: {
+    what: 'Trades that lost 0.8% of their value or more. These are the drawdowns.',
+    rule: 'After a big loss, the next trade is half size.',
+    suggest: 'Check the stop that let the loss pass −0.8%. Most big losses come from a stop that was moved or not set.'
+  },
+  smallLoss: {
+    what: 'Trades between −0.8% and +0.11%. Each one is small, but they add up.',
+    rule: 'Take only setups that meet the checklist.',
+    suggest: 'Look for a repeated entry type in this group and cut it if it does not pay.'
+  },
+  smallProfit: {
+    what: 'Gains between +0.11% and +1%. Safe, but too small to cover a big loss on their own.',
+    rule: 'Hold for the big-profit band when the setup allows it.',
+    suggest: 'Check whether partial exits are cutting winners short.'
+  },
+  bigProfit: {
+    what: 'Gains of +1% or more. This is where the edge pays.',
+    rule: 'Repeat the setup that produced it. Do not add size without a reason.',
+    suggest: 'Confirm the setup repeats across months, not in one good week.'
+  }
+};
+function riskMapHtml(model) {
+  const nf = numLocale();
+  const pct = v => repFmt(v, 'pct'), money = v => repFmt(v, 'money');
+  const seq = model.tr
+    .map(t => ({ d: reportDateOf(t?.date ?? t?.Date) || '', p: pnlPctOf(t), pnl: pnlOf(t), tag: riskTagOf(t) }))
+    .filter(x => x.p !== null && x.tag)
+    .sort((a, b) => a.d.localeCompare(b.d));
+  const total = seq.length;
+  if (!total) return repEmpty('No closed trades to map yet');
+  const keyOf = tag => (RISK_MAP_GROUPS.find(g => g.bands.some(i => RISK_TAG_BANDS[i][0] === tag)) || {}).key;
+  seq.forEach(x => { x.q = keyOf(x.tag); });
+  const G = {};
+  RISK_MAP_GROUPS.forEach(g => {
+    const items = seq.filter(x => x.q === g.key);
+    G[g.key] = { ...g, n: items.length, share: items.length / total,
+      avgP: items.length ? items.reduce((a, x) => a + x.p, 0) / items.length : null,
+      net: items.reduce((a, x) => a + x.pnl, 0) };
+  });
+  const bl = G.bigLoss, bp = G.bigProfit, sl = G.smallLoss, sp = G.smallProfit;
+  const netAll = seq.reduce((a, x) => a + x.pnl, 0);
+  const LIMIT = 0.10, SMALL_LOSS_LIMIT = 0.40;
+
+  // streaks and the worst day for big losses (dates are in order)
+  let streak = 0, bestStreak = 0;
+  const bigPerDay = new Map();
+  seq.forEach(x => {
+    if (x.q === 'bigLoss') {
+      streak++; bestStreak = Math.max(bestStreak, streak);
+      bigPerDay.set(x.d, (bigPerDay.get(x.d) || 0) + 1);
+    } else streak = 0;
+  });
+  const worstDayBL = bigPerDay.size ? Math.max(...bigPerDay.values()) : 0;
+
+  // rules, written from this selection
+  const rule = (ok, text) => ({ lvl: ok ? 'ok' : 'warn', text });
+  const rules = [
+    rule(bl.share <= LIMIT, bl.share > LIMIT
+      ? `Big losses are ${ pct(bl.share) } of trades, above the ${ pct(LIMIT) } limit. Rule: size down so no single trade can lose more than 0.8% of its value.`
+      : `Big losses are ${ pct(bl.share) } of trades, inside the ${ pct(LIMIT) } limit. Keep the same size rule.`),
+    rule(bestStreak < 2, bestStreak >= 2
+      ? `Two or more big losses in a row happened (longest run: ${ bestStreak }). Rule: stop for the day after two big losses.`
+      : 'No run of big losses longer than one trade.'),
+    rule(worstDayBL < 2, worstDayBL >= 2
+      ? `The worst day had ${ worstDayBL } big losses. Rule: a daily cap of one big loss, then stop.`
+      : 'No day had more than one big loss.'),
+    rule(bp.n > 0 && sp.n <= 2 * bp.n, bp.n === 0
+      ? 'No big profits in this selection. Rule: check that targets are reachable.'
+      : sp.n > 2 * bp.n
+        ? `Small wins (${ sp.n }) outnumber big wins (${ bp.n }) by more than two to one. Rule: let winners run into the big-profit band before exiting.`
+        : 'Big wins keep pace with small wins.'),
+    rule(sl.share <= SMALL_LOSS_LIMIT, sl.share > SMALL_LOSS_LIMIT
+      ? `Routine losses are ${ pct(sl.share) } of trades. Rule: skip any setup that does not meet the checklist.`
+      : `Routine losses are ${ pct(sl.share) } of trades, under ${ pct(SMALL_LOSS_LIMIT) }.`),
+    rule(netAll >= 0, netAll < 0
+      ? `Net gross P/L is ${ money(netAll) }. Rule: cut size until the equity curve turns up.`
+      : `Net gross P/L is ${ money(netAll) }, positive.`)
+  ];
+
+  // planning for the next session
+  const plan = [
+    'Stop each trade before it passes −0.8%, the edge of the big-loss band.',
+    `Daily cap: one big loss, then stop. The worst day in this selection had ${ worstDayBL }.`,
+    `Weekly target: big losses under ${ pct(LIMIT) } of trades. Now ${ pct(bl.share) }.`,
+    bp.n ? `Keep aiming for big profits. They are ${ pct(bp.share) } of trades and average ${ pct(bp.avgP) }.`
+      : 'No big profits yet. Set a target that lets trades reach +1%.',
+    'Review the map after every 20 trades, not after a single trade.'
+  ];
+
+  const important = [
+    'Only trades with an exit are placed on the map. Open trades are left out.',
+    'Bands use Gross P/L % before charges, so a trade can sit in a different band from its net result.',
+    'Zero Gross P/L counts as a loss in the win and loss figures.',
+    'Change the broker filter to compare brokers on the same map.'
+  ];
+
+  // charts
+  const donutParts = ['bigProfit', 'smallProfit', 'smallLoss', 'bigLoss']
+    .map(k => ({ key: k, value: G[k].n, label: G[k].name }));
+  const C = 2 * Math.PI * 40;
+  let off = 0;
+  const donut = `<svg viewBox="0 0 120 120" role="img" aria-label="Trades by quadrant">`
+    + donutParts.filter(d => d.value > 0).map(d => {
+      const len = d.value / total * C;
+      const seg = `<circle cx="60" cy="60" r="40" fill="none" stroke="${ RISK_MAP_COL[d.key][0] }" stroke-opacity="${ RISK_MAP_COL[d.key][1] }" stroke-width="16" stroke-dasharray="${ len.toFixed(2) } ${ (C - len).toFixed(2) }" stroke-dashoffset="${ (-off).toFixed(2) }" transform="rotate(-90 60 60)"><title>${ d.label }: ${ d.value } trades</title></circle>`;
+      off += len;
+      return seg;
+    }).join('')
+    + `<text x="60" y="58" text-anchor="middle" class="rm-donut-val">${ total }</text><text x="60" y="74" text-anchor="middle" class="rm-donut-cap">trades</text></svg>`;
+
+  const gaugeV = Math.min(100, bl.share / 0.30 * 100);
+  const gauge = `<svg viewBox="0 0 120 74" role="img" aria-label="Big-loss share ${ pct(bl.share) }">`
+    + `<path d="M10,62 A50,50 0 0 1 110,62" fill="none" stroke="var(--bg-raised)" stroke-width="12" pathLength="100"/>`
+    + `<path d="M10,62 A50,50 0 0 1 110,62" fill="none" stroke="${ bl.share > LIMIT ? 'var(--red)' : 'var(--green)' }" stroke-width="12" pathLength="100" stroke-dasharray="${ gaugeV.toFixed(2) } 100"/>`
+    + `<text x="60" y="56" text-anchor="middle" class="rm-donut-val">${ pct(bl.share) }</text>`
+    + `<text x="60" y="70" text-anchor="middle" class="rm-donut-cap">big-loss share · limit ${ pct(LIMIT) }</text></svg>`;
+
+  const netOrder = ['bigProfit', 'smallProfit', 'smallLoss', 'bigLoss'];
+  const netMax = Math.max(1, ...netOrder.map(k => Math.abs(G[k].net)));
+  const netBars = netOrder.map(k => `<div class="rsk-tag"><span class="rsk-tag-name">${ G[k].name }</span>`
+    + `<div class="rsk-tag-track"><div class="rsk-tag-fill ${ G[k].net >= 0 ? 'pos' : 'neg' }" style="width:${ (Math.abs(G[k].net) / netMax * 100).toFixed(1) }%"></div></div>`
+    + `<span class="rsk-tag-n">${ money(G[k].net) }</span></div>`).join('');
+
+  const avgItems = ['bigProfit', 'smallProfit', 'smallLoss', 'bigLoss'].filter(k => G[k].avgP !== null)
+    .map(k => ({ label: G[k].name, value: G[k].avgP, title: `${ G[k].name }: average ${ pct(G[k].avgP) }`, cls: G[k].avgP >= 0 ? 'ana-pos' : 'ana-neg' }));
+  const avgChart = avgItems.length ? repBarsSvg(avgItems, 170) : repEmpty('No trades in any quadrant');
+
+  // monthly stack: how many trades fell in each quadrant, per month
+  const byMonth = new Map();
+  seq.forEach(x => {
+    const mk = x.d.slice(0, 7) || '—';
+    if (!byMonth.has(mk)) byMonth.set(mk, { bigLoss: 0, smallLoss: 0, smallProfit: 0, bigProfit: 0 });
+    byMonth.get(mk)[x.q]++;
+  });
+  const months = [...byMonth.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  const stackOrder = ['bigLoss', 'smallLoss', 'smallProfit', 'bigProfit'];
+  const stackMax = Math.max(1, ...months.map(([, c]) => stackOrder.reduce((a, k) => a + c[k], 0)));
+  const SW = ANA_W, SH = 190, top = 10, bottom = 24, plot = SH - top - bottom;
+  const slot = SW / Math.max(1, months.length), bw = Math.max(6, slot * 0.6);
+  const stackSvg = months.length ? `<svg viewBox="0 0 ${ SW } ${ SH }" role="img" aria-label="Trades per quadrant by month">`
+    + months.map(([mk, c], i) => {
+      let y = top + plot;
+      const x = i * slot + (slot - bw) / 2;
+      const segs = stackOrder.map(k => {
+        const h = c[k] / stackMax * plot;
+        y -= h;
+        return h > 0 ? `<rect x="${ x.toFixed(1) }" y="${ y.toFixed(1) }" width="${ bw.toFixed(1) }" height="${ h.toFixed(1) }" fill="${ RISK_MAP_COL[k][0] }" fill-opacity="${ RISK_MAP_COL[k][1] }"><title>${ mk } · ${ G[k].name }: ${ c[k] }</title></rect>` : '';
+      }).join('');
+      const lbl = `<text x="${ (i * slot + slot / 2).toFixed(1) }" y="${ SH - 6 }" text-anchor="middle">${ mk.slice(2) }</text>`;
+      return segs + lbl;
+    }).join('') + `</svg>`
+    : repEmpty('No months to show');
+  const stackLegend = stackOrder.map(k => `<span class="rm-key"><i style="background:${ RISK_MAP_COL[k][0] };opacity:${ RISK_MAP_COL[k][1] }"></i>${ G[k].name }</span>`).join('');
+
+  // quadrant cards: description, rule and the figures for each one
+  const cards = RISK_MAP_GROUPS.map(g => {
+    const q = G[g.key], t = RISK_MAP_TEXT[g.key];
+    return `<article class="rm-q ${ g.cls }" style="grid-column:${ g.col + 2 };grid-row:${ g.row + 2 }">`
+      + `<div class="rm-q-top"><span class="rm-q-name">${ g.name }</span><span class="rm-q-share">${ pct(q.share) }</span></div>`
+      + `<strong class="rm-q-count">${ q.n.toLocaleString(nf) }</strong>`
+      + `<div class="rm-q-meta">Avg ${ pct(q.avgP) } · net ${ money(q.n ? q.net : null) }</div>`
+      + `<p class="rm-q-what">${ t.what }</p>`
+      + `<p class="rm-q-rule"><b>Rule</b> ${ t.rule }</p></article>`;
+  }).join('');
+
+  const hero = `<section class="rm-hero">`
+    + `<p class="rm-lede">Big losses are ${ pct(bl.share) } of trades and net ${ money(bl.net) }. Big profits are ${ pct(bp.share) } and net ${ money(bp.net) }. `
+    + `${ bl.share > LIMIT ? 'Big losses are above the limit, so size and stops come first.' : 'Big losses are inside the limit; keep the rules that hold them there.' }</p>`
+    + `<h2>Risk map</h2>`
+    + `<div class="rm-hero-tiles">`
+    + `<div><span>Big-loss share</span><strong class="${ bl.share > LIMIT ? 'neg' : 'pos' }">${ pct(bl.share) }</strong><em>limit ${ pct(LIMIT) }</em></div>`
+    + `<div><span>Big-profit share</span><strong class="pos">${ pct(bp.share) }</strong><em>${ bp.n } trades</em></div>`
+    + `<div><span>Net from big losses</span><strong class="neg">${ money(bl.net) }</strong><em>${ bl.n } trades</em></div>`
+    + `<div><span>Net from big profits</span><strong class="pos">${ money(bp.net) }</strong><em>${ bp.n } trades</em></div>`
+    + `</div></section>`;
+
+  const explanation = `<section class="rep-panel rm-card"><h3>Explanation</h3>`
+    + `<p>Each closed trade is placed in one of four boxes by its Gross P/L % (before charges). Across: losses on the left, profits on the right. Down: big moves on top, small moves below.</p>`
+    + `<ul class="rm-list"><li><b>Big</b> means −0.8% or worse for a loss, +1% or more for a profit.</li>`
+    + `<li><b>Small</b> means everything between −0.8% and +1%.</li>`
+    + `<li>The map shows how the trades are spread, not whether a single trade was good.</li></ul></section>`;
+
+  const descriptions = `<section class="rep-panel rm-card rm-wide"><h3>Descriptions</h3>`
+    + `<div class="rm-qmap"><span></span><span class="rm-qcol">Losses</span><span class="rm-qcol">Profits</span>`
+    + `<span class="rm-qrow" style="grid-column:1;grid-row:2">Big</span><span class="rm-qrow" style="grid-column:1;grid-row:3">Small</span>`
+    + cards + `</div></section>`;
+
+  const charts = `<div class="rm-charts">`
+    + `<section class="rep-panel rm-card"><h3>Share of trades</h3><div class="rm-donut">${ donut }</div>`
+    + `<div class="rm-legend">${ donutParts.map(d => `<span class="rm-key"><i style="background:${ RISK_MAP_COL[d.key][0] };opacity:${ RISK_MAP_COL[d.key][1] }"></i>${ d.label } <b>${ d.value }</b></span>`).join('') }</div></section>`
+    + `<section class="rep-panel rm-card"><h3>Big-loss gauge</h3><div class="rm-gauge">${ gauge }</div><p class="rm-foot">The gauge fills to 30% of trades. The line for the limit is ${ pct(LIMIT) }.</p></section>`
+    + `<section class="rep-panel rm-card"><h3>Net gross P/L by quadrant</h3><div class="rsk-tags">${ netBars }</div></section>`
+    + `<section class="rep-panel rm-card rm-wide"><h3>Trades per quadrant by month</h3>${ stackSvg }<div class="rm-legend">${ stackLegend }</div></section>`
+    + `<section class="rep-panel rm-card rm-wide"><h3>Average Gross P/L % by quadrant</h3>${ avgChart }</section>`
+    + `</div>`;
+
+  const ruleList = `<section class="rep-panel rm-card"><h3>Rules</h3><ul class="rm-rules">`
+    + rules.map(r => `<li class="${ r.lvl }"><span>${ r.lvl === 'ok' ? 'OK' : 'Act' }</span>${ escapeHtml(r.text) }</li>`).join('')
+    + `</ul></section>`;
+
+  const suggestions = `<section class="rep-panel rm-card"><h3>Suggestions</h3><ul class="rm-list">`
+    + RISK_MAP_GROUPS.map(g => `<li><b>${ g.name }.</b> ${ RISK_MAP_TEXT[g.key].suggest }</li>`).join('')
+    + `</ul></section>`;
+
+  const planning = `<section class="rep-panel rm-card"><h3>Planning</h3><ol class="rm-plan">`
+    + plan.map(t => `<li>${ escapeHtml(t) }</li>`).join('')
+    + `</ol></section>`;
+
+  const importantList = `<section class="rep-panel rm-card rm-important"><h3>Important</h3><ul class="rm-list">`
+    + important.map(t => `<li>${ escapeHtml(t) }</li>`).join('')
+    + `</ul></section>`;
+
+  return `<div class="rm-page">${ hero }`
+    + `<div class="rm-two">${ explanation }${ importantList }</div>`
+    + descriptions
+    + charts
+    + `<div class="rm-two">${ ruleList }${ suggestions }</div>`
+    + planning
+    + `</div>`;
+}
+
+// Risk management · Status: histogram scale, "count" or "% of trades" (set by its switch)
 let riskStatusMode = 'count';
 // Risk management · Status, top to bottom: the risk map, four headline numbers, the band histogram beside
 // the profit / loss donut, then the risk-tag mix beside the win / loss profile. Counts match the table:
@@ -881,11 +1115,12 @@ function repRiskTableHtml(leadHeads, rows) {
   return `<div class="rep-scroll table-wrap rep-framed"><table class="rep-table rep-risk"><thead><tr>${ head }</tr></thead><tbody>${ body }</tbody></table></div>`;
 }
 // the Risk management page has one tab per period: status, daily, weekly, monthly, yearly (FY)
-const RISK_TABS = REPORT_TABS.filter(t => ['status', 'daily', 'weekly', 'monthly', 'yearly'].includes(t.key));
+const RISK_TABS = [{ key: 'map', label: 'Risk map' }, ...REPORT_TABS.filter(t => ['status', 'daily', 'weekly', 'monthly', 'yearly'].includes(t.key))];
 let riskTab = 'status';
 // the explanation of each risk-bin tab; shown as the tab's tooltip (hover), not as text on the page
 const RISK_TAB_NOTES = {
   analysis: 'Charts of the closed trades in the selection: equity curve, drawdown, daily and monthly P/L, weekdays, symbols and win / loss streaks. The date filters above apply.',
+  map: 'Each trade sits in one of four quadrants by its Gross P/L % band: big loss, small loss, small profit or big profit. Each quadrant shows its count, share, average and net gross P/L.',
   status: 'Every trade with an exit, by its Gross P/L % (before charges). One row for the whole selection. Each trade is placed by its Gross P/L % (before charges). Losses are the first seven bins, profits the last seven. Newest first.',
   daily: 'Each trading day, by Gross P/L % band. Each trade is placed by its Gross P/L % (before charges). Losses are the first seven bins, profits the last seven. Newest first.',
   weekly: 'Each week (Monday to Friday), by Gross P/L % band. Each trade is placed by its Gross P/L % (before charges). Losses are the first seven bins, profits the last seven. Newest first.',
@@ -899,6 +1134,7 @@ function renderRiskTabs() {
 }
 // the risk bins of one period type: a total row first, then one row per period, newest first
 function repRiskBlockHtml(model, kind) {
+  if (kind === 'map') return riskMapHtml(model);
   if (kind === 'status') return repRiskStatusHtml(model);
   const isDaily = kind === 'daily';
   const leadHeads = isDaily ? ['Date', 'Day'] : ['Start', 'End'];
