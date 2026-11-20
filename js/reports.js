@@ -946,12 +946,7 @@ function riskMapHtml(model) {
     + `<p class="rm-lede">Big losses are ${ pct(bl.share) } of trades and net ${ money(bl.net) }. Big profits are ${ pct(bp.share) } and net ${ money(bp.net) }. `
     + `${ bl.share > LIMIT ? 'Big losses are above the limit, so size and stops come first.' : 'Big losses are inside the limit; keep the rules that hold them there.' }</p>`
     + `<h2>Risk map</h2>`
-    + `<div class="rm-hero-tiles">`
-    + `<div><span>Big-loss share</span><strong class="${ bl.share > LIMIT ? 'neg' : 'pos' }">${ pct(bl.share) }</strong><em>limit ${ pct(LIMIT) }</em></div>`
-    + `<div><span>Big-profit share</span><strong class="pos">${ pct(bp.share) }</strong><em>${ bp.n } trades</em></div>`
-    + `<div><span>Net from big losses</span><strong class="neg">${ money(bl.net) }</strong><em>${ bl.n } trades</em></div>`
-    + `<div><span>Net from big profits</span><strong class="pos">${ money(bp.net) }</strong><em>${ bp.n } trades</em></div>`
-    + `</div></section>`;
+    + `</section>`;
 
   const explanation = `<section class="rep-panel rm-card"><h3>Explanation</h3>`
     + `<p>Each closed trade is placed in one of four boxes by its Gross P/L % (before charges). Across: losses on the left, profits on the right. Down: big moves on top, small moves below.</p>`
