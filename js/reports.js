@@ -979,8 +979,8 @@ function riskMapHtml(model) {
     + `</ul></section>`;
 
   return `<div class="rm-page">`
-    + `<div class="rm-two">${ explanation }${ importantList }</div>`
     + descriptions
+    + `<div class="rm-two">${ explanation }${ importantList }</div>`
     + charts
     + `<div class="rm-two">${ ruleList }${ suggestions }</div>`
     + planning
