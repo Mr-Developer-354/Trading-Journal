@@ -93,3 +93,17 @@
 }
 #view-ledger .filter-bar button.ledger-filter-title:hover { color: var(--gold); }
 #view-ledger .filter-bar button.ledger-filter-title:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
+
+/* Calendar loss heat: four red steps, light to dark (ffb6b8, b34a44, 95271d, 60241e) */
+.cal-cell.l1, .cal-mini-day.l1, .cal-legend-swatch.l1 { background: #ffb6b8 !important; color: #5a1417 !important; border-color: #f0959a !important; }
+.cal-cell.l2, .cal-mini-day.l2, .cal-legend-swatch.l2 { background: #b34a44 !important; color: #fff !important; border-color: #9a3b36 !important; }
+.cal-cell.l3, .cal-mini-day.l3, .cal-legend-swatch.l3 { background: #95271d !important; color: #fff !important; border-color: #7d1f17 !important; }
+.cal-cell.l4, .cal-mini-day.l4, .cal-legend-swatch.l4 { background: #60241e !important; color: #fff !important; border-color: #4a1b16 !important; }
+:root:not([data-theme="light"]) .cal-cell.l1, :root:not([data-theme="light"]) .cal-mini-day.l1 { background: #ffb6b8 !important; color: #5a1417 !important; }
+:root:not([data-theme="light"]) .cal-cell.l2, :root:not([data-theme="light"]) .cal-mini-day.l2 { background: #b34a44 !important; color: #fff !important; }
+:root:not([data-theme="light"]) .cal-cell.l3, :root:not([data-theme="light"]) .cal-mini-day.l3 { background: #95271d !important; color: #fff !important; }
+:root:not([data-theme="light"]) .cal-cell.l4, :root:not([data-theme="light"]) .cal-mini-day.l4 { background: #60241e !important; color: #fff !important; }
+:root[data-theme="dark"] .cal-cell.l1, :root[data-theme="dark"] .cal-mini-day.l1 { background: #ffb6b8 !important; color: #5a1417 !important; }
+:root[data-theme="dark"] .cal-cell.l2, :root[data-theme="dark"] .cal-mini-day.l2 { background: #b34a44 !important; color: #fff !important; }
+:root[data-theme="dark"] .cal-cell.l3, :root[data-theme="dark"] .cal-mini-day.l3 { background: #95271d !important; color: #fff !important; }
+:root[data-theme="dark"] .cal-cell.l4, :root[data-theme="dark"] .cal-mini-day.l4 { background: #60241e !important; color: #fff !important; }
