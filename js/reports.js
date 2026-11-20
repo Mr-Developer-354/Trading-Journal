@@ -942,12 +942,6 @@ function riskMapHtml(model) {
       + `<p class="rm-q-rule"><b>Rule</b> ${ t.rule }</p></article>`;
   }).join('');
 
-  const hero = `<section class="rm-hero">`
-    + `<p class="rm-lede">Big losses are ${ pct(bl.share) } of trades and net ${ money(bl.net) }. Big profits are ${ pct(bp.share) } and net ${ money(bp.net) }. `
-    + `${ bl.share > LIMIT ? 'Big losses are above the limit, so size and stops come first.' : 'Big losses are inside the limit; keep the rules that hold them there.' }</p>`
-    + `<h2>Risk map</h2>`
-    + `</section>`;
-
   const explanation = `<section class="rep-panel rm-card"><h3>Explanation</h3>`
     + `<p>Each closed trade is placed in one of four boxes by its Gross P/L % (before charges). Across: losses on the left, profits on the right. Down: big moves on top, small moves below.</p>`
     + `<ul class="rm-list"><li><b>Big</b> means −0.8% or worse for a loss, +1% or more for a profit.</li>`
@@ -984,7 +978,7 @@ function riskMapHtml(model) {
     + important.map(t => `<li>${ escapeHtml(t) }</li>`).join('')
     + `</ul></section>`;
 
-  return `<div class="rm-page">${ hero }`
+  return `<div class="rm-page">`
     + `<div class="rm-two">${ explanation }${ importantList }</div>`
     + descriptions
     + charts
