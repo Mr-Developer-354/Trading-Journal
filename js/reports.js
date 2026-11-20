@@ -948,7 +948,7 @@ function riskMapHtml(model) {
     + cards + `</div></section>`;
 
   const charts = `<div class="rm-charts">`
-    + `<section class="rep-panel rm-card"><h3>Share of trades</h3><div class="rm-donut">${ donut }</div>`
+    + `<section class="rep-panel rm-card rm-wide"><h3>Share of trades</h3><div class="rm-donut-wrap">${ donut }</div>`
     + `</section>`
     + `<section class="rep-panel rm-card"><h3>Big-loss gauge</h3><div class="rm-gauge">${ gauge }</div><p class="rm-foot">The gauge fills to 30% of trades. The line for the limit is ${ pct(LIMIT) }.</p></section>`
     + `<section class="rep-panel rm-card"><h3>Net gross P/L by quadrant</h3><div class="rsk-tags">${ netBars }</div></section>`
@@ -1123,7 +1123,7 @@ function renderRiskMapDonut() {
   if (!host || !pendingRiskDonut || typeof VIZ === 'undefined') return;
   const d = pendingRiskDonut;
   pendingRiskDonut = null;
-  VIZ.donut({ host, height: 240, hole: 0.64, items: d.items, centerText: String(d.total), centerSub: 'trades', fmt: v => v + ' trades' });
+  VIZ.donut({ host, height: 300, hole: 0.64, items: d.items, centerText: String(d.total), centerSub: 'trades', fmt: v => v + ' trades' });
 }
 function repRiskBlockHtml(model, kind) {
   if (kind === 'map') return riskMapHtml(model);

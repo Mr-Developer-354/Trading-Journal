@@ -289,7 +289,7 @@ const VIZ = (() => {
     render(o.host, h, (svg, w, H, T) => {
       const total = items.reduce((s, i) => s + i.value, 0);
       if (!total) return text(w / 2, H / 2, 'No data in this period', { 'text-anchor': 'middle', fill: T.faint, 'font-size': 12 }, svg);
-      const Rl = labelled ? Math.max(40, Math.min(w / 2 - 64, H / 2 - 26, 96)) : 0;
+      const Rl = labelled ? Math.max(40, Math.min(w / 2 - 64, H / 2 - 26, 110)) : 0;
       const R = labelled ? Math.max(30, Rl - 36) : Math.min(w * 0.42, H / 2 - 6, 110);
       const cx = w / 2, cy = H / 2;
       const r0 = R * (o.hole ?? 0.64);
