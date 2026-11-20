@@ -893,7 +893,7 @@ function riskMapHtml(model) {
     netBy[k] = items.reduce((acc, x) => acc + x.pnl + dbChargeOf(x.t, chargeMap), 0);
   });
   // P/L slices use the size of each quadrant's P/L; the label shows the signed amount
-  const plItems = by => keys.map(k => ({ label: `${ G[k].name } ${ money(by[k]) }`, value: Math.abs(by[k]), color: RM_DONUT_HEX[k] }));
+  const plItems = by => keys.map(k => ({ label: `${ G[k].name }\n${ money(by[k]) }`, value: Math.abs(by[k]), color: RM_DONUT_HEX[k] }));
   riskDonutSets = {
     trades: { center: String(total), sub: 'trades', fmt: v => v + ' trades',
       items: keys.map(k => ({ label: G[k].name, value: G[k].n, color: RM_DONUT_HEX[k] })) },

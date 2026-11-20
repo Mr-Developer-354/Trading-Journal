@@ -319,16 +319,24 @@ const VIZ = (() => {
           const cs = Math.cos(m.mid), sn = Math.sin(m.mid);
           // labels near the top or bottom start to the right of their leader, so the line never runs through the text
           const anchor = cs >= -0.25 ? 'start' : 'end';
-          const bw = textLen(`${ m.it.label } ${ pct(m) }`) + 4;
-          return { ...m, anchor, bw, p0: pt(R + 2, m.mid), p1: pt(R + 12, m.mid), x: cx + Rl * cs, y: cy + Rl * sn };
+          // a label with line breaks ("name\nvalue") is stacked as rows, centred, with the share as the last row
+          const parts = String(m.it.label).split('\n');
+          const multi = parts.length > 1;
+          const lines = multi ? [...parts, pct(m)] : null;
+          const bw = multi ? Math.max(...lines.map(textLen)) + 4 : textLen(`${ m.it.label } ${ pct(m) }`) + 4;
+          const bh = multi ? lines.length * 12 : 14;
+          return { ...m, anchor, bw, bh, multi, lines, p0: pt(R + 2, m.mid), p1: pt(R + 12, m.mid), x: cx + Rl * cs, y: cy + Rl * sn };
         });
-        const boxX = c => c.anchor === 'start' ? c.x : c.anchor === 'end' ? c.x - c.bw : c.x - c.bw / 2;
+        // left edge of a label's box (for the overlap test)
+        const boxX = c => c.multi
+          ? (c.anchor === 'start' ? c.x + 2 : c.x - 2 - c.bw)
+          : (c.anchor === 'start' ? c.x : c.anchor === 'end' ? c.x - c.bw : c.x - c.bw / 2);
         for (let it = 0; it < 200; it++) {
           let moved = false;
           for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) {
             const A = L[i], B = L[j];
             const ox = Math.min(boxX(A) + A.bw, boxX(B) + B.bw) - Math.max(boxX(A), boxX(B));
-            const oy = Math.min(A.y + 8, B.y + 8) - Math.max(A.y - 8, B.y - 8);
+            const oy = Math.min(A.y + A.bh / 2, B.y + B.bh / 2) - Math.max(A.y - A.bh / 2, B.y - B.bh / 2);
             if (ox > 0 && oy > 0) {
               moved = true;
               if (ox < oy) { const d = ox / 2 + 1, sg = A.x <= B.x ? 1 : -1; A.x -= sg * d; B.x += sg * d; }
@@ -352,6 +360,15 @@ const VIZ = (() => {
           const tx = c.anchor === 'start' ? c.x + 2 : c.anchor === 'end' ? c.x - 2 : c.x;
           node('path', { d: `M${c.p0[0]},${c.p0[1]} L${c.p1[0]},${c.p1[1]} L${tx},${c.y}`, fill: 'none', stroke: T.faint, 'stroke-width': 1 }, svg);
           node('circle', { cx: c.p0[0], cy: c.p0[1], r: 2, fill: c.it.color }, svg);
+          if (c.multi) {
+            const left = boxX(c), mx = left + c.bw / 2;
+            c.lines.forEach((line, i) => {
+              const last = i === c.lines.length - 1;
+              const ly = c.y - (c.lines.length - 1) * 6 + i * 12 + 4;
+              text(mx, ly, line, Object.assign({ 'text-anchor': 'middle', fill: last ? T.faint : T.ink, 'font-size': 11 }, last ? mono : {}), svg);
+            });
+            return;
+          }
           const lbl = text(tx, c.y + 4, c.it.label, { 'text-anchor': c.anchor, fill: T.ink, 'font-size': 11 }, svg);
           const sh = node('tspan', Object.assign({ fill: T.faint }, mono), lbl);
           sh.textContent = ` ${ pct(c) }`;
