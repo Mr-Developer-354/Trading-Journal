@@ -1148,7 +1148,7 @@ function renderRiskMapDonut() {
     renderRiskMapDonut();
   };
   const d = riskDonutSets[riskMapMetric] || riskDonutSets.trades;
-  VIZ.donut({ host, height: 260, hole: 0.64, items: d.items, centerText: d.center, centerSub: d.sub, fmt: d.fmt });
+  VIZ.donut({ host, height: 300, hole: 0.64, items: d.items, centerText: d.center, centerSub: d.sub, fmt: d.fmt });
 }
 function repRiskBlockHtml(model, kind) {
   if (kind === 'map') return riskMapHtml(model);

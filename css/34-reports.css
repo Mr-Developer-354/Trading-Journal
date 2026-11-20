@@ -317,7 +317,7 @@ html[data-privacy] :is(#view-reports, #view-risk) :is(.rep-kv-row dd, .rep-kpi >
 .rm-q-rule { font-size: 12.5px; line-height: 1.55; color: var(--ink); margin: 0; }
 .rm-q-rule b { color: var(--gold); font-weight: 600; margin-right: 4px; }
 /* charts */
-.rm-charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: start; }
+.rm-charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .rm-donut svg, .rm-gauge svg { display: block; width: 100%; max-width: 200px; height: auto; margin: 0 auto; }
 .rm-gauge svg { max-width: 240px; }
 .rm-donut-val { font-family: var(--mono); font-size: 18px; font-weight: 600; fill: var(--ink); }
