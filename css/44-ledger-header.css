@@ -107,3 +107,13 @@
 :root[data-theme="dark"] .cal-cell.l2, :root[data-theme="dark"] .cal-mini-day.l2 { background: #b34a44 !important; color: #fff !important; }
 :root[data-theme="dark"] .cal-cell.l3, :root[data-theme="dark"] .cal-mini-day.l3 { background: #95271d !important; color: #fff !important; }
 :root[data-theme="dark"] .cal-cell.l4, :root[data-theme="dark"] .cal-mini-day.l4 { background: #60241e !important; color: #fff !important; }
+
+/* Month and year calendar loss heat: same four red steps as the calendar (the older rules here use higher specificity) */
+#calMonthView .cal-cell.l1, [data-theme="dark"] #calMonthView .cal-cell.l1 { background: #ffb6b8 !important; color: #5a1417 !important; border-color: #f0959a !important; }
+#calMonthView .cal-cell.l2, [data-theme="dark"] #calMonthView .cal-cell.l2 { background: #b34a44 !important; color: #fff !important; border-color: #9a3b36 !important; }
+#calMonthView .cal-cell.l3, [data-theme="dark"] #calMonthView .cal-cell.l3 { background: #95271d !important; color: #fff !important; border-color: #7d1f17 !important; }
+#calMonthView .cal-cell.l4, [data-theme="dark"] #calMonthView .cal-cell.l4 { background: #60241e !important; color: #fff !important; border-color: #4a1b16 !important; }
+.cal-year .cal-mini-day.l1, [data-theme="dark"] .cal-year .cal-mini-day.l1 { background: #ffb6b8 !important; color: #5a1417 !important; border-color: #f0959a !important; }
+.cal-year .cal-mini-day.l2, [data-theme="dark"] .cal-year .cal-mini-day.l2 { background: #b34a44 !important; color: #fff !important; border-color: #9a3b36 !important; }
+.cal-year .cal-mini-day.l3, [data-theme="dark"] .cal-year .cal-mini-day.l3 { background: #95271d !important; color: #fff !important; border-color: #7d1f17 !important; }
+.cal-year .cal-mini-day.l4, [data-theme="dark"] .cal-year .cal-mini-day.l4 { background: #60241e !important; color: #fff !important; border-color: #4a1b16 !important; }
