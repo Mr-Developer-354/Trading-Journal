@@ -29,26 +29,26 @@ function openAddTrade(existing, inlineOpts) {
     'Capital': [
       ['date','Date','date','',true], ['symbol','Symbol','text','e.g. RELIANCE',true],
       ['qty','Qty','number','',true],
-      ['entry','EntryPrice','number','',true], ['sl','Stoploss','number','optional',false], ['exit','ExitPrice','number','',true],
+      ['entry','EntryPrice','number','optional',false], ['sl','Stoploss','number','optional',false], ['exit','ExitPrice','number','optional',false],
       ['entryTime','EntryTime','time','',false], ['exitTime','ExitTime','time','',false], ['expCha','ExpChgs','readonly','',false]
     ],
     'Equity': [
       ['date','Date','date','',true], ['symbol','Symbol','text','e.g. NIFTY',true],
       ['qty','Qty','number','',true],
-['entry','EntryPrice','number','',true], ['sl','Stoploss','number','optional',false], ['exit','ExitPrice','number','',true],
+['entry','EntryPrice','number','optional',false], ['sl','Stoploss','number','optional',false], ['exit','ExitPrice','number','optional',false],
       ['expiry','Expiry','text','e.g. 27-Nov-2026',false], ['strike','Strike','number','optional',false],
       ['entryTime','EntryTime','time','',false], ['exitTime','ExitTime','time','',false], ['expCha','ExpChgs','readonly','',false]
     ],
     'Currency': [
       ['date','Date','date','',true], ['symbol','Symbol','text','e.g. USDINR',true],
       ['qty','Qty','number','',true],
-['entry','EntryPrice','number','',true], ['sl','Stoploss','number','optional',false], ['exit','ExitPrice','number','',true],
+['entry','EntryPrice','number','optional',false], ['sl','Stoploss','number','optional',false], ['exit','ExitPrice','number','optional',false],
       ['expiry','Expiry','text','optional',false], ['entryTime','EntryTime','time','',false], ['exitTime','ExitTime','time','',false], ['expCha','ExpChgs','readonly','',false]
     ],
     'Commodity': [
       ['date','Date','date','',true], ['symbol','Symbol','text','e.g. GOLD',true],
       ['qty','Qty','number','',true],
-['entry','EntryPrice','number','',true], ['sl','Stoploss','number','optional',false], ['exit','ExitPrice','number','',true],
+['entry','EntryPrice','number','optional',false], ['sl','Stoploss','number','optional',false], ['exit','ExitPrice','number','optional',false],
       ['expiry','Expiry','text','optional',false], ['entryTime','EntryTime','time','',false], ['exitTime','ExitTime','time','',false]
     ]
   };
