@@ -968,7 +968,7 @@ function riskMapHtml(model) {
     + `<section class="rep-panel rm-card rm-wide">${ donut }`
     + `</section>`
     + `<section class="rep-panel rm-card"><h3>Big-loss gauge</h3><div class="rm-gauge">${ gauge }</div><p class="rm-foot">The gauge fills to 30% of trades. The line for the limit is ${ pct(LIMIT) }.</p></section>`
-    + `<section class="rep-panel rm-card"><h3>Net gross P/L by quadrant</h3><div class="rsk-tags">${ netBars }</div></section>`
+
     + `<section class="rep-panel rm-card rm-wide"><h3>Trades per quadrant by month</h3>${ stackSvg }<div class="rm-legend">${ stackLegend }</div></section>`
     + `<section class="rep-panel rm-card rm-wide"><h3>Average Gross P/L % by quadrant</h3>${ avgChart }</section>`
     + `</div>`;
