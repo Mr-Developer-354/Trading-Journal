@@ -970,9 +970,11 @@ function riskMapHtml(model) {
     + `<span class="rm-qrow" style="grid-column:1;grid-row:2">Big</span><span class="rm-qrow" style="grid-column:1;grid-row:3">Small</span>`
     + cards + `</div></section>`;
 
+  const avgCard = `<section class="rep-panel rm-card"><h3>Average Gross P/L % by quadrant</h3>${ avgChart }</section>`;
   const charts = `<div class="rm-charts">`
     + `<section class="rep-panel rm-card">${ donut }`
     + `</section>`
+    + avgCard
     + `<section class="rep-panel rm-card"><h3>Big-loss gauge</h3><div class="rm-gauge">${ gauge }</div><p class="rm-foot">The gauge fills to 30% of trades. The line for the limit is ${ pct(LIMIT) }.</p></section>`
 
     + `<section class="rep-panel rm-card rm-wide"><h3>Trades per quadrant by month</h3>${ stackSvg }<div class="rm-legend">${ stackLegend }</div></section>`
@@ -994,13 +996,12 @@ function riskMapHtml(model) {
     + important.map(t => `<li>${ escapeHtml(t) }</li>`).join('')
     + `</ul></section>`;
 
-  const avgCard = `<section class="rep-panel rm-card"><h3>Average Gross P/L % by quadrant</h3>${ avgChart }</section>`;
   return `<div class="rm-page">`
     + descriptions
     + `<div class="rm-two">${ explanation }${ importantList }</div>`
     + charts
     + `<div class="rm-two">${ ruleList }${ suggestions }</div>`
-    + `<div class="rm-two">${ avgCard }${ planning }</div>`
+    + planning
     + `</div>`;
 }
 
