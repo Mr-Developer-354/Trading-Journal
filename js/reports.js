@@ -876,16 +876,10 @@ function riskMapHtml(model) {
   // charts
   const donutParts = ['bigProfit', 'smallProfit', 'smallLoss', 'bigLoss']
     .map(k => ({ key: k, value: G[k].n, label: G[k].name }));
-  const C = 2 * Math.PI * 40;
-  let off = 0;
-  const donut = `<svg viewBox="0 0 120 120" role="img" aria-label="Trades by quadrant">`
-    + donutParts.filter(d => d.value > 0).map(d => {
-      const len = d.value / total * C;
-      const seg = `<circle cx="60" cy="60" r="40" fill="none" stroke="${ RISK_MAP_COL[d.key][0] }" stroke-opacity="${ RISK_MAP_COL[d.key][1] }" stroke-width="16" stroke-dasharray="${ len.toFixed(2) } ${ (C - len).toFixed(2) }" stroke-dashoffset="${ (-off).toFixed(2) }" transform="rotate(-90 60 60)"><title>${ d.label }: ${ d.value } trades</title></circle>`;
-      off += len;
-      return seg;
-    }).join('')
-    + `<text x="60" y="58" text-anchor="middle" class="rm-donut-val">${ total }</text><text x="60" y="74" text-anchor="middle" class="rm-donut-cap">trades</text></svg>`;
+  // the donut is drawn after the page is written (see renderRiskMapDonut), with the same labels as the dashboard
+  const RM_DONUT_HEX = { bigProfit: '#2fb170', smallProfit: '#1f6e4c', smallLoss: '#7a3535', bigLoss: '#e5534b' };
+  pendingRiskDonut = { total, items: donutParts.map(d => ({ label: d.label, value: d.value, color: RM_DONUT_HEX[d.key] })) };
+  const donut = `<div class="rm-donut-host" id="rmDonut"></div>`;
 
   const gaugeV = Math.min(100, bl.share / 0.30 * 100);
   const gauge = `<svg viewBox="0 0 120 74" role="img" aria-label="Big-loss share ${ pct(bl.share) }">`
@@ -955,7 +949,7 @@ function riskMapHtml(model) {
 
   const charts = `<div class="rm-charts">`
     + `<section class="rep-panel rm-card"><h3>Share of trades</h3><div class="rm-donut">${ donut }</div>`
-    + `<div class="rm-legend">${ donutParts.map(d => `<span class="rm-key"><i style="background:${ RISK_MAP_COL[d.key][0] };opacity:${ RISK_MAP_COL[d.key][1] }"></i>${ d.label } <b>${ d.value }</b></span>`).join('') }</div></section>`
+    + `</section>`
     + `<section class="rep-panel rm-card"><h3>Big-loss gauge</h3><div class="rm-gauge">${ gauge }</div><p class="rm-foot">The gauge fills to 30% of trades. The line for the limit is ${ pct(LIMIT) }.</p></section>`
     + `<section class="rep-panel rm-card"><h3>Net gross P/L by quadrant</h3><div class="rsk-tags">${ netBars }</div></section>`
     + `<section class="rep-panel rm-card rm-wide"><h3>Trades per quadrant by month</h3>${ stackSvg }<div class="rm-legend">${ stackLegend }</div></section>`
@@ -1122,6 +1116,15 @@ function renderRiskTabs() {
   host.innerHTML = RISK_TABS.map(t => `<button type="button" class="rep-tab${ t.key === riskTab ? ' active' : '' }" data-rep-tab="${ t.key }" aria-selected="${ t.key === riskTab }" title="${ escapeHtml(RISK_TAB_NOTES[t.key]) }">${ t.label }</button>`).join('');
 }
 // the risk bins of one period type: a total row first, then one row per period, newest first
+// the risk map's share-of-trades donut, drawn with the same chart code as the dashboard
+let pendingRiskDonut = null;
+function renderRiskMapDonut() {
+  const host = document.getElementById('rmDonut');
+  if (!host || !pendingRiskDonut || typeof VIZ === 'undefined') return;
+  const d = pendingRiskDonut;
+  pendingRiskDonut = null;
+  VIZ.donut({ host, height: 240, hole: 0.64, items: d.items, centerText: String(d.total), centerSub: 'trades', fmt: v => v + ' trades' });
+}
 function repRiskBlockHtml(model, kind) {
   if (kind === 'map') return riskMapHtml(model);
   if (kind === 'status') return repRiskStatusHtml(model);
@@ -1299,6 +1302,7 @@ function renderRisk() {
   renderDateFilters('risk', model.tr);
   const filtered = applyDateFilters(model);
   body.innerHTML = filtered.tr.length ? repRiskBlockHtml(filtered, riskTab) : repEmpty();
+  renderRiskMapDonut();
   mountReportFrame(body);
 }
 
