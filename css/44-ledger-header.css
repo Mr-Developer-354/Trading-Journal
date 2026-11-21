@@ -124,3 +124,6 @@
 #view-holidays .page-head > div:first-child { flex: 1 1 auto; min-width: 0; }
 #view-holidays .hol-title-row { justify-content: space-between; width: 100%; }
 #view-holidays .page-head > div:first-child > p { max-width: none; }
+/* Market holidays: the "25 holidays · synced" line sits above the buttons, right-aligned */
+#view-holidays .hol-actions { flex-wrap: wrap; justify-content: flex-end; }
+#view-holidays #holStatus { order: -1; flex: 0 0 100%; text-align: right; }
