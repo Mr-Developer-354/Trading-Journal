@@ -121,8 +121,10 @@
 /* Market holidays: today's status sits to the right of the title */
 #view-holidays .hol-title-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 #view-holidays .hol-title-row h1 { margin: 0; }
-#view-holidays .page-head > div:first-child { flex: 1 1 0; min-width: 0; }
-#view-holidays .page-head > .hol-actions { flex: 0 0 auto; }
+/* Market holidays header: title block takes the free width, buttons sit in the right column */
+#view-holidays .page-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; column-gap: 16px; }
+#view-holidays .page-head > div:first-child { min-width: 0; }
+#view-holidays .page-head > .hol-actions { grid-column: 2; }
 #view-holidays .hol-title-row { justify-content: space-between; width: 100%; }
 #view-holidays .page-head > div:first-child > p { max-width: none; }
 /* Market holidays: the "25 holidays · synced" line sits above the buttons, right-aligned */
