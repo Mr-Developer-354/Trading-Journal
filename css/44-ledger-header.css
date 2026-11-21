@@ -133,3 +133,8 @@
 /* Market holidays: buttons and sync line in one row, on the right */
 #view-holidays .hol-actions { justify-content: flex-end; flex-wrap: nowrap; }
 #view-holidays #holStatus { flex: 0 0 auto; white-space: nowrap; }
+/* Market holidays header: title on the left; today's status at the top right edge; buttons under it, right-aligned */
+#view-holidays .page-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; align-items: start; column-gap: 16px; row-gap: 8px; }
+#view-holidays .page-head > div:first-child { grid-column: 1; grid-row: 1 / span 2; min-width: 0; }
+#view-holidays #holToday { grid-column: 2; grid-row: 1; justify-self: end; align-self: start; }
+#view-holidays .page-head > .hol-actions { grid-column: 2; grid-row: 2; justify-self: end; }
