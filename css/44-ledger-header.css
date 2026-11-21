@@ -127,6 +127,6 @@
 /* Market holidays: the "25 holidays · synced" line sits above the buttons, right-aligned */
 #view-holidays .hol-actions { flex-wrap: wrap; justify-content: flex-end; }
 #view-holidays #holStatus { order: -1; flex: 0 0 100%; text-align: right; }
-/* Market holidays: buttons on the right, the sync line right-aligned under them */
-#view-holidays .hol-actions { justify-content: flex-end; }
-#view-holidays #holStatus { flex: 0 0 100%; text-align: right; }
+/* Market holidays: buttons and sync line in one row, on the right */
+#view-holidays .hol-actions { justify-content: flex-end; flex-wrap: nowrap; }
+#view-holidays #holStatus { flex: 0 0 auto; white-space: nowrap; }
