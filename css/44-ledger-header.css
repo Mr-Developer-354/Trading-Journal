@@ -123,3 +123,4 @@
 #view-holidays .hol-title-row h1 { margin: 0; }
 #view-holidays .page-head > div:first-child { flex: 1 1 auto; min-width: 0; }
 #view-holidays .hol-title-row { justify-content: space-between; width: 100%; }
+#view-holidays .page-head > div:first-child > p { max-width: none; }
