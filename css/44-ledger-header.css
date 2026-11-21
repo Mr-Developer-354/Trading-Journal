@@ -117,3 +117,7 @@
 .cal-year .cal-mini-day.l2, [data-theme="dark"] .cal-year .cal-mini-day.l2 { background: #b34a44 !important; color: #fff !important; border-color: #9a3b36 !important; }
 .cal-year .cal-mini-day.l3, [data-theme="dark"] .cal-year .cal-mini-day.l3 { background: #95271d !important; color: #fff !important; border-color: #7d1f17 !important; }
 .cal-year .cal-mini-day.l4, [data-theme="dark"] .cal-year .cal-mini-day.l4 { background: #60241e !important; color: #fff !important; border-color: #4a1b16 !important; }
+
+/* Market holidays: today's status sits to the right of the title */
+#view-holidays .hol-title-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+#view-holidays .hol-title-row h1 { margin: 0; }
