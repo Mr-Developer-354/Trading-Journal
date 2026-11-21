@@ -121,3 +121,5 @@
 /* Market holidays: today's status sits to the right of the title */
 #view-holidays .hol-title-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 #view-holidays .hol-title-row h1 { margin: 0; }
+#view-holidays .page-head > div:first-child { flex: 1 1 auto; min-width: 0; }
+#view-holidays .hol-title-row { justify-content: space-between; width: 100%; }
