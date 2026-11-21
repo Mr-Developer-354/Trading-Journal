@@ -138,11 +138,11 @@
 #view-holidays .page-head > div:first-child { grid-column: 1; grid-row: 1 / span 2; min-width: 0; }
 #view-holidays #holToday { grid-column: 2; grid-row: 1; justify-self: end; align-self: start; }
 #view-holidays .page-head > .hol-actions { grid-column: 2; grid-row: 2; justify-self: end; }
-/* Market holidays on phone: one column, title, then status, then the buttons and sync line */
+/* Market holidays on phone: the status sits on the title's row at the right; the buttons go on their own row below */
 @media (max-width: 600px) {
-  #view-holidays .page-head { grid-template-columns: minmax(0, 1fr); row-gap: 10px; }
+  #view-holidays .page-head { grid-template-columns: minmax(0, 1fr) auto; row-gap: 10px; align-items: start; }
   #view-holidays .page-head > div:first-child { grid-column: 1; grid-row: 1; }
-  #view-holidays #holToday { grid-column: 1; grid-row: 2; justify-self: start; }
-  #view-holidays .page-head > .hol-actions { grid-column: 1; grid-row: 3; justify-self: stretch; flex-wrap: wrap; justify-content: flex-start; }
+  #view-holidays #holToday { grid-column: 2; grid-row: 1; justify-self: end; align-self: start; margin-top: 4px; }
+  #view-holidays .page-head > .hol-actions { grid-column: 1 / -1; grid-row: 2; justify-self: stretch; flex-wrap: wrap; justify-content: flex-start; }
   #view-holidays #holStatus { flex: 1 1 100%; text-align: left; }
 }
